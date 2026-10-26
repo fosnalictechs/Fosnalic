@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="h4awi3_WYQkyIkpYgVEAfaQ0ODd80zTPPkRz2Se6LpA" />
-<title>Contact — FOSNALIC Techs</title>
+<title>Contact â FOSNALIC Techs</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -85,7 +85,7 @@ section{padding:50px 0}
 <section class="hero-contact">
 <div class="container">
 <h2 style="color:white;font-size:2.5rem">Contact Us</h2>
-<p style="opacity:0.9;margin-top:8px">Get in touch — We reply within 1 hour</p>
+<p style="opacity:0.9;margin-top:8px">Get in touch â We reply within 1 hour</p>
 </div>
 </section>
 
@@ -96,7 +96,7 @@ section{padding:50px 0}
 <div>
 <div class="card"><div class="card-body">
 <h3 style="margin-bottom:6px">Send Us a Message</h3>
-<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form — we will reply to your email directly</p>
+<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form â we will reply to your email directly</p>
 
 <form id="contactForm">
 <input type="hidden" name="access_key" value="aa4676f3-a86a-4db7-b801-b7f215a8e266">
@@ -116,7 +116,7 @@ section{padding:50px 0}
 
 <div>
 <div class="card"><div class="card-body">
-<h3 style="margin-bottom:14px">All My Links — Possible Shadrach</h3>
+<h3 style="margin-bottom:14px">All My Links â Possible Shadrach</h3>
 <a href="https://github.com/fosnalictechs" target="_blank" class="btn-link"><i class="fab fa-github" style="background:#111"></i><div><strong>GitHub</strong></div></a>
 <a href="https://share.google/MnHgD7JdXlJiYEdkF" target="_blank" class="btn-link"><i class="fab fa-linkedin" style="background:#0A66C2"></i><div><strong>LinkedIn</strong></div></a>
 <a href="https://instagram.com/fosnalictechs" target="_blank" class="btn-link"><i class="fab fa-instagram" style="background:#E4405F"></i><div><strong>Instagram</strong></div></a>
@@ -133,7 +133,7 @@ section{padding:50px 0}
 <!-- Telegram Channel -->
 <a href="https://t.me/fosnalictech" target="_blank" class="btn-link">
 <i class="fab fa-telegram" style="background:#0088cc"></i>
-<div><strong>Telegram Channel</strong><br><small>Join Our Channel</small></div>
+<div><strong>Telegram Channel</strong><br><small>Join Our Channel Now</small></div>
 </a>
 <a href="https://wa.me/256740495806" target="_blank" class="btn-link"><i class="fab fa-whatsapp" style="background:#25D366"></i><div><strong>WhatsApp</strong><br><small>Chat on WhatsApp</small></div></a>
 </div></div>
@@ -154,17 +154,17 @@ Support: 24/7 via WhatsApp<br>
 </div>
 </section>
 
-<footer><div class="container"><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs • possyshad@gmail.com</div></div></footer>
-<button class="back-to-top" id="backToTop">🔝</button>
+<footer><div class="container"><div class="footer-bottom">Â© <span id="year"></span> FOSNALIC Techs â¢ possyshad@gmail.com</div></div></footer>
+<button class="back-to-top" id="backToTop">ð</button>
 
 <script>
 document.getElementById('menuToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('active');
 document.getElementById('year').textContent=new Date().getFullYear();
-function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Contact possyshad@gmail.com","Live Chat — Ask Problems","My Apps — Download"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('')+t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('');}
+function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Contact possyshad@gmail.com","Live Chat â Ask Problems","My Apps â Download"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('')+t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('');}
 loadTicker();
 const backBtn=document.getElementById('backToTop');window.addEventListener('scroll',()=>{if(window.scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});backBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 
-// STAYS ON PAGE — NO REDIRECT
+// STAYS ON PAGE â NO REDIRECT
 const form = document.getElementById('contactForm');
 const result = document.getElementById('formResult');
 const btn = document.getElementById('submitBtn');
@@ -188,21 +188,21 @@ form.addEventListener('submit', async (e) => {
       result.style.background = '#F0FDF4';
       result.style.color = '#166534';
       result.style.border = '1px solid #BBF7D0';
-      result.textContent = '✅ Message sent! We will reply within 1 hour.';
+      result.textContent = 'â Message sent! We will reply within 1 hour.';
       form.reset();
     } else {
       result.style.display = 'block';
       result.style.background = '#FEF2F2';
       result.style.color = '#991B1B';
       result.style.border = '1px solid #FECACA';
-      result.textContent = '❌ ' + data.message;
+      result.textContent = 'â ' + data.message;
     }
   } catch (err) {
     result.style.display = 'block';
     result.style.background = '#FEF2F2';
     result.style.color = '#991B1B';
     result.style.border = '1px solid #FECACA';
-    result.textContent = '❌ Something went wrong, try again.';
+    result.textContent = 'â Something went wrong, try again.';
   }
   btn.textContent = 'Send Message';
   btn.disabled = false;
