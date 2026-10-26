@@ -2,180 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="google-site-verification" content="h4awi3_WYQkyIkpYgVEAfaQ0ODd80zTPPkRz2Se6LpA" />
-<title>Community Q&A — FOSNALIC Techs</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="FOSNALIC Techs Community — Ask tech problems, get solutions, share knowledge.">
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LIVE — FOSNALIC Techs</title>
 <style>
-:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#0a0e1a;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--gray);color:var(--text);line-height:1.6}
-.container{width:90%;max-width:900px;margin:0 auto;padding:0 20px}
-section{padding:70px 0}
-header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);z-index:1000;padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.navbar{display:flex;justify-content:space-between;align-items:center}
-.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-wrap img{width:38px;height:38px;border-radius:8px;object-fit:cover}
-.logo-wrap span{font-weight:800;color:var(--primary);font-size:1.2rem}
-.nav-links{display:flex;list-style:none} .nav-links li{margin-left:18px} .nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
-.nav-links a.active{color:var(--primary)}
-.menu-btn{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--primary)}
-.mobile-menu{position:fixed;top:0;right:-100%;width:300px;height:100%;background:white;z-index:2000;transition:0.3s;box-shadow:-10px 0 30px rgba(0,0,0,0.2);padding:24px;overflow-y:auto}
-.mobile-menu.active{right:0}
-.mobile-menu a{display:block;padding:14px 0;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border)}
-.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1999;display:none}
-.mobile-overlay.active{display:block}
-.btn{padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;border:none;cursor:pointer;font-weight:600;transition:0.2s}
-.btn:hover{transform:translateY(-1px)}
-.btn-dark{background:#111;color:white;border-radius:50px;padding:8px 14px;font-size:0.8rem;border:none;cursor:pointer}
-.input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;font-size:0.9rem;background:white}
-.input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(42,75,124,0.1)}
-.card{background:white;border-radius:16px;box-shadow:var(--shadow);border:1px solid var(--border);padding:22px;margin-bottom:16px}
-.tag{display:inline-block;background:var(--gray);padding:5px 12px;border-radius:20px;font-size:0.75rem;border:1px solid var(--border);margin-right:6px;font-weight:600}
-.ticker-wrap{position:fixed;top:66px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap}
-.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.answer-box{background:var(--gray);padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid var(--border)}
-.hero{background:linear-gradient(135deg,rgba(10,14,26,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=2000') center/cover;color:white;text-align:center}
-@media(max-width:900px){.nav-links{display:none}.menu-btn{display:block}}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,sans-serif;background:#F7F9FC;color:#0F1C2E}
+.header{background:#0F1C2E;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.live-dot{width:10px;height:10px;background:#FF3B3B;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+#tickerWrap{background:#2A4B7C;color:#fff;overflow:hidden;white-space:nowrap;padding:8px 0}
+#ticker{display:inline-block;animation:scroll 60s linear infinite}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.container{max-width:700px;margin:0 auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+.live-item{border-left:4px solid #2A4B7C;padding:12px 14px;margin:12px 0;background:#fff;border-radius:0 12px 12px 0}
+.time{font-size:12px;color:#718096}
+.adBox{display:none;margin:16px 0} .adBox.has-content{display:block}
 </style>
 </head>
 <body>
 
-<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-
-<header style="top:38px">
-<div class="container navbar" style="max-width:1200px">
-<a href="index.html" class="logo-wrap">
-<img src="logo.png" alt="FOSNALIC Techs" onerror="this.src='https://via.placeholder.com/38x38/2A4B7C/FFFFFF?text=F'">
-<span>FOSNALIC Techs</span>
-</a>
-<ul class="nav-links">
-<li><a href="index.html">Home</a></li>
-<li><a href="services.html">Services</a></li>
-<li><a href="portfolio.html">Portfolio</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="live-chat.html" class="active">Community</a></li>
-<li><a href="my-apps.html">My Apps</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-<button class="menu-btn" onclick="openMenu()"><i class="fas fa-bars"></i></button>
-</div>
-</header>
-
-<div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div>
-<div class="mobile-menu" id="mobileMenu">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-<h3 style="color:var(--primary)">FOSNALIC</h3><button onclick="closeMenu()" style="background:none;border:none;font-size:1.3rem"><i class="fas fa-times"></i></button>
-</div>
-<a href="index.html"><i class="fas fa-home"></i> Home</a>
-<a href="services.html"><i class="fas fa-cogs"></i> Services</a>
-<a href="portfolio.html"><i class="fas fa-briefcase"></i> Portfolio</a>
-<a href="academy.html"><i class="fas fa-graduation-cap"></i> Academy</a>
-<a href="pricing.html"><i class="fas fa-tag"></i> Pricing</a>
-<a href="about.html"><i class="fas fa-info-circle"></i> About</a>
-<a href="extra-help.html"><i class="fas fa-life-ring"></i> Support Center</a>
-<a href="live-chat.html" style="color:var(--primary);font-weight:800"><i class="fas fa-comments"></i> Community Q&A</a>
-<a href="my-apps.html"><i class="fas fa-mobile-alt"></i> My Apps — Download</a>
-<a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+<div class="header">
+<div><b>FOSNALIC Techs</b> <span style="font-size:12px;opacity:0.7">LIVE</span></div>
+<div><span class="live-dot"></span> LIVE</div>
 </div>
 
-<section class="hero" style="margin-top:104px;padding:70px 0">
+<div id="tickerWrap"><div id="ticker">Loading ticker...</div></div>
+
+<div id="adHeader" class="adBox"><div id="adHeaderContent"></div></div>
+
 <div class="container">
-<h2 style="color:white;font-size:2.2rem;font-weight:800">Community Q&A</h2>
-<p style="max-width:600px;margin:10px auto 0;color:#cbd5e0">Ask a technical problem, share knowledge and get verified solutions from developers and the community.</p>
-</div>
-</section>
-
-<section>
-<div class="container">
-<div class="card">
-<h3><i class="fas fa-plus-circle" style="color:var(--primary)"></i> Ask a Question</h3>
-<p style="color:#718096;font-size:0.85rem;margin:6px 0 14px">Be clear and add category — answers come from community and FOSNALIC team.</p>
-<input class="input" id="chatName" placeholder="Your Name (optional)">
-<select class="input" id="chatCat">
-<option>Web Design</option>
-<option>Software / POS</option>
-<option>Mobile Apps</option>
-<option>Academy & eLearning</option>
-<option>Graphic Design</option>
-<option>Support Center</option>
-<option>General</option>
-</select>
-<input class="input" id="chatTitle" placeholder="Question title — e.g. How to integrate MTN MoMo in website?">
-<textarea class="input" id="chatDesc" rows="4" placeholder="Describe your problem in detail... Include what you tried."></textarea>
-<button class="btn" onclick="postQuestion()"><i class="fas fa-paper-plane"></i> Post Question</button>
+<div class="card" style="text-align:center">
+<h2 style="margin:0">🔴 Live Updates</h2>
+<p style="color:#718096;margin:6px 0 0">Auto refresh every 10 sec — Online for all</p>
+<p id="liveStatus" style="font-size:12px;color:#00C853">● Connected</p>
 </div>
 
-<div style="margin:24px 0;display:flex;gap:10px;flex-wrap:wrap">
-<input class="input" id="searchChat" placeholder="Search questions..." style="flex:1;min-width:200px;margin-bottom:0" onkeyup="renderChat()">
-<select class="input" id="filterCat" style="width:200px;margin-bottom:0" onchange="renderChat()">
-<option value="">All Categories</option>
-<option>Web Design</option>
-<option>Software / POS</option>
-<option>Mobile Apps</option>
-<option>General</option>
-</select>
+<div id="liveFeed">Loading live...</div>
+
+<div id="adMiddle" class="adBox"><div id="adMiddleContent"></div></div>
+
+<div class="card" style="background:#0F1C2E;color:#fff;text-align:center">
+<p style="margin:0">Want notifications?</p>
+<button onclick="loadLive()" style="margin-top:10px;padding:10px 20px;border-radius:8px;border:0;background:#2A4B7C;color:#fff;cursor:pointer">Refresh Now</button>
 </div>
 
-<div id="chatList"></div>
+<div id="adFooter" class="adBox"><div id="adFooterContent"></div></div>
 </div>
-</section>
-
-<footer style="background:var(--dark);color:white;padding:30px 0;text-align:center">
-<div class="container"><p style="color:rgba(255,255,255,0.5);font-size:0.85rem">© <span id="year"></span> FOSNALIC Techs — Community Q&A — Professional Support</p></div>
-</footer>
 
 <script>
-function openMenu(){document.getElementById('mobileMenu').classList.add('active');document.getElementById('overlay').classList.add('active')}
-function closeMenu(){document.getElementById('mobileMenu').classList.remove('active');document.getElementById('overlay').classList.remove('active')}
-document.getElementById('year').textContent=new Date().getFullYear();
-function getChat(){return JSON.parse(localStorage.getItem('fosnalic_chat')||'[]')}
-function saveChat(c){localStorage.setItem('fosnalic_chat',JSON.stringify(c))}
-function postQuestion(){
-const name=document.getElementById('chatName').value.trim()||'Anonymous',cat=document.getElementById('chatCat').value,title=document.getElementById('chatTitle').value.trim(),desc=document.getElementById('chatDesc').value.trim();
-if(!title||!desc) return alert('Please add title and description');
-let chat=getChat();
-chat.unshift({id:Date.now(),name,cat,title,desc,likes:0,answers:[],date:new Date().toLocaleString(),pinned:false});
-saveChat(chat);
-document.getElementById('chatTitle').value='';document.getElementById('chatDesc').value='';
-renderChat();window.scrollTo({top:400,behavior:'smooth'});
+const GIST_ID = "0f719dd44c5c9bce109b0bce767f9162";
+let GIST_CACHE=null;
+
+async function getGistData(){
+ try{
+  let r = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`);
+  let j = await r.json();
+  let content = j.files["fosnalic-data.json"]?.content;
+  if(content) return JSON.parse(content);
+ }catch(e){}
+ try{
+  let r2 = await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});
+  return await r2.json();
+ }catch(e){ return null; }
 }
-function renderChat(){
-let chat=getChat();
-const search=document.getElementById('searchChat').value.toLowerCase(),filter=document.getElementById('filterCat').value;
-let filtered=chat.filter(c=>(!search||c.title.toLowerCase().includes(search)||c.desc.toLowerCase().includes(search))&&(!filter||c.cat===filter));
-filtered.sort((a,b)=> (b.pinned?1:0)-(a.pinned?1:0) || b.id-a.id);
-document.getElementById('chatList').innerHTML=filtered.map(c=>`
-<div class="card" style="${c.pinned?'border:2px solid #FF6B35;box-shadow:0 10px 30px rgba(255,107,53,0.15)':''}">
-<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><span class="tag">${c.cat}</span> ${c.pinned?'<span class="tag" style="background:#FF6B35;color:white;border-color:#FF6B35">PINNED</span>':''}</div><small style="color:#A0AEC0">${c.date} • ${c.name}</small></div>
-<h3 style="margin-top:12px;font-size:1.1rem">${c.title}</h3>
-<p style="color:#718096;font-size:0.92rem;margin-top:6px">${c.desc}</p>
-<div style="display:flex;gap:10px;margin-top:14px;align-items:center;flex-wrap:wrap">
-<button class="btn" style="padding:7px 14px;font-size:0.8rem" onclick="likePost(${c.id})"><i class="fas fa-arrow-up"></i> ${c.likes} Upvote</button>
-<button class="btn-dark" onclick="toggleAnswer(${c.id})"><i class="fas fa-comment"></i> ${c.answers.length} Answers</button>
-</div>
-<div id="ans-${c.id}" style="display:none;margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
-<div id="ansList-${c.id}">${c.answers.map(a=>`<div class="answer-box"><strong>${a.name}:</strong> ${a.text}<br><small style="color:#A0AEC0">${a.date}</small></div>`).join('')||'<p style="color:#A0AEC0;font-size:0.85rem">No answers yet — be first to help.</p>'}</div>
-<div style="margin-top:12px">
-<input class="input" id="ansName-${c.id}" placeholder="Your name">
-<textarea class="input" id="ansText-${c.id}" rows="2" placeholder="Write a helpful answer..."></textarea>
-<button class="btn" style="padding:8px 16px;font-size:0.85rem" onclick="postAnswer(${c.id})">Post Answer</button>
-</div>
-</div>
-</div>`).join('')||'<div class="card" style="text-align:center;padding:40px"><i class="fas fa-comments" style="font-size:2rem;color:#CBD5E0"></i><p style="color:#718096;margin-top:10px">No questions yet — be the first to ask!</p></div>';
+
+async function loadTicker(){
+ let data = await getGistData();
+ let fallback = JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');
+ let t = data?.ticker?.length ? data.ticker : (fallback.length?fallback:["Welcome to FOSNALIC Techs — Live Updates"]);
+ document.getElementById('ticker').innerHTML = t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('') + t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');
 }
-function likePost(id){let chat=getChat();let c=chat.find(x=>x.id===id);if(c){c.likes++;saveChat(chat);renderChat();}}
-function toggleAnswer(id){const el=document.getElementById('ans-'+id);el.style.display=el.style.display==='none'?'block':'none';}
-function postAnswer(id){
-const name=document.getElementById('ansName-'+id).value.trim()||'Anonymous',text=document.getElementById('ansText-'+id).value.trim();
-if(!text) return alert('Write an answer');
-let chat=getChat();let c=chat.find(x=>x.id===id);c.answers.push({name,text,date:new Date().toLocaleString()});saveChat(chat);renderChat();setTimeout(()=>{document.getElementById('ans-'+id).style.display='block';},150);
+
+async function loadAds(){
+ let data = await getGistData(); if(!data) return;
+ ['adHeader','adMiddle','adFooter'].forEach(id=>{
+  let d = data[id]; if(!d || (!d.image && !d.text)) return;
+  let slot=document.getElementById(id); let content=document.getElementById(id+'Content');
+  if(!slot||!content) return; slot.classList.add('has-content');
+  if(d.text && d.text.trim().startsWith('<')){ content.innerHTML=d.text; } 
+  else {
+   let html=''; if(d.image) html+=`<a href="${d.link||'#'}" target="_blank"><img src="${d.image}" style="width:100%;border-radius:12px;display:block"></a>`; 
+   if(d.text) html+=`<div style="padding:12px">${d.text}</div>`; content.innerHTML=html;
+  }
+ });
 }
-function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Community Q&A — Ask Problems","Get Solutions from Developers","Professional ICT Support"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('')+t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');}
-loadTicker();renderChat();
+
+async function loadLive(){
+ try{
+  document.getElementById('liveStatus').innerText="● Updating...";
+  let data = await getGistData(); if(!data){ document.getElementById('liveStatus').innerText="● Offline"; return; }
+  let live = data.live || [];
+  if(!live.length){
+   document.getElementById('liveFeed').innerHTML=`<div class="card" style="text-align:center;color:#718096">No live updates yet.<br>Post from Admin → LIVE ONLINE</div>`;
+  }else{
+   document.getElementById('liveFeed').innerHTML = live.map(p=>{
+    let d=new Date(p.time);
+    return `<div class="live-item">
+     <div style="font-size:16px;line-height:1.5">${p.text}</div>
+     <div class="time">${d.toLocaleDateString()} ${d.toLocaleTimeString()}</div>
+    </div>`;
+   }).join('');
+  }
+  document.getElementById('liveStatus').innerText=`● Live — ${new Date().toLocaleTimeString()} — ${live.length} updates`;
+ }catch(e){
+  document.getElementById('liveStatus').innerText="● Error loading";
+ }
+}
+
+// Start
+loadTicker(); loadAds(); loadLive();
+setInterval(loadLive, 10000); // refresh live every 10 sec
+setInterval(loadTicker, 30000); // refresh ticker every 30 sec
 </script>
+
 </body>
 </html>
