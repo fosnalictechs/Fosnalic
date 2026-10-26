@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+// Hide iframe disabler - prevents site being embedded in iframe
+if (window.top !== window.self) {
+  window.top.location.href = window.self.location.href;
+}
+</script>
+<style>html{display:none}</style>
+<script>if(self==top){document.documentElement.style.display='block'}else{top.location=self.location}</script>
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOSNALIC Techs — Official Website</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--primary:#2A4B7C;--secondary:#FF6B35;--accent:#34D1BF;--dark:#121212;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08);--transition:all 0.3s ease}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--gray);color:var(--text);line-height:1.7;overflow-x:hidden}
+#matrixHero{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0.08}
+.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+section{padding:90px 0;position:relative;z-index:1}
+.light-bg{background:var(--light)}
+h2{font-size:2.5rem;text-align:center;margin-bottom:10px;font-weight:800}
+h2:after{content:'';display:block;width:80px;height:4px;background:linear-gradient(to right,var(--primary),var(--secondary));margin:15px auto 0;border-radius:2px}
+h2.left{text-align:left}
+h2.left:after{margin:15px 0 0 0}
+.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;transition:var(--transition);border:none;cursor:pointer}
+.btn:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,0.15)}
+.btn-dark{background:#111!important}
+.badge{display:inline-block;background:rgba(255,255,255,0.15);padding:6px 14px;border-radius:50px;font-size:0.85rem;margin-bottom:15px;border:1px solid rgba(255,255,255,0.2)}
+.gradient-text{background:linear-gradient(135deg,var(--secondary),#FFD23F);-webkit-background-clip:text;background-clip:text;color:transparent}
+header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);z-index:1000;box-shadow:0 2px 20px rgba(0,0,0,0.05);padding:12px 0}
+.navbar{display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.5rem;font-weight:800;color:var(--primary);text-decoration:none}
+.logo img{height:40px}
+.nav-links{display:flex;list-style:none;align-items:center}
+.nav-links li{margin-left:18px}
+.nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
+.menu-toggle{display:none;font-size:1.4rem;cursor:pointer}
+.hero{min-height:100vh;display:flex;align-items:center;background:linear-gradient(135deg,rgba(10,10,10,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=2000&q=80') center/cover;color:white;text-align:center;padding-top:80px;position:relative;overflow:hidden}
+.hero-content{max-width:900px;margin:0 auto;position:relative;z-index:1}
+.hero h1{font-size:3.4rem;line-height:1.1;margin-bottom:18px}
+.hero p{font-size:1.2rem;opacity:0.9;margin-bottom:25px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.hero-developer{display:flex;align-items:center;gap:12px;justify-content:center;margin-top:20px;background:rgba(255,255,255,0.12);padding:10px 18px;border-radius:50px;width:fit-content;margin-left:auto;margin-right:auto}
+.hero-developer img{width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid white}
+.ticker-wrap{position:fixed;top:64px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap;border-bottom:2px solid var(--secondary)}
+.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
+.ticker-item{display:inline-block;margin-right:60px;font-size:0.85rem}
+.ticker-item i{color:var(--secondary);margin-right:8px}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ad-slot{display:none;background:white;border:1px solid var(--border);border-radius:12px;padding:0;text-align:center;margin:20px 0;box-shadow:var(--shadow);overflow:hidden}
+.ad-slot.has-content{display:block}
+.ad-slot img{max-width:100%;display:block}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.about-main-img{width:100%;border-radius:14px;height:380px;object-fit:cover;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
+.card{background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition)}
+.card:hover{transform:translateY(-6px)}
+.card-img{height:200px;background-size:cover;background-position:center}
+.card-body{padding:22px}
+.icon-box{width:55px;height:55px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;margin-bottom:12px}
+.tag{display:inline-block;background:var(--gray);padding:4px 10px;border-radius:20px;font-size:0.75rem;margin-top:10px;border:1px solid var(--border)}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;margin-bottom:30px}
+footer{background:var(--dark);color:white;padding:60px 0 20px}
+footer ul{list-style:none}footer ul li{margin-bottom:8px;color:rgba(255,255,255,0.6);font-size:0.9rem}footer a{color:rgba(255,255,255,0.7);text-decoration:none}
+.footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;margin-top:10px;color:rgba(255,255,255,0.4);font-size:0.85rem}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);z-index:2000;place-items:center;padding:20px}
+.modal.open{display:grid}
+.modal-box{background:white;border-radius:16px;padding:30px;width:100%;max-width:420px}
+.form-control{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:14px;font-size:0.95rem}
+.alert{padding:12px;border-radius:8px;font-size:0.85rem;margin-bottom:12px;display:none}
+.alert-error{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}
+.alert-success{background:#F0FDF4;border:1px solid #BBF7D0;color:#166534}
+.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:var(--transition);border:none;z-index:999;box-shadow:0 8px 20px rgba(0,0,0,0.2)}
+.back-to-top.visible{opacity:1;visibility:visible}
+.back-to-top:hover{transform:translateY(-3px);background:var(--secondary)}
+@media(max-width:768px){.menu-toggle{display:block}.nav-links{position:fixed;top:64px;left:-100%;width:100%;background:white;flex-direction:column;padding:20px 0;box-shadow:0 15px 30px rgba(0,0,0,0.1);transition:var(--transition);border-top:1px solid var(--border)}.nav-links.active{left:0}.nav-links li{margin:12px 0;text-align:center}.hero h1{font-size:2.3rem}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap" id="tickerWrap"><div class="ticker" id="ticker"></div></div>
+
+<header style="top:40px">
+<div class="container navbar">
+<a href="index.html" class="logo"><img src="fosnalic-logo.png" onerror="this.style.display='none'"> FOSNALIC Techs</a>
+<div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+<ul class="nav-links" id="navLinks">
+<li><a href="index.html">Home</a></li>
+<li><a href="services.html">Services</a></li>
+<li><a href="portfolio.html">Portfolio</a></li>
+<li><a href="academy.html">Academy</a></li>
+<li><a href="pricing.html">Pricing</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="extra-help.html">Support</a></li>
+<li><a href="contact.html">Contact</a></li>
+<li id="authNav"><a href="#" class="btn" style="padding:8px 16px;font-size:0.8rem" onclick="openModal('signin');return false">Sign In</a></li>
+<li id="authNav2"><a href="#" class="btn btn-dark" style="padding:8px 16px;font-size:0.8rem" onclick="openModal('signup');return false">Sign Up</a></li>
+<li id="userNav" style="display:none"><span id="userEmailDisplay" style="font-size:0.85rem;font-weight:700"></span> <a href="#" onclick="logout();return false" style="color:var(--secondary);margin-left:8px">Logout</a></li>
+</ul>
+</div>
+</header>
+
+<section class="hero" style="margin-top:40px">
+<canvas id="matrixHero"></canvas>
+<div class="container hero-content">
+<div class="badge"><i class="fas fa-shield-alt"></i> Official Website • Iframe Protected</div>
+<h1>Welcome to <span class="gradient-text">FOSNALIC Techs</span></h1>
+<p>We Build Technology That Actually Works. Professional ICT solutions — Custom Software, Business Websites, Mobile Apps, eLearning Systems, Graphic Design, and ICT Support.</p>
+<div class="hero-btns"><a href="services.html" class="btn">Explore Services <i class="fas fa-arrow-right"></i></a><a href="portfolio.html" class="btn btn-dark">View Portfolio</a><a href="contact.html" class="btn" style="background:#25D366">Get Quote</a></div>
+<div class="hero-developer"><img src="ps-logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=2A4B7C&color=fff'"><div style="text-align:left"><div style="font-weight:700;font-size:0.9rem">Built by Possible Shadrach</div><div style="font-size:0.75rem;opacity:0.8">Full Stack Developer • FOSNALIC Techs</div></div></div>
+</div>
+</section>
+
+<div class="container"><div class="ad-slot" id="adHeader"><div id="adHeaderContent"></div></div></div>
+
+<section class="light-bg">
+<div class="container">
+<h2>Introduction</h2>
+<div class="about-grid" style="margin-top:40px">
+<div><h2 class="left">Who We Are & What We Do</h2><p>FOSNALIC Techs delivers quality, reliable, and long-term tech support for businesses and schools.</p><div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap"><a href="about.html" class="btn">Learn More</a><a href="services.html" class="btn btn-dark">All Services</a></div></div>
+<div><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop" class="about-main-img"></div>
+</div>
+<div class="grid" style="margin-top:50px">
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">Web Design & Development</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">Business sites, SEO, MoMo integration, hosting</p></div></div>
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9b?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">Programming / Software</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">Custom school, clinic, shop systems</p></div></div>
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">Coding Training</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">3 months job-ready program, internship</p></div></div>
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">eLearning / LMS</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">School LMS, exams, online classes</p></div></div>
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">Graphic Design & ICT Solutions</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">Logos, branding, repair, networks, CCTV</p></div></div>
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1535303311164-664fc9ec6532?w=600&auto=format&fit=crop')"></div><div class="card-body"><div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check-circle" style="color:var(--primary)"></i><h3 style="font-size:1rem">Extra Help — Account, SIM, Phone</h3></div><p style="color:#718096;font-size:0.85rem;margin-top:8px">Create account, SIM swap, find lost device, flashing</p></div></div>
+</div>
+</div>
+</section>
+
+<div class="container"><div class="ad-slot" id="adMiddle"><div id="adMiddleContent"></div></div></div>
+
+<section>
+<div class="container">
+<h2>Quick Links To All Pages</h2>
+<div class="grid" style="margin-top:40px">
+<a href="services.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-cogs"></i></div><h3>Services</h3><p style="color:#718096;font-size:0.9rem">12 Services — Main + Extra Help</p><span class="tag">Go to Services →</span></div></div></a>
+<a href="portfolio.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box" style="background:linear-gradient(135deg,#34D1BF,#2A4B7C)"><i class="fas fa-briefcase"></i></div><h3>Portfolio</h3><p style="color:#718096;font-size:0.9rem">Real projects — Schools, business sites</p><span class="tag">Go to Portfolio →</span></div></div></a>
+<a href="academy.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box" style="background:linear-gradient(135deg,#FF6B35,#FFD23F)"><i class="fas fa-graduation-cap"></i></div><h3>Academy</h3><p style="color:#718096;font-size:0.9rem">Full Stack, Graphics, Internship</p><span class="tag">Go to Academy →</span></div></div></a>
+<a href="pricing.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-tags"></i></div><h3>Pricing</h3><p style="color:#718096;font-size:0.9rem">Starter 500k, Business 1.2M, School 2.5M</p><span class="tag">Go to Pricing →</span></div></div></a>
+<a href="about.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box" style="background:linear-gradient(135deg,#2A4B7C,#34D1BF)"><i class="fas fa-user"></i></div><h3>About</h3><p style="color:#718096;font-size:0.9rem">Mission, vision, process</p><span class="tag">Go to About →</span></div></div></a>
+<a href="extra-help.html" style="text-decoration:none;color:inherit"><div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1535303311164-664fc9ec6532?w=600&auto=format&fit=crop')"></div><div class="card-body"><div class="icon-box" style="background:linear-gradient(135deg,#FF6B35,#2A4B7C)"><i class="fas fa-hands-helping"></i></div><h3>Support</h3><p style="color:#718096;font-size:0.9rem">Account, SIM, lost device, flashing</p><span class="tag">Go to Support →</span></div></div></a>
+</div>
+</div>
+</section>
+
+<section class="light-bg">
+<div class="container">
+<h2>Updates & News — Auto 1s</h2>
+<p style="text-align:center;color:#718096;margin-top:8px">Auto scrolls every 1 second horizontally</p>
+<div style="display:flex;gap:20px;overflow-x:auto;padding:20px 0;scroll-snap-type:x mandatory;scroll-behavior:smooth" id="updatesGrid"></div>
+</div>
+</section>
+
+<div class="container"><div class="ad-slot" id="adFooter"><div id="adFooterContent"></div></div></div>
+
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div><div class="logo" style="color:white"><img src="fosnalic-logo.png" onerror="this.style.display='none'"> FOSNALIC Techs</div><p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:12px">Professional ICT solutions — matrix hero + real auth + iframe protected.</p></div>
+<div><strong>Quick Links</strong><ul style="margin-top:12px"><li><a href="index.html">Home</a></li><li><a href="services.html">Services</a></li><li><a href="portfolio.html">Portfolio</a></li><li><a href="academy.html">Academy</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="about.html">About</a></li><li><a href="extra-help.html">Support</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+<div><strong>Services</strong><ul style="margin-top:12px"><li>Web Development</li><li>Software & Apps</li><li>Coding Training</li><li>eLearning LMS</li><li>Graphic Design</li><li>ICT Solutions</li><li>Extra Help</li></ul></div>
+<div><strong>Account</strong><ul style="margin-top:12px"><li><a href="#" onclick="openModal('signin');return false">Sign In</a></li><li><a href="#" onclick="openModal('signup');return false">Sign Up</a></li></ul></div>
+</div>
+<div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs • All Rights Reserved • Built by Possible Shadrach • Iframe Protected 🔒</div>
+</div>
+</footer>
+
+<button class="back-to-top" id="backToTop">🔝</button>
+
+<div class="modal" id="authModal">
+<div class="modal-box">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h3 id="modalTitle">Sign In</h3><button onclick="closeModal('authModal')" style="background:none;border:none;font-size:20px;cursor:pointer"><i class="fas fa-times"></i></button></div>
+<div id="authAlert" class="alert"></div>
+<div id="signinForm"><input id="siEmail" class="form-control" type="email" placeholder="Email address"><input id="siPass" class="form-control" type="password" placeholder="Password"><button class="btn" style="width:100%" onclick="realSignIn()"><span id="siBtnText">Sign In</span></button><p style="text-align:center;margin-top:14px;font-size:0.85rem">No account? <a href="#" onclick="switchModal('signup');return false" style="color:var(--primary);font-weight:700">Sign Up</a></p></div>
+<div id="signupForm" style="display:none"><input id="suName" class="form-control" type="text" placeholder="Full name"><input id="suEmail" class="form-control" type="email" placeholder="Email address"><input id="suPass" class="form-control" type="password" placeholder="Create password (min 6)"><input id="suPass2" class="form-control" type="password" placeholder="Confirm password"><button class="btn" style="width:100%" onclick="realSignUp()"><span id="suBtnText">Create Account</span></button><p style="text-align:center;margin-top:14px;font-size:0.85rem">Have account? <a href="#" onclick="switchModal('signin');return false" style="color:var(--primary);font-weight:700">Sign In</a></p></div>
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById('matrixHero'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=canvas.parentElement.offsetWidth;canvas.height=canvas.parentElement.offsetHeight}
+resize();window.addEventListener('resize',resize);
+const fontSize=14,cols=Math.floor(canvas.width/fontSize);
+const drops=Array(cols).fill(0).map(()=>Math.random()*-20);
+const chars="01";
+function draw(){
+ctx.fillStyle="rgba(18,18,18,0.06)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+for(let i=0;i<drops.length;i++){
+const x=i*fontSize,y=drops[i]*fontSize;
+if(drops[i]>=0){
+ctx.fillStyle = i%3===0 ? "rgba(42,75,124,0.18)" : i%3===1 ? "rgba(255,107,53,0.16)" : "rgba(52,209,191,0.16)";
+ctx.font=fontSize+"px monospace";
+ctx.fillText(chars[Math.floor(Math.random()*chars.length)],x,y);
+}
+if(y>canvas.height && Math.random()>0.98) drops[i]=0; else drops[i]++;
+}
+}
+setInterval(draw,40);
+document.getElementById('menuToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('active');
+document.getElementById('year').textContent=new Date().getFullYear();
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function switchModal(t){document.getElementById('modalTitle').textContent=t==='signin'?'Sign In':'Create Account';document.getElementById('signinForm').style.display=t==='signin'?'block':'none';document.getElementById('signupForm').style.display=t==='signup'?'block':'none';document.getElementById('authAlert').style.display='none'}
+function showAlert(m,t){const el=document.getElementById('authAlert');el.textContent=m;el.className='alert '+(t==='error'?'alert-error':'alert-success');el.style.display='block'}
+function getUsers(){return JSON.parse(localStorage.getItem('fosnalic_users')||'[]')}
+function saveUsers(u){localStorage.setItem('fosnalic_users',JSON.stringify(u))}
+function setSession(u){localStorage.setItem('fosnalic_session',JSON.stringify(u));updateNav()}
+function getSession(){return JSON.parse(localStorage.getItem('fosnalic_session')||'null')}
+function updateNav(){
+const s=getSession();
+const a=document.getElementById('authNav'),a2=document.getElementById('authNav2'),b=document.getElementById('userNav'),d=document.getElementById('userEmailDisplay');
+if(s){a.style.display='none';a2.style.display='none';b.style.display='flex';d.textContent=s.name||s.email}else{a.style.display='block';a2.style.display='block';b.style.display='none'}
+}
+updateNav();
+function realSignUp(){
+const name=document.getElementById('suName').value.trim(),email=document.getElementById('suEmail').value.trim().toLowerCase(),pass=document.getElementById('suPass').value,pass2=document.getElementById('suPass2').value;
+if(!name||!email||!pass) return showAlert('Fill all fields','error');
+if(pass.length<6) return showAlert('Password min 6','error');
+if(pass!==pass2) return showAlert('Passwords no match','error');
+let users=getUsers();
+if(users.find(u=>u.email===email)) return showAlert('Email exists','error');
+const user={id:Date.now(),name,email,password:pass,created:new Date().toISOString()};
+users.push(user);saveUsers(users);setSession(user);
+document.getElementById('suBtnText').textContent='Creating...';
+setTimeout(()=>{showAlert('Account created! Welcome '+name,'success');setTimeout(()=>closeModal('authModal'),900)},500);
+}
+function realSignIn(){
+const email=document.getElementById('siEmail').value.trim().toLowerCase(),pass=document.getElementById('siPass').value;
+if(!email||!pass) return showAlert('Fill email and password','error');
+let users=getUsers();
+const user=users.find(u=>u.email===email && u.password===pass);
+if(!user) return showAlert('Invalid email or password','error');
+document.getElementById('siBtnText').textContent='Signing in...';
+setTimeout(()=>{setSession(user);showAlert('Welcome back '+user.name,'success');setTimeout(()=>closeModal('authModal'),900)},500);
+}
+function logout(){localStorage.removeItem('fosnalic_session');updateNav();location.reload()}
+function loadTicker(){
+let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');
+if(!t){t=["Welcome to FOSNALIC Techs — We Build Technology That Works","New School Management System v3.0 Launched","Academy Intake Open — Full Stack Development","All websites now with MoMo Integration"]}
+document.getElementById('ticker').innerHTML=t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('')+t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('');
+}
+function loadAds(){
+['adHeader','adMiddle','adFooter'].forEach(id=>{
+const data=JSON.parse(localStorage.getItem(id)||'null');
+if(data && (data.image || data.text)){
+const slot=document.getElementById(id);
+const content=document.getElementById(id+'Content');
+slot.classList.add('has-content');
+let html='';
+if(data.image) html+=`<a href="${data.link||'#'}" target="_blank"><img src="${data.image}"></a>`;
+if(data.text) html+=`<div style="padding:15px">${data.text}</div>`;
+content.innerHTML=html;
+}
+});
+}
+function loadNews(){
+let news=JSON.parse(localStorage.getItem('fosnalic_news')||'null');
+if(!news){
+news=[
+{title:"School System v3.0",img:"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop",desc:"SMS, fees, analytics",tag:"UPDATE • 26 Oct 2026"},
+{title:"Academy Intake Open",img:"https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&auto=format&fit=crop",desc:"Full Stack cohort next month",tag:"ACADEMY • 20 Oct 2026"},
+{title:"MoMo Integration",img:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&auto=format&fit=crop",desc:"MTN MoMo + Airtel Money",tag:"GENERAL • 15 Oct 2026"},
+{title:"Business Website Offer",img:"https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&auto=format&fit=crop",desc:"Get website at 500k only",tag:"OFFER • 24 Oct 2026"}
+];
+}
+const grid=document.getElementById('updatesGrid');
+grid.innerHTML=news.map(n=>`<div class="card" style="min-width:320px;scroll-snap-align:start;flex-shrink:0"><div class="card-img" style="background-image:url('${n.img}')"></div><div class="card-body"><h3>${n.title}</h3><p style="color:#718096;font-size:0.9rem">${n.desc}</p><span class="tag">${n.tag}</span></div></div>`).join('');
+let scrollAmount=0;
+setInterval(()=>{
+const maxScroll=grid.scrollWidth-grid.clientWidth;
+scrollAmount+=340;
+if(scrollAmount>maxScroll) scrollAmount=0;
+grid.scrollTo({left:scrollAmount,behavior:'smooth'});
+},1000);
+}
+loadTicker();loadAds();loadNews();
+const backBtn=document.getElementById('backToTop');
+window.addEventListener('scroll',()=>{if(window.scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});
+backBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+window.onclick=e=>{if(e.target.classList.contains('modal')) e.target.classList.remove('open')}
+</script>
+</body>
+</html>

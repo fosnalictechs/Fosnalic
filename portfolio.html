@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — FOSNALIC Techs</title>
+<meta name="description" content="Real projects by FOSNALIC Techs — School systems, Business websites, POS, eLearning, Mobile apps">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#0a0e1a;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:var(--gray);color:var(--text);line-height:1.6}
+.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px}
+section{padding:80px 0}
+header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);z-index:1000;padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.navbar{display:flex;justify-content:space-between;align-items:center}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-wrap img{width:38px;height:38px;border-radius:8px;object-fit:cover}
+.logo-wrap span{font-weight:800;color:var(--primary)}
+.nav-links{display:flex;list-style:none} .nav-links li{margin-left:18px} .nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
+.nav-links a.active{color:var(--primary)}
+.menu-btn{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--primary)}
+.mobile-menu{position:fixed;top:0;right:-100%;width:300px;height:100%;background:white;z-index:2000;transition:0.3s;box-shadow:-10px 0 30px rgba(0,0,0,0.2);padding:24px;overflow-y:auto}
+.mobile-menu.active{right:0}
+.mobile-menu a{display:block;padding:14px 0;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1999;display:none}
+.mobile-overlay.active{display:block}
+.ticker-wrap{position:fixed;top:66px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap}
+.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ad-slot{display:none} .ad-slot.has-content{display:block;background:white;border-radius:12px;margin:20px 0;box-shadow:var(--shadow);overflow:hidden}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:0.2s}
+.card:hover{transform:translateY(-4px)}
+.card-img{height:200px;background-size:cover;background-position:center}
+.card-body{padding:22px}
+.tag{display:inline-block;background:var(--gray);padding:4px 10px;border-radius:20px;font-size:0.72rem;border:1px solid var(--border);font-weight:600;margin-right:5px;margin-top:6px}
+.hero{background:linear-gradient(135deg,rgba(10,14,26,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1547658719-da2b51169166?w=2000') center/cover;color:white;text-align:center}
+@media(max-width:900px){.nav-links{display:none}.menu-btn{display:block}}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<header style="top:38px">
+<div class="container navbar">
+<a href="index.html" class="logo-wrap"><img src="logo.png" alt="FOSNALIC" onerror="this.src='https://via.placeholder.com/38x38/2A4B7C/FFFFFF?text=F'"><span>FOSNALIC Techs</span></a>
+<ul class="nav-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="services.html">Services</a></li>
+<li><a href="portfolio.html" class="active">Portfolio</a></li>
+<li><a href="pricing.html">Pricing</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+<button class="menu-btn" onclick="openMenu()"><i class="fas fa-bars"></i></button>
+</div>
+</header>
+
+<div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+<div style="display:flex;justify-content:space-between;margin-bottom:24px"><h3 style="color:var(--primary)">FOSNALIC</h3><button onclick="closeMenu()" style="background:none;border:none;font-size:1.3rem"><i class="fas fa-times"></i></button></div>
+<a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html" style="color:var(--primary)">Portfolio</a><a href="academy.html">Academy</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="extra-help.html">Support</a><a href="live-chat.html">Community</a><a href="my-apps.html">My Apps</a><a href="contact.html">Contact</a>
+</div>
+
+<section class="hero" style="margin-top:100px;padding:90px 0">
+<div class="container">
+<h2 style="color:white;font-size:2.4rem;font-weight:800">Our Portfolio — Real Results</h2>
+<p style="max-width:700px;margin:12px auto 0;color:#cbd5e0">15+ schools, 50+ businesses trust our systems — School Management, POS, eLearning, Mobile Apps with MoMo</p>
+</div>
+</section>
+
+<div class="container"><div class="ad-slot" id="adHeader"><div id="adHeaderContent"></div></div></div>
+
+<section>
+<div class="container">
+<div class="grid">
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600')"></div><div class="card-body"><span class="tag" style="background:#EFF6FF;color:var(--primary)">Education</span><h3 style="margin-top:8px">School Management System v3.0</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Fees, Results, SMS to parents, Exams, Library, Hostel — Used by 15+ schools in Uganda.</p><span class="tag">PHP</span><span class="tag">MySQL</span><span class="tag">SMS API</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600')"></div><div class="card-body"><span class="tag" style="background:#FFF7ED;color:var(--secondary)">Business</span><h3 style="margin-top:8px">Business Website + MoMo</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Modern business site with MTN MoMo + Airtel Money, SEO, SSL, hosting & WhatsApp integration.</p><span class="tag">MoMo API</span><span class="tag">SEO</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600')"></div><div class="card-body"><span class="tag" style="background:#F0FDF4;color:#16A34A">POS</span><h3 style="margin-top:8px">POS & Inventory System</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Shop POS, stock, barcode, receipts, offline mode, sales reports, low-stock alerts.</p><span class="tag">Offline</span><span class="tag">Barcode</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600')"></div><div class="card-body"><span class="tag" style="background:#EFF6FF;color:var(--primary)">eLearning</span><h3 style="margin-top:8px">eLearning Platform</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Online courses, quizzes, certificates, video lessons — Academy project with student tracking.</p><span class="tag">LMS</span><span class="tag">Certificates</span></div></div>
+
+<!-- MORE PROJECTS ADDED -->
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600')"></div><div class="card-body"><span class="tag" style="background:#FEF3C7;color:#D97706">Android</span><h3 style="margin-top:8px">School Results App — Android</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Parents check results on phone, fees balance, school news — linked to main system.</p><span class="tag">Android</span><span class="tag">Firebase</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600')"></div><div class="card-body"><span class="tag" style="background:#F3E8FF;color:#7C3AED">SaaS</span><h3 style="margin-top:8px">Sacco & VSLA Management</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Savings, loans, interest, shares, reports — built for SACCOs and village savings groups.</p><span class="tag">Loans</span><span class="tag">Reports</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600')"></div><div class="card-body"><span class="tag" style="background:#FFF7ED;color:var(--secondary)">Business</span><h3 style="margin-top:8px">Clinic & Pharmacy System</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Patients, appointments, prescriptions, stock, billing — for clinics and drug shops.</p><span class="tag">Medical</span><span class="tag">Billing</span></div></div>
+
+<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1558655146-d09347e92766?w=600')"></div><div class="card-body"><span class="tag" style="background:#EFF6FF;color:var(--primary)">Design</span><h3 style="margin-top:8px">Graphic Design & Branding</h3><p style="color:#718096;font-size:0.9rem;margin-top:6px">Logos, posters, business cards, social media kits for 100+ brands in Uganda.</p><span class="tag">Branding</span><span class="tag">Print</span></div></div>
+
+</div>
+</div>
+</section>
+
+<div class="container"><div class="ad-slot" id="adFooter"><div id="adFooterContent"></div></div></div>
+
+<footer style="background:var(--dark);color:white;padding:30px 0;text-align:center"><div class="container"><p style="color:rgba(255,255,255,0.5);font-size:0.85rem">© <span id="year"></span> FOSNALIC Techs — Real Projects, Real Results</p></div></footer>
+
+<script>
+function openMenu(){document.getElementById('mobileMenu').classList.add('active');document.getElementById('overlay').classList.add('active')}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('active');document.getElementById('overlay').classList.remove('active')}
+document.getElementById('year').textContent=new Date().getFullYear();
+function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Portfolio — 15+ Schools Using Our System","Business Websites + MoMo Integration","POS, eLearning, Android Apps"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('')+t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');}
+function loadAds(){['adHeader','adFooter'].forEach(id=>{const data=JSON.parse(localStorage.getItem(id)||'null');if(data&&(data.image||data.text)){const slot=document.getElementById(id);const content=document.getElementById(id+'Content');slot.classList.add('has-content');let html='';if(data.image) html+=`<a href="${data.link||'#'}" target="_blank"><img src="${data.image}" style="width:100%;border-radius:12px"></a>`;if(data.text) html+=`<div style="padding:15px">${data.text}</div>`;content.innerHTML=html;}});}
+loadTicker();loadAds();
+</script>
+</body>
+</html>

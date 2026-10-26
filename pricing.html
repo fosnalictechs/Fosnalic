@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pricing — FOSNALIC Techs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Affordable pricing — Websites, Business systems, School management — FOSNALIC Techs Uganda">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#0a0e1a;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:var(--gray);color:var(--text);line-height:1.7}
+.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px}
+section{padding:80px 0}
+header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);z-index:1000;padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.navbar{display:flex;justify-content:space-between;align-items:center}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-wrap img{width:38px;height:38px;border-radius:8px;object-fit:cover}
+.logo-wrap span{font-weight:800;color:var(--primary)}
+.nav-links{display:flex;list-style:none} .nav-links li{margin-left:18px} .nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
+.nav-links a.active{color:var(--primary)}
+.menu-btn{display:none;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--primary)}
+.mobile-menu{position:fixed;top:0;right:-100%;width:300px;height:100%;background:white;z-index:2000;transition:0.3s;box-shadow:-10px 0 30px rgba(0,0,0,0.2);padding:24px;overflow-y:auto}
+.mobile-menu.active{right:0}
+.mobile-menu a{display:block;padding:14px 0;color:var(--text);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1999;display:none}
+.mobile-overlay.active{display:block}
+.ticker-wrap{position:fixed;top:66px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap}
+.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
+.card{background:white;border-radius:16px;box-shadow:var(--shadow);border:1px solid var(--border);padding:28px;text-align:center;transition:0.2s}
+.card:hover{transform:translateY(-4px)}
+.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;border:none;cursor:pointer}
+.hero{background:linear-gradient(135deg,rgba(10,14,26,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=2000') center/cover;color:white;text-align:center}
+@media(max-width:900px){.nav-links{display:none}.menu-btn{display:block}}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<header style="top:38px">
+<div class="container navbar">
+<a href="index.html" class="logo-wrap"><img src="logo.png" alt="FOSNALIC" onerror="this.src='https://via.placeholder.com/38x38/2A4B7C/FFFFFF?text=F'"><span>FOSNALIC Techs</span></a>
+<ul class="nav-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="services.html">Services</a></li>
+<li><a href="portfolio.html">Portfolio</a></li>
+<li><a href="pricing.html" class="active">Pricing</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+<button class="menu-btn" onclick="openMenu()"><i class="fas fa-bars"></i></button>
+</div>
+</header>
+
+<div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="mobile-menu" id="mobileMenu">
+<div style="display:flex;justify-content:space-between;margin-bottom:24px"><h3 style="color:var(--primary)">FOSNALIC</h3><button onclick="closeMenu()" style="background:none;border:none;font-size:1.3rem"><i class="fas fa-times"></i></button></div>
+<a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="academy.html">Academy</a><a href="pricing.html" style="color:var(--primary)">Pricing</a><a href="about.html">About</a><a href="extra-help.html">Support Center</a><a href="live-chat.html">Community</a><a href="my-apps.html">My Apps</a><a href="contact.html">Contact</a>
+</div>
+
+<section class="hero" style="margin-top:100px;padding:90px 0">
+<div class="container">
+<h2 style="color:white;font-size:2.4rem;font-weight:800">Simple, Transparent Pricing</h2>
+<p style="max-width:700px;margin:12px auto 0;color:#cbd5e0">Affordable packages for businesses, schools and startups in Uganda — no hidden fees, full support included.</p>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="grid">
+
+<div class="card">
+<div style="width:56px;height:56px;background:#EFF6FF;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--primary);margin:0 auto 14px;font-size:1.5rem"><i class="fas fa-rocket"></i></div>
+<h3>Starter</h3><h1 style="color:var(--primary);margin:8px 0">UGX 500K</h1><p style="color:#718096;font-size:0.9rem;line-height:1.8">1-Page Business Website<br>MTN MoMo Integration<br>Free Hosting 1 Year<br>Basic SEO & SSL<br>WhatsApp Chat Button</p>
+<a href="contact.html" class="btn" style="margin-top:20px">Get Started</a>
+</div>
+
+<div class="card" style="border:2px solid var(--secondary);transform:scale(1.03);box-shadow:0 20px 50px rgba(255,107,53,0.2)">
+<div style="display:inline-block;background:var(--secondary);color:white;padding:4px 14px;border-radius:20px;font-size:0.75rem;font-weight:700;margin-bottom:10px">MOST POPULAR</div>
+<div style="width:56px;height:56px;background:#FFF7ED;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--secondary);margin:0 auto 14px;font-size:1.5rem"><i class="fas fa-briefcase"></i></div>
+<h3>Business Pro</h3><h1 style="color:var(--secondary);margin:8px 0">UGX 1.2M</h1><p style="color:#718096;font-size:0.9rem;line-height:1.8">5-Page Professional Website<br>MoMo + Email Forms<br>Admin Panel / CMS<br>SEO + Analytics Setup<br>1 Year Support</p>
+<a href="contact.html" class="btn" style="margin-top:20px">Choose Business</a>
+</div>
+
+<div class="card">
+<div style="width:56px;height:56px;background:#F0FDF4;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#16A34A;margin:0 auto 14px;font-size:1.5rem"><i class="fas fa-school"></i></div>
+<h3>School System</h3><h1 style="color:var(--primary);margin:8px 0">UGX 2.5M</h1><p style="color:#718096;font-size:0.9rem;line-height:1.8">Full School Management<br>Fees, Results, SMS Alerts<br>LMS + Online Exams<br>Hosting + Staff Training<br>Free Android App</p>
+<a href="contact.html" class="btn" style="margin-top:20px">Request Demo</a>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:40px;background:white;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;text-align:left;padding:30px">
+<div><i class="fas fa-check-circle" style="color:#16A34A"></i> <strong>No Hidden Fees</strong><br><small style="color:#718096">What you see is what you pay</small></div>
+<div><i class="fas fa-headset" style="color:var(--primary)"></i> <strong>Support Included</strong><br><small style="color:#718096">Training + 1 year help</small></div>
+<div><i class="fas fa-mobile-alt" style="color:var(--secondary)"></i> <strong>Mobile Money Ready</strong><br><small style="color:#718096">MTN & Airtel integrated</small></div>
+<div><i class="fas fa-lock" style="color:#16A34A"></i> <strong>Secure & Fast</strong><br><small style="color:#718096">SSL + backups + SEO</small></div>
+</div>
+
+</div>
+</section>
+
+<footer style="background:var(--dark);color:white;padding:30px 0;text-align:center"><div class="container"><p style="color:rgba(255,255,255,0.5);font-size:0.85rem">© <span id="year"></span> FOSNALIC Techs — Professional ICT Solutions</p></div></footer>
+
+<script>
+function openMenu(){document.getElementById('mobileMenu').classList.add('active');document.getElementById('overlay').classList.add('active')}
+function closeMenu(){document.getElementById('mobileMenu').classList.remove('active');document.getElementById('overlay').classList.remove('active')}
+document.getElementById('year').textContent=new Date().getFullYear();
+function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Starter 500K — Business Website","Business 1.2M — Most Popular","School 2.5M — Full System + App"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('')+t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');}
+loadTicker();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Support Center — FOSNALIC Techs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FOSNALIC Techs Support Center — Professional help for accounts, devices, email recovery and tech support in Uganda.">
+<meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE_HERE">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#0a0e1a;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:var(--gray);color:var(--text);line-height:1.7}
+.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px}
+section{padding:80px 0}
+header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);backdrop-filter:blur(10px);z-index:1000;padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.navbar{display:flex;justify-content:space-between;align-items:center}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-wrap img{width:38px;height:38px;border-radius:8px;object-fit:cover}
+.logo-wrap span{font-weight:800;color:var(--primary);font-size:1.2rem}
+.nav-links{display:flex;list-style:none} .nav-links li{margin-left:22px}
+.nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.92rem}
+.nav-links a.active{color:var(--primary)}
+.ticker-wrap{position:fixed;top:66px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap}
+.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
+.card{background:white;border-radius:16px;box-shadow:var(--shadow);border:1px solid var(--border);padding:26px;transition:0.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(0,0,0,0.12)}
+.icon-box{width:52px;height:52px;background:#FFF3EF;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--secondary);font-size:1.4rem;margin-bottom:14px}
+.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;border:none;cursor:pointer}
+.btn-outline{padding:10px 22px;background:white;color:var(--primary);border:1px solid var(--border);border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;margin-top:12px}
+.badge{display:inline-block;background:#FEF2F2;color:#991B1B;font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:10px}
+.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s;border:none;z-index:999}
+.back-to-top.visible{opacity:1;visibility:visible}
+footer{background:var(--dark);color:white;padding:40px 0 20px} .footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;margin-top:20px;color:rgba(255,255,255,0.4);font-size:0.85rem}
+@media(max-width:768px){.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
+
+<header style="top:38px">
+<div class="container navbar">
+<a href="index.html" class="logo-wrap">
+<img src="logo.png" alt="FOSNALIC Techs" onerror="this.src='https://via.placeholder.com/38x38/2A4B7C/FFFFFF?text=F'">
+<span>FOSNALIC Techs</span>
+</a>
+<ul class="nav-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="services.html">Services</a></li>
+<li><a href="extra-help.html" class="active">Support</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</div>
+</header>
+
+<section style="margin-top:100px;background:linear-gradient(135deg,rgba(10,14,26,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1535303311164-664fc9ec6532?w=2000') center/cover;color:white;text-align:center;padding:90px 0">
+<div class="container">
+<h2 style="color:white;font-size:2.4rem;font-weight:800">Support Center</h2>
+<p style="max-width:700px;margin:12px auto 0;color:#cbd5e0">Professional help for accounts, devices and everyday tech issues — Secure, verified and official processes only.</p>
+<div style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);padding:8px 16px;border-radius:30px;font-size:0.8rem"><i class="fas fa-shield-alt" style="color:#22c55e"></i> Proof of ownership required for sensitive services</div>
+</div>
+</section>
+
+<section>
+<div class="container">
+<div class="grid">
+
+<div class="card">
+<div class="icon-box"><i class="fas fa-user-plus"></i></div>
+<span class="badge">Most Requested</span>
+<h3>Account Setup & Security</h3>
+<p style="color:#718096;font-size:0.9rem;margin-top:6px">Professional setup for Google, Gmail, Facebook, Business accounts with 2FA and recovery options. Secure from day one.</p>
+<a href="contact.html" class="btn-outline">Get Help</a>
+</div>
+
+<div class="card">
+<div class="icon-box"><i class="fas fa-sim-card"></i></div>
+<h3>SIM & Mobile Registration</h3>
+<p style="color:#718096;font-size:0.9rem;margin-top:6px">MTN and Airtel official registration and replacement guidance. Valid national ID required — we follow operator procedures.</p>
+<a href="contact.html" class="btn-outline">Learn Process</a>
+</div>
+
+<div class="card">
+<div class="icon-box"><i class="fas fa-mobile-alt"></i></div>
+<span class="badge" style="background:#F0FFF4;color:#22543D">Secure Process</span>
+<h3>Lost Device Assistance</h3>
+<p style="color:#718096;font-size:0.9rem;margin-top:6px">Help with Find My Device, Google account location and IMEI blocking guidance. Proof of purchase required.</p>
+<a href="contact.html" class="btn-outline">Request Support</a>
+</div>
+
+<div class="card">
+<div class="icon-box"><i class="fas fa-tools"></i></div>
+<h3>Phone Software Repair</h3>
+<p style="color:#718096;font-size:0.9rem;margin-top:6px">System errors, boot loops and software fixes using official tools. Unlock only with ownership proof — no bypass services.</p>
+<a href="contact.html" class="btn-outline">Book Repair</a>
+</div>
+
+<div class="card">
+<div class="icon-box"><i class="fas fa-envelope-open-text"></i></div>
+<h3>Email Recovery Support</h3>
+<p style="color:#718096;font-size:0.9rem;margin-top:6px">Guided recovery for Gmail and Yahoo using official provider flows. We never ask for passwords — secure verification only.</p>
+<a href="contact.html" class="btn-outline">Recover Email</a>
+</div>
+
+<div class="card" style="background:linear-gradient(135deg,#1a365d,#2A4B7C);color:white;border:none">
+<h3 style="color:white"><i class="fas fa-headset"></i> General Tech Support</h3>
+<p style="color:#cbd5e0;font-size:0.9rem;margin-top:6px">Any tech problem — remote assistance, training and troubleshooting for businesses, schools and individuals.</p>
+<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+<a href="contact.html" class="btn" style="background:white;color:var(--primary)">Contact Us</a>
+<a href="live-chat.html" class="btn" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2)">Live Chat</a>
+</div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:40px;background:#FFFBEB;border-color:#FDE68A">
+<div style="display:flex;gap:12px;align-items:flex-start">
+<i class="fas fa-info-circle" style="color:#D97706;font-size:1.2rem;margin-top:2px"></i>
+<div>
+<h4 style="color:#92400E">Professional Standards</h4>
+<p style="color:#78350F;font-size:0.85rem;margin-top:4px">All support follows official provider processes. We require proof of ownership for account recovery, device unlock and SIM services. No hacking, bypass or unauthorized access services offered.</p>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<footer><div class="container"><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs — Professional ICT Support Center</div></div></footer>
+
+<button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+document.getElementById('year').textContent=new Date().getFullYear();
+function loadTicker(){
+let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');
+if(!t){t=["Support Center — Professional ICT Help","Secure & Official Processes Only","Account • Device • Email • Tech Support"]}
+document.getElementById('ticker').innerHTML=t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('')+t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');
+}
+loadTicker();
+const backBtn=document.getElementById('backToTop');
+addEventListener('scroll',()=>{if(scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});
+backBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>
