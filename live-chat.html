@@ -22,13 +22,13 @@ button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#ff
 <div class="card">
 <div class="tabs">
 <div class="tab active" onclick="setType('all',this)">All</div>
-<div class="tab" onclick="setType('text',this)">💬 Text</div>
-<div class="tab" onclick="setType('image',this)">🖼 Images</div>
-<div class="tab" onclick="setType('video',this)">🎥 Videos</div>
-<div class="tab" onclick="setType('audio',this)">🎙 Audio</div>
+<div class="tab" onclick="setType('text',this)">ð¬ Text</div>
+<div class="tab" onclick="setType('image',this)">ð¼ Images</div>
+<div class="tab" onclick="setType('video',this)">ð¥ Videos</div>
+<div class="tab" onclick="setType('audio',this)">ð Audio</div>
 </div>
 <div class="row" style="margin-top:10px">
-<input id="q" placeholder="🔍 Search..." oninput="load()" style="flex:1">
+<input id="q" placeholder="ð Search..." oninput="load()" style="flex:1">
 <button class="btn-sm" onclick="load()">Search</button>
 </div>
 </div>
@@ -36,14 +36,14 @@ button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#ff
 <div class="card">
 <div id="replyInfo" style="display:none;background:#FFF3CD;padding:8px;border-radius:8px;margin-bottom:8px;font-size:13px"></div>
 <input id="n" placeholder="Your name">
-<textarea id="t" rows="2" placeholder="Message (optional if you attach media)"></textarea>
+<textarea id="t" rows="2" placeholder="Message (_optional if you attach media)"></textarea>
 
 <div id="mediaPreview" style="display:none;margin:8px 0"></div>
 
 <div class="row">
-<label class="btn-sm" style="cursor:pointer">🖼 Image<input type="file" id="fImage" accept="image/*" hidden onchange="uploadFile(this,'image')"></label>
-<label class="btn-sm" style="cursor:pointer">🎥 Video<input type="file" id="fVideo" accept="video/*" hidden onchange="uploadFile(this,'video')"></label>
-<label class="btn-sm" style="cursor:pointer">🎙 Audio<input type="file" id="fAudio" accept="audio/*" hidden onchange="uploadFile(this,'audio')"></label>
+<label class="btn-sm" style="cursor:pointer">ð¼ Image<input type="file" id="fImage" accept="image/*" hidden onchange="uploadFile(this,'image')"></label>
+<label class="btn-sm" style="cursor:pointer">ð¥ Video<input type="file" id="fVideo" accept="video/*" hidden onchange="uploadFile(this,'video')"></label>
+<label class="btn-sm" style="cursor:pointer">ð Audio<input type="file" id="fAudio" accept="audio/*" hidden onchange="uploadFile(this,'audio')"></label>
 <button style="flex:1" onclick="post()">Post Live</button>
 </div>
 <div id="s" style="font-size:12px;margin-top:6px"></div>
@@ -57,7 +57,7 @@ const API="https://fosnalic-live.onrender.com";
 let replyTo=null, mediaUrl=null, mediaType=null, curType="all";
 
 function setType(t,el){ curType=t; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); load(); }
-function setReply(id,name){ replyTo=id; document.getElementById('replyInfo').style.display='block'; document.getElementById('replyInfo').innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>`; }
+function setReply(id,name){ replyTo=id; document.getElementById('replyInfo').style.display='block'; document.getElementById('replyInfo').innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">â</a>`; }
 function cancelReply(){ replyTo=null; document.getElementById('replyInfo').style.display='none'; }
 
 async function uploadFile(input,type){
@@ -94,7 +94,7 @@ function render(m,isReply){
   if(m.mediaType==="video") media=`<video src="${m.mediaUrl}" controls class="media"></video>`;
   if(m.mediaType==="audio") media=`<audio src="${m.mediaUrl}" controls class="audio"></audio>`;
  }
- return `<div class="${cls}"><b>${esc(m.name)}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin:6px 0">${esc(m.text)}</div>${media}<div style="margin-top:8px"><button class="btn-sm" onclick="setReply('${m.id}','${esc(m.name)}')">↩ Reply</button></div></div>`;
+ return `<div class="${cls}"><b>${esc(m.name)}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin:6px 0">${esc(m.text)}</div>${media}<div style="margin-top:8px"><button class="btn-sm" onclick="setReply('${m.id}','${esc(m.name)}')">â© Reply</button></div></div>`;
 }
 function esc(s){return (s||"").replace(/</g,'&lt;');}
 
@@ -103,7 +103,7 @@ async function post(){
  if(!text && !mediaUrl) { alert("Add text or media"); return; }
  document.getElementById('s').innerText="Posting...";
  await fetch(API+"/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text,replyTo,mediaUrl,mediaType})});
- document.getElementById('t').value=""; clearMedia(); cancelReply(); document.getElementById('s').innerText="Posted! ✅"; load();
+ document.getElementById('t').value=""; clearMedia(); cancelReply(); document.getElementById('s').innerText="Posted! â"; load();
 }
 load(); setInterval(load,6000);
 </script>
