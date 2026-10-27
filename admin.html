@@ -1,160 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Admin — possyshad@gmail.com Only</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#F5F7FA;padding:20px}
-.card{background:white;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.08);border:1px solid #E2E8F0;padding:20px;margin-bottom:20px;max-width:1100px;margin:0 auto 20px}
-.btn{padding:10px 18px;background:#2A4B7C;color:white;border-radius:8px;border:none;cursor:pointer;font-weight:600}
-.btn-dark{background:#111!important}
-.input{width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:8px;margin-bottom:10px}
-.file-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px}
-.file-btn{padding:6px 12px;background:white;border:1px solid #E2E8F0;border-radius:8px;cursor:pointer;font-size:0.85rem}
-.file-btn.active{background:#2A4B7C;color:white}
-textarea{width:100%;min-height:300px;font-family:monospace;font-size:0.85rem;padding:12px;border:1px solid #E2E8F0;border-radius:8px}
-#loginOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-box{background:white;border-radius:16px;padding:30px;width:100%;max-width:420px;text-align:center}
-</style>
-</head>
-<body>
-<div id="loginOverlay">
-<div class="login-box">
-<h2>Admin Login</h2>
-<p style="color:#718096;font-size:0.9rem;margin:8px 0 20px">Only possyshad@gmail.com — Password stays</p>
-<input class="input" type="email" id="email" value="possyshad@gmail.com">
-<input class="input" type="password" id="pass" placeholder="Password">
-<input class="input" type="password" id="pass2" placeholder="Confirm Password" style="display:none">
-<div id="err" style="display:none;background:#FEF2F2;color:#991B1B;padding:8px;border-radius:8px;margin-bottom:10px;font-size:0.85rem"></div>
-<button class="btn" id="loginBtn" onclick="login()" style="width:100%">Continue with Email</button>
-</div>
-</div>
-
-<div id="main" style="display:none">
-<div style="max-width:1100px;margin:0 auto 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-<div><h1>Admin ✅ possyshad@gmail.com</h1><p style="color:#718096">No subfolders — Same folder upload to Cloudflare</p></div>
-<div><a href="index.html" class="btn btn-dark" style="text-decoration:none">View Site</a> <button class="btn" style="background:#e53e3e" onclick="logout()">Logout</button></div>
-</div>
-
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin V2 FIXED - FOSNALIC</title>
+<style>body{font-family:Segoe UI;background:#F5F7FA;padding:15px}.card{background:#fff;padding:18px;border-radius:14px;margin:0 auto 18px;max-width:1100px;box-shadow:0 8px 20px rgba(0,0,0,.06)}input,textarea,select{width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:8px;margin:6px 0}button{padding:10px 16px;background:#2A4B7C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}.file-btn{padding:6px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:8px;margin:3px;cursor:pointer}.file-btn.active{background:#2A4B7C;color:#fff}.ok{color:#16A34A;font-size:.85rem;margin-left:8px}.err{color:#E53E3E;font-size:.85rem}</style></head><body>
+<h2 style="max-width:1100px;margin:0 auto 15px">Admin V2 FIXED ✅</h2>
 <div class="card" style="border:2px solid #2A4B7C">
-<h2><i class="fas fa-mobile-alt"></i> My Apps — Same Folder</h2>
-<p style="color:#718096;font-size:0.85rem;margin-bottom:10px">Put APKs in SAME folder as index.html. Example: school.apk → File name = school.apk</p>
-<input class="input" id="appName" placeholder="App Name * e.g. FOSNALIC School">
-<textarea class="input" id="appDesc" placeholder="Description *" style="min-height:60px"></textarea>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<input class="input" id="appVersion" placeholder="Version e.g. v3.0">
-<input class="input" id="appSize" placeholder="Size e.g. 25 MB">
-</div>
-<input class="input" id="appFile" placeholder="File name * e.g. school.apk OR https://...">
-<button class="btn" onclick="addApp()"><i class="fas fa-plus"></i> Add App</button>
-<div id="appsList" style="margin-top:15px"></div>
-</div>
-
-<div class="card">
-<h2><i class="fas fa-bullhorn"></i> Ads & Updates — Edit Index</h2>
-<h3 style="margin:10px 0 8px">Ticker (Top Bar)</h3>
-<input class="input" id="tickerInput" placeholder="e.g. New App Released — Download Now">
-<button class="btn" style="width:auto" onclick="addTicker()">Add Ticker</button>
-<div id="tickerList" style="margin-top:10px"></div>
-
-<h3 style="margin:20px 0 8px">News / Updates</h3>
-<input class="input" id="newsTitle" placeholder="Title *">
-<input class="input" id="newsImg" placeholder="Image URL (optional)">
-<input class="input" id="newsDesc" placeholder="Description">
-<button class="btn" style="width:auto" onclick="addNews()">Add News</button>
-<div id="newsList" style="margin-top:10px"></div>
-
-<h3 style="margin:20px 0 8px">Ads (Header / Middle / Footer)</h3>
-<select class="input" id="adSlot"><option value="adHeader">Header Ad</option><option value="adMiddle">Middle Ad</option><option value="adFooter">Footer Ad</option></select>
-<input class="input" id="adImage" placeholder="Ad Image URL">
-<input class="input" id="adLink" placeholder="Ad Link URL">
-<textarea class="input" id="adText" placeholder="Optional HTML text" style="min-height:60px"></textarea>
-<button class="btn" style="width:auto" onclick="saveAd()">Save Ad</button>
-<button class="btn btn-dark" style="width:auto" onclick="clearAd()">Clear This Slot</button>
-<div id="adPreview" style="margin-top:10px;font-size:0.85rem;color:#718096"></div>
-</div>
-
-<div class="card">
-<h2><i class="fas fa-file-code"></i> Edit Pages — Same Folder</h2>
-<div class="file-list">
-<button class="file-btn active" onclick="loadPage('index.html')">index</button>
-<button class="file-btn" onclick="loadPage('services.html')">services</button>
-<button class="file-btn" onclick="loadPage('portfolio.html')">portfolio</button>
-<button class="file-btn" onclick="loadPage('academy.html')">academy</button>
-<button class="file-btn" onclick="loadPage('pricing.html')">pricing</button>
-<button class="file-btn" onclick="loadPage('about.html')">about</button>
-<button class="file-btn" onclick="loadPage('extra-help.html')">extra-help</button>
-<button class="file-btn" onclick="loadPage('contact.html')">contact</button>
-<button class="file-btn" onclick="loadPage('live-chat.html')">live-chat</button>
-<button class="file-btn" onclick="loadPage('my-apps.html')">my-apps</button>
-</div>
-<textarea id="pageEditor"></textarea>
-<button class="btn btn-dark" style="width:auto;margin-top:10px" onclick="downloadPage()">Download This Page</button>
-<span id="pageStatus" style="font-size:0.85rem;color:#718096;margin-left:10px"></span>
-</div>
-</div>
-
+<h3>⚙️ GitHub Connection</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="ghOwner" value="fosnalictechs"><input id="ghRepo" value="fosnalic"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="ghBranch" value="main"><input id="ghToken" type="password" placeholder="ghp_ token repo+gist"></div>
+<button onclick="saveConfig()">Save Config</button> <span id="cfgOk" class="ok"></span></div>
+<div class="card"><h3>📢 Ticker + Ads — Instant Gist</h3>
+<div style="display:flex;gap:8px"><input id="tickerInput" placeholder="Ticker text"><button onclick="addTicker()">Add</button></div><div id="tickerList" style="margin-top:10px"></div><span id="sTicker" class="ok"></span><span id="eTicker" class="err"></span><hr>
+<select id="adSlot"><option value="adHeader">adHeader Top</option><option value="adMiddle">adMiddle</option><option value="adFooter">adFooter Bottom</option></select><textarea id="adText" style="min-height:90px" placeholder="<div> ad code"></textarea><button onclick="saveAd()">Save Ad</button> <span id="sAd" class="ok"></span></div>
+<div class="card" style="border:2px solid #111"><h3>📝 Edit 9 Pages</h3>
+<div style="display:flex;flex-wrap:wrap"><button class="file-btn active" onclick="loadPage('index.html',this)">index.html</button><button class="file-btn" onclick="loadPage('services.html',this)">services.html</button><button class="file-btn" onclick="loadPage('portfolio.html',this)">portfolio.html</button><button class="file-btn" onclick="loadPage('academy.html',this)">academy.html</button><button class="file-btn" onclick="loadPage('pricing.html',this)">pricing.html</button><button class="file-btn" onclick="loadPage('about.html',this)">about.html</button><button class="file-btn" onclick="loadPage('extra-help.html',this)">extra-help.html</button><button class="file-btn" onclick="loadPage('contact.html',this)">contact.html</button><button class="file-btn" onclick="loadPage('live-chat.html',this)">live-chat.html</button><button class="file-btn" onclick="loadPage('my-apps.html',this)">my-apps.html</button></div>
+<textarea id="pageEditor" style="min-height:380px;font-family:monospace;font-size:.82rem"></textarea><button onclick="savePageToGitHub()" style="background:#111;width:100%;margin-top:8px">💾 SAVE PAGE TO GITHUB</button><span id="pageStatus" class="ok"></span></div>
 <script>
-const ALLOWED="possyshad@gmail.com";
-function getPass(){return localStorage.getItem('fosnalic_admin_pass')}
-function isFirst(){return !getPass()}
-function checkAuth(){return localStorage.getItem('fosnalic_admin_auth')==='true'}
-function init(){
-const p2=document.getElementById('pass2');
-const btn=document.getElementById('loginBtn');
-if(isFirst()){p2.style.display='block';btn.textContent='Create Password — possyshad@gmail.com';}
-else{if(checkAuth()){document.getElementById('loginOverlay').style.display='none';document.getElementById('main').style.display='block';renderAll();return;}btn.textContent='Login — possyshad@gmail.com';}
-}
-function login(){
-const email=document.getElementById('email').value.trim().toLowerCase();
-const p1=document.getElementById('pass').value;
-const p2=document.getElementById('pass2').value;
-const err=document.getElementById('err');
-if(email!==ALLOWED){err.style.display='block';err.textContent='Only possyshad@gmail.com allowed';return}
-if(!p1){err.style.display='block';err.textContent='Enter password';return}
-if(isFirst()){
-if(p1.length<6){err.style.display='block';err.textContent='Min 6 chars';return}
-if(p1!==p2){err.style.display='block';err.textContent='Passwords not match';return}
-localStorage.setItem('fosnalic_admin_pass',btoa(p1));localStorage.setItem('fosnalic_admin_auth','true');localStorage.setItem('fosnalic_admin_email',email);location.reload();
-}else{
-if(p1===atob(getPass())){localStorage.setItem('fosnalic_admin_auth','true');document.getElementById('loginOverlay').style.display='none';document.getElementById('main').style.display='block';renderAll();}
-else{err.style.display='block';err.textContent='Wrong password';}
-}
-}
-function logout(){localStorage.removeItem('fosnalic_admin_auth');location.reload();}
-init();
-function addApp(){
-const name=document.getElementById('appName').value.trim();
-const desc=document.getElementById('appDesc').value.trim();
-const file=document.getElementById('appFile').value.trim();
-if(!name||!desc||!file){alert('Name, Desc, File required');return}
-let apps=JSON.parse(localStorage.getItem('fosnalic_apps')||'[]');
-apps.push({name,desc,file,version:document.getElementById('appVersion').value||'v1.0',size:document.getElementById('appSize').value||'10 MB',date:new Date().toLocaleDateString(),id:Date.now()});
-localStorage.setItem('fosnalic_apps',JSON.stringify(apps));
-document.getElementById('appName').value='';document.getElementById('appDesc').value='';document.getElementById('appFile').value='';
-renderApps();
-}
-function renderApps(){
-let apps=JSON.parse(localStorage.getItem('fosnalic_apps')||'[]');
-document.getElementById('appsList').innerHTML=apps.map((a,i)=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #eee;flex-wrap:wrap;gap:8px"><div><strong>${a.name}</strong> — ${a.version} — ${a.file}<br><small>${a.desc}</small></div><div><a href="${a.file}" target="_blank" style="background:#2A4B7C;color:white;padding:5px 10px;border-radius:6px;text-decoration:none">Test</a> <button onclick="delApp(${i})" style="background:red;color:white;border:none;padding:5px 10px;border-radius:6px">X</button></div></div>`).join('')||'No apps — add above';
-}
-function delApp(i){let apps=JSON.parse(localStorage.getItem('fosnalic_apps')||'[]');apps.splice(i,1);localStorage.setItem('fosnalic_apps',JSON.stringify(apps));renderApps();}
-function addTicker(){let v=document.getElementById('tickerInput').value.trim();if(!v)return alert('Enter ticker');let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');t.push(v);localStorage.setItem('fosnalic_ticker',JSON.stringify(t));document.getElementById('tickerInput').value='';renderTicker();}
-function renderTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');document.getElementById('tickerList').innerHTML=t.map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #eee"><span>${x}</span><button onclick="removeTicker(${i})" style="background:red;color:white;border:none;padding:2px 8px;border-radius:4px">X</button></div>`).join('')||'No ticker';}
-function removeTicker(i){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');t.splice(i,1);localStorage.setItem('fosnalic_ticker',JSON.stringify(t));renderTicker();}
-function addNews(){let title=document.getElementById('newsTitle').value.trim();if(!title)return alert('Title required');let news=JSON.parse(localStorage.getItem('fosnalic_news')||'[]');news.push({title,img:document.getElementById('newsImg').value||'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600',desc:document.getElementById('newsDesc').value,tag:new Date().toLocaleDateString()});localStorage.setItem('fosnalic_news',JSON.stringify(news));document.getElementById('newsTitle').value='';document.getElementById('newsImg').value='';document.getElementById('newsDesc').value='';renderNews();}
-function renderNews(){let news=JSON.parse(localStorage.getItem('fosnalic_news')||'[]');document.getElementById('newsList').innerHTML=news.map((n,i)=>`<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #eee"><span><strong>${n.title}</strong></span><button onclick="removeNews(${i})" style="background:red;color:white;border:none;padding:2px 8px;border-radius:4px">X</button></div>`).join('')||'No news';}
-function removeNews(i){let news=JSON.parse(localStorage.getItem('fosnalic_news')||'[]');news.splice(i,1);localStorage.setItem('fosnalic_news',JSON.stringify(news));renderNews();}
-function saveAd(){let slot=document.getElementById('adSlot').value;let data={image:document.getElementById('adImage').value,link:document.getElementById('adLink').value,text:document.getElementById('adText').value};localStorage.setItem(slot,JSON.stringify(data));document.getElementById('adPreview').textContent='Saved '+slot+' — refresh index.html';}
-function clearAd(){let slot=document.getElementById('adSlot').value;localStorage.removeItem(slot);document.getElementById('adPreview').textContent='Cleared '+slot;}
-let currentPage='index.html';
-function loadPage(name){currentPage=name;document.querySelectorAll('.file-btn').forEach(b=>b.classList.remove('active'));if(event)event.target.classList.add('active');fetch(name).then(r=>r.text()).then(t=>{document.getElementById('pageEditor').value=t;document.getElementById('pageStatus').textContent='Loaded: '+name}).catch(()=>document.getElementById('pageEditor').value='// Could not load');}
-function downloadPage(){const blob=new Blob([document.getElementById('pageEditor').value],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=currentPage;a.click();document.getElementById('pageStatus').textContent='Downloaded '+currentPage+' — replace in folder then upload folder';}
-function renderAll(){renderApps();renderTicker();renderNews();}
-renderAll();loadPage('index.html');
-</script>
-</body>
-</html>
+let GH={owner:localStorage.getItem('gh_owner')||'fosnalictechs',repo:localStorage.getItem('gh_repo')||'fosnalic',branch:localStorage.getItem('gh_branch')||'main',token:localStorage.getItem('gh_token')||''};const GIST_ID="0f719dd44c5c9bce109b0bce767f9162";let CACHE=null;let currentPage='index.html';let currentSha=null;
+document.getElementById('ghOwner').value=GH.owner;document.getElementById('ghRepo').value=GH.repo;document.getElementById('ghBranch').value=GH.branch;document.getElementById('ghToken').value=GH.token;
+function saveConfig(){GH.owner=document.getElementById('ghOwner').value.trim();GH.repo=document.getElementById('ghRepo').value.trim();GH.branch=document.getElementById('ghBranch').value.trim();GH.token=document.getElementById('ghToken').value.trim();localStorage.setItem('gh_owner',GH.owner);localStorage.setItem('gh_repo',GH.repo);localStorage.setItem('gh_branch',GH.branch);localStorage.setItem('gh_token',GH.token);document.getElementById('cfgOk').textContent='✓ Saved';loadData();}
+async function getFileSha(p){let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}`,{headers:{Authorization:`token ${GH.token}`}});if(!r.ok)return null;let j=await r.json();return{sha:j.sha,content:atob(j.content.replace(/\n/g,''))};}
+async function loadPage(n,b){currentPage=n;if(b){document.querySelectorAll('.file-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}document.getElementById('pageStatus').textContent='Loading '+n+'...';try{let d=await getFileSha(n);if(d){currentSha=d.sha;document.getElementById('pageEditor').value=d.content;document.getElementById('pageStatus').textContent='Loaded '+n;}else{document.getElementById('pageEditor').value='';currentSha=null;document.getElementById('pageStatus').textContent='New file';}}catch(e){document.getElementById('pageStatus').textContent='Error '+e;}}
+async function savePageToGitHub(){if(!GH.token)return alert('Paste token');let c=document.getElementById('pageEditor').value;let b64=btoa(unescape(encodeURIComponent(c)));let body={message:`Update ${currentPage}`,content:b64,branch:GH.branch};if(currentSha)body.sha=currentSha;document.getElementById('pageStatus').textContent='Saving...';let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});let j=await r.json();if(r.ok){currentSha=j.content.sha;document.getElementById('pageStatus').textContent='✅ Saved! 60s live';alert('Saved '+currentPage);}else{document.getElementById('pageStatus').textContent='❌ '+j.message;alert(JSON.stringify(j));}}
+async function loadData(){try{let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:GH.token?{Authorization:`token ${GH.token}`}:{}});let j=await r.json();if(!j.files||!j.files['fosnalic-data.json']){CACHE={ticker:[],adHeader:{text:""},adMiddle:{text:""},adFooter:{text:""}};}else{CACHE=JSON.parse(j.files['fosnalic-data.json'].content);}if(!CACHE.ticker)CACHE.ticker=[];if(!CACHE.adHeader)CACHE.adHeader={text:""};renderTicker();if(CACHE.adHeader?.text)document.getElementById('adText').value=CACHE.adHeader.text;}catch(e){document.getElementById('eTicker').textContent='Load fail '+e;CACHE={ticker:[],adHeader:{text:""},adMiddle:{text:""},adFooter:{text:""}};}}
+async function saveToGist(){if(!GH.token){alert('Need gist token');return false;}if(!CACHE)CACHE={ticker:[]};let body=JSON.stringify({files:{'fosnalic-data.json':{content:JSON.stringify(CACHE,null,2)}}});let r=await fetch(`https://api.github.com/gists/${GIST_ID}`,{method:'PATCH',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body});let j=await r.json();if(!r.ok){alert('Gist fail: '+(j.message||''));return false;}return true;}
+function renderTicker(){document.getElementById('tickerList').innerHTML=(CACHE?.ticker||[]).map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #eee"><span>${x}</span><button onclick="removeTicker(${i})" style="background:red;color:#fff;border:none;padding:2px 8px">X</button></div>`).join('')||'<i>No tickers</i>';}
+async function addTicker(){let v=document.getElementById('tickerInput').value.trim();if(!v)return;CACHE.ticker=CACHE.ticker||[];CACHE.ticker.push(v);document.getElementById('tickerInput').value='';document.getElementById('sTicker').textContent='Saving...';if(await saveToGist()){renderTicker();document.getElementById('sTicker').textContent='✅ Live!';}}
+async function removeTicker(i){CACHE.ticker.splice(i,1);await saveToGist();renderTicker();}
+async function saveAd(){let slot=document.getElementById('adSlot').value;let txt=document.getElementById('adText').value;if(!CACHE)CACHE={ticker:[]};CACHE[slot]={text:txt};document.getElementById('sAd').textContent='Saving...';if(await saveToGist())document.getElementById('sAd').textContent='✅ Ad Live!';}
+loadData();loadPage('index.html');
+</script></body></html></html>
