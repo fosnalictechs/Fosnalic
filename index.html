@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="h4awi3_WYQkyIkpYgVEAfaQ0ODd80zTPPkRz2Se6LpA">
 <meta name="description" content="We Build Technology That Actually Works. Professional ICT solutions — Custom Software, Business Websites, Mobile Apps, eLearning Systems, Graphic Design, and ICT Support. Built by Possible Shadrach — possyshad@gmail.com">
-<meta name="author" content="Possible Shadrach — possyshad@gmail.com">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -18,17 +17,12 @@ header .container{display:flex;justify-content:space-between;align-items:center}
 .logo-wrap{display:flex;align-items:center;gap:10px}
 .logo-wrap img{width:42px;height:42px;border-radius:8px;object-fit:cover;background:#1a365d}
 header h1{color:#1a365d;font-weight:800;font-size:1.25rem}
-/* ONE VISIBLE TICKER - FIXED */
-#tickerBar{background:#FF6B35;color:#fff;padding:12px 0;text-align:left;font-size:0.95rem;white-space:nowrap;overflow:hidden;font-weight:800;position:relative;z-index:60;display:block;border-bottom:2px solid #1a365d}
+#tickerBar{background:#FF6B35;color:#fff;padding:12px 0;font-size:0.95rem;white-space:nowrap;overflow:hidden;font-weight:800;position:relative;z-index:60;display:block;border-bottom:2px solid #1a365d}
 #tickerContent{display:inline-block;padding-left:100%;animation:scroll 22s linear infinite;color:#fff !important}
 @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
-/* HIDE DUPLICATE TICKER */
 #fos-ticker{display:none !important}
-/* ADS - FIX WHITE ON WHITE */
-#adHeaderContainer,#adMiddleContainer,#adFooterContainer,#adHeader,#adMiddle,#adFooter{text-align:center;padding:0;background:transparent;min-height:0;display:block}
+#adHeaderContainer,#adMiddleContainer,#adFooterContainer,#adHeader,#adMiddle,#adFooter{text-align:center;padding:0;background:transparent;display:block}
 #adHeaderContainer:empty,#adMiddleContainer:empty,#adFooterContainer:empty,#adHeader:empty,#adMiddle:empty,#adFooter:empty{display:none !important}
-#adHeaderContainer *,#adMiddleContainer *,#adFooterContainer *{color:#111 !important}
-#adHeaderContainer img,#adMiddleContainer img,#adFooterContainer img,#adHeader img,#adMiddle img,#adFooter img{max-width:100%;border-radius:8px}
 .hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,0.88),rgba(10,14,26,0.97)),url('https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200');background-size:cover;background-position:center;filter:blur(2px)}
 .hero-content{position:relative;z-index:2;max-width:620px}
@@ -51,102 +45,27 @@ footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 .mobile-menu.active{right:0}
 .mobile-menu a{display:block;padding:12px 0;color:#1a365d;text-decoration:none;font-weight:600;border-bottom:1px solid #E2E8F0}
 .verified-badge{display:inline-flex;align-items:center;gap:6px;background:#e6fffa;color:#065f46;padding:6px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;margin-top:12px}
-.fos-floating{position:fixed;z-index:99990;background:#fff;color:#111;padding:14px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);max-width:330px}
-.fos-floating-br{bottom:20px;right:20px}.fos-floating-bl{bottom:20px;left:20px}
+.fos-floating{position:fixed;z-index:99990;background:#fff;color:#111;padding:14px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);max-width:300px;animation:pop .3s ease}
+.fos-floating-br{bottom:20px;right:15px}.fos-floating-bl{bottom:20px;left:15px}
 .fos-sticky-bottom{position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
-.fos-fullscreen{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px}
-.fos-fullscreen-inner{background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative}
-.fos-close{position:absolute;top:-10px;right:-10px;background:#ef4444;color:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-weight:700}
+.fos-close{position:absolute;top:-10px;right:-10px;background:#ef4444;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:700;z-index:5}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 #newsContainer img{width:100%;height:170px;object-fit:cover;border-radius:10px;display:block}
 </style>
 </head>
 <body>
-
-<!-- ONLY ONE TICKER NOW -->
-<div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — Custom Software — Verified Developer</span></div>
+<div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions</span></div>
 <div id="adHeader"></div>
-<div id="fos-ticker"><span id="fos-ticker-text"></span></div>
-
-<header>
-<div class="container">
-<div class="logo-wrap">
-<img src="logo.png" alt="FOSNALIC Techs Logo" onerror="this.src='https://via.placeholder.com/42x42/2A4B7C/FFFFFF?text=F'">
-<h1>FOSNALIC Techs</h1>
-</div>
-<button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><i class="fas fa-bars"></i></button>
-</div>
-</header>
-
-<div class="mobile-menu" id="mobileMenu">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-<div style="display:flex;align-items:center;gap:8px"><img src="logo.png" style="width:32px;height:32px;border-radius:6px" onerror="this.style.display='none'"><h3 style="color:#1a365d">FOSNALIC</h3></div>
-<button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="background:none;border:none;font-size:1.2rem"><i class="fas fa-times"></i></button>
-</div>
-<a href="index.html">Home</a>
-<a href="services.html">Services</a>
-<a href="portfolio.html">Portfolio</a>
-<a href="academy.html">Academy</a>
-<a href="pricing.html">Pricing</a>
-<a href="about.html">About — Possible Shadrach</a>
-<a href="my-apps.html">My Apps — Download</a>
-<a href="live-chat.html">Live Chat — Ask Problem</a>
-<a href="contact.html">Contact</a>
-</div>
-
+<header><div class="container"><div class="logo-wrap"><img src="logo.png" alt="logo" onerror="this.src='https://via.placeholder.com/42x42/2A4B7C/FFFFFF?text=F'"><h1>FOSNALIC Techs</h1></div><button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><i class="fas fa-bars"></i></button></div></header>
+<div class="mobile-menu" id="mobileMenu"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h3 style="color:#1a365d">FOSNALIC</h3><button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="background:none;border:none;font-size:1.2rem"><i class="fas fa-times"></i></button></div><a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="academy.html">Academy</a><a href="pricing.html">Pricing</a><a href="about.html">About</a><a href="my-apps.html">My Apps</a><a href="live-chat.html">Live Chat</a><a href="contact.html">Contact</a></div>
 <div id="adHeaderContainer"></div>
-
-<section class="hero">
-<div class="hero-bg"></div>
-<div class="hero-content">
-<img src="shadrach.jpg" alt="Possible Shadrach — Developer" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'">
-<h2>Welcome to<br><span>FOSNALIC Techs</span></h2>
-<p>We Build Technology That Actually Works. Professional ICT solutions — Custom Software, Business Websites, Mobile Apps, eLearning Systems, Graphic Design, and ICT Support. Built by Possible Shadrach</p>
-<div class="verified-badge"><i class="fas fa-check-circle"></i> Google Verified Developer</div>
-<a href="services.html" class="btn btn-primary">Explore Services →</a>
-<a href="portfolio.html" class="btn btn-dark">View Portfolio</a>
-<a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a>
-<a href="my-apps.html" class="btn btn-green">My Apps — Download</a>
-</div>
-</section>
-
-<div id="adMiddle"></div>
-<div id="adMiddleContainer"></div>
-
-<section class="news-section">
-<div class="container">
-<h2 style="color:#111">Latest Updates</h2>
-<div id="newsContainer" class="grid"></div>
-<div id="appsPreview" class="grid" style="margin-top:20px"></div>
-</div>
-</section>
-
-<section class="services">
-<div class="container">
-<h2 style="text-align:center">What We Build</h2>
-<div class="grid" style="margin-top:20px">
-<div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-code"></i> Custom Software</h3><p style="color:#a0aec0;margin-top:8px">School systems, Business management, Custom solutions.</p></div>
-<div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-mobile-alt"></i> Mobile Apps</h3><p style="color:#a0aec0;margin-top:8px">Android apps, eLearning apps, Business apps.</p></div>
-<div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-user"></i> Developer</h3><div style="display:flex;align-items:center;gap:12px;margin-top:10px"><img src="shadrach.jpg" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'"><div><strong>Possible Shadrach</strong><br><small style="color:#a0aec0">possyshad@gmail.com</small></div></div></div>
-</div>
-</div>
-</section>
-
-<div id="adFooter"></div>
-<div id="adFooterContainer"></div>
-
-<footer>
-<div class="container">
-<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
-<img src="logo.png" style="width:36px;height:36px;border-radius:8px" onerror="this.style.display='none'">
-<strong style="color:white">FOSNALIC Techs</strong>
-</div>
-<p>Built by Possible Shadrach — possyshad@gmail.com</p>
-<p style="margin-top:8px;font-size:0.8rem">Google Verified • Professional ICT Solutions That Actually Work</p>
-</div>
-</footer>
-
+<section class="hero"><div class="hero-bg"></div><div class="hero-content"><img src="shadrach.jpg" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'"><h2>Welcome to<br><span>FOSNALIC Techs</span></h2><p>We Build Technology That Actually Works. Professional ICT solutions — Custom Software, Business Websites, Mobile Apps, eLearning Systems, Graphic Design, and ICT Support. Built by Possible Shadrach</p><div class="verified-badge"><i class="fas fa-check-circle"></i> Google Verified Developer</div><a href="services.html" class="btn btn-primary">Explore Services →</a><a href="portfolio.html" class="btn btn-dark">View Portfolio</a><a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a><a href="my-apps.html" class="btn btn-green">My Apps — Download</a></div></section>
+<div id="adMiddle"></div><div id="adMiddleContainer"></div>
+<section class="news-section"><div class="container"><h2 style="color:#111">Latest Updates</h2><div id="newsContainer" class="grid"></div></div></section>
+<section class="services"><div class="container"><h2 style="text-align:center">What We Build</h2><div class="grid" style="margin-top:20px"><div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-code"></i> Custom Software</h3><p style="color:#a0aec0;margin-top:8px">School systems, Business management, Custom solutions.</p></div><div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-mobile-alt"></i> Mobile Apps</h3><p style="color:#a0aec0;margin-top:8px">Android apps, eLearning apps, Business apps.</p></div><div class="card" style="background:#1a202c;color:white"><h3><i class="fas fa-user"></i> Developer</h3><div style="display:flex;align-items:center;gap:12px;margin-top:10px"><img src="shadrach.jpg" style="width:48px;height:48px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'"><div><strong>Possible Shadrach</strong><br><small style="color:#a0aec0">possyshad@gmail.com</small></div></div></div></div></div></section>
+<div id="adFooter"></div><div id="adFooterContainer"></div>
+<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>Built by Possible Shadrach — possyshad@gmail.com</p></div></footer>
 <div id="fos-ad-mount"></div>
-
 <script>
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 const RAW_GIST = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
@@ -154,60 +73,55 @@ async function loadAll(){
  try{
   let r = await fetch(RAW_GIST+"?t="+Date.now(),{cache:"no-store"});
   let d = r.ok ? await r.json() : {ticker:[]};
-  
-  // ONE TICKER ONLY - NO DUPLICATE
   if(d.ticker && d.ticker.length){
-    let clean = [...new Set(d.ticker)]; // remove duplicates
-    let txt = clean.join(' ••• ');
-    document.getElementById('tickerContent').innerHTML = txt;
+    let clean=[...new Set(d.ticker)];
+    document.getElementById('tickerContent').innerHTML=clean.join(' ••• ');
   }
-
-  // ADS - only show if has content, hide white ribbon if empty
   function setAd(id, data){
-    let el = document.getElementById(id);
-    let container = document.getElementById(id+'Container');
-    if(!data || (!data.text && !data.html)){ if(el) el.style.display='none'; if(container) container.style.display='none'; return; }
-    let content = data.text || data.html || '';
-    if(content.trim()==='' || content.includes('Hello, welcome')){ // hide your old white welcome text
-      if(el) el.style.display='none'; if(container) container.style.display='none'; return;
-    }
-    if(el){ el.innerHTML = content; el.style.display='block'; }
-    if(container){ container.innerHTML = content; container.style.display='block'; }
+    let el=document.getElementById(id); let cont=document.getElementById(id+'Container');
+    if(!data || (!data.text && !data.html)){ if(el) el.style.display='none'; if(cont) cont.style.display='none'; return; }
+    let content=data.text||data.html||'';
+    if(content.trim()===''){ if(el) el.style.display='none'; if(cont) cont.style.display='none'; return; }
+    if(el){ el.innerHTML=content; el.style.display='block'; }
+    if(cont){ cont.innerHTML=content; cont.style.display='block'; }
   }
-  setAd('adHeader', d.adHeader);
-  setAd('adMiddle', d.adMiddle);
-  setAd('adFooter', d.adFooter);
-
+  setAd('adHeader', d.adHeader); setAd('adMiddle', d.adMiddle); setAd('adFooter', d.adFooter);
   if(d.news && d.news.length){
     let c=document.getElementById('newsContainer');
     c.innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`
       <div class="card" style="padding:0;overflow:hidden">
-        ${n.img ? `<img src="${n.img}" onerror="this.src='https://via.placeholder.com/400x170/2A4B7C/FFFFFF?text=FOSNALIC'" loading="lazy">` : ''}
-        <div style="padding:16px">
-          <span style="background:#2A4B7C;color:#fff;padding:3px 8px;border-radius:10px;font-size:.7rem;font-weight:700">${n.tag||'Update'}</span>
-          <h3 style="margin:8px 0 6px;color:#111">${n.title}</h3>
-          <p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p>
-        </div>
-      </div>
-    `).join('');
+        ${n.img ? `<img src="${n.img}" onerror="this.src='https://via.placeholder.com/400x170/2A4B7C/FFFFFF?text=FOSNALIC'">` : ''}
+        <div style="padding:16px"><span style="background:#2A4B7C;color:#fff;padding:3px 8px;border-radius:10px;font-size:.7rem;font-weight:700">${n.tag||'Update'}</span><h3 style="margin:8px 0 6px;color:#111">${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div>
+      </div>`).join('');
   }
-
+  // ADS WITH NO OVERLAP + ONCE LOGIC
   let mount=document.getElementById('fos-ad-mount'); if(mount) mount.innerHTML='';
+  let floatCount=0; let seenAds=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');
   (d.ads||[]).forEach(ad=>{
     if(ad.enabled===false) return;
     if(ad.type==='banner'){ setAd(ad.slot, {text:ad.html}); return; }
+    if(ad.showOnce){
+      if(seenAds['ad_'+ad.id]) return;
+    }
     let wrap=document.createElement('div');
-    let close=ad.closable?`<button class="fos-close" onclick="this.parentElement.parentElement.remove()">×</button>`:'';
-    if(ad.type==='floating-br'){wrap.className='fos-floating fos-floating-br';wrap.innerHTML=close+ad.html;}
-    else if(ad.type==='floating-bl'){wrap.className='fos-floating fos-floating-bl';wrap.innerHTML=close+ad.html;}
-    else if(ad.type==='sticky-bottom'){wrap.className='fos-sticky-bottom';wrap.innerHTML=close+ad.html;}
-    else if(ad.type==='fullscreen'){wrap.className='fos-fullscreen';wrap.innerHTML=`<div class="fos-fullscreen-inner">${close}${ad.html}</div>`;}
+    let closeBtn=`<button class="fos-close" onclick="let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_${ad.id}']=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); this.parentElement.parentElement.remove();">×</button>`;
+    if(ad.type==='floating-br' || ad.type==='floating-bl' || ad.type==='floating'){
+      wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');
+      wrap.style.bottom=(20+floatCount*100)+'px'; floatCount++;
+      wrap.innerHTML=closeBtn+'<div style="position:relative">'+ad.html+'</div>';
+    } else if(ad.type==='sticky-bottom'){
+      wrap.className='fos-sticky-bottom'; wrap.innerHTML=closeBtn+ad.html;
+    } else if(ad.type==='top-bar'){
+      wrap.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center'; wrap.innerHTML=closeBtn+ad.html;
+    } else if(ad.type==='fullscreen'){
+      wrap.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px'; wrap.innerHTML=`<div style="background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative">${closeBtn}${ad.html}</div>`;
+      setTimeout(()=>{ let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_'+ad.id]=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); },5000);
+    }
     mount.appendChild(wrap);
   });
  }catch(e){ console.log(e); }
 }
 loadAll(); setInterval(loadAll,60000);
 </script>
-
 </body>
 </html>
