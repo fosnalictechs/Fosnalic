@@ -1,95 +1,173 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Super Admin — All 9 Pages — FOSNALIC</title>
-<style>body{font-family:Segoe UI;background:#F5F7FA;padding:15px}.card{background:white;padding:18px;border-radius:14px;margin:0 auto 18px;max-width:1100px;box-shadow:0 8px 20px rgba(0,0,0,0.06)}input,textarea,select{width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:8px;margin:6px 0}button{padding:10px 16px;background:#2A4B7C;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600} .file-btn{padding:6px 12px;background:white;border:1px solid #E2E8F0;border-radius:8px;margin:3px;cursor:pointer} .file-btn.active{background:#2A4B7C;color:white} .ok{color:#16A34A;font-size:0.85rem;margin-left:8px}</style></head><body>
-<h2 style="max-width:1100px;margin:0 auto 15px">Super Admin ✅ All 9 Pages Sync</h2>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FOSNALIC Techs — Professional ICT Solutions</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:#0a0e1a;color:#fff;overflow-x:hidden}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+header{background:#fff;padding:12px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+header .container{display:flex;justify-content:space-between;align-items:center}
+header h1{color:#1a365d;font-weight:800;font-size:1.3rem}
+#tickerBar{background:#111;color:#fff;padding:8px 0;overflow:hidden;white-space:nowrap;font-size:.85rem;font-weight:600}
+#tickerContent{display:inline-block;animation:scroll 30s linear infinite}
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.hero{min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at top,#1a365d 0%,#0a0e1a 60%)}
+.hero h2{font-size:3rem;font-weight:800;line-height:1.1}.hero h2 span{color:#FF6B35;background:linear-gradient(135deg,#FF6B35,#ff8c42);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#cbd5e0;margin:18px auto;max-width:600px}
+.btn{display:inline-block;padding:14px 28px;border-radius:30px;text-decoration:none;font-weight:700;margin:8px}
+.btn-primary{background:linear-gradient(135deg,#2A4B7C,#FF6B35);color:#fff}
+.btn-outline{border:2px solid #fff;color:#fff}
+.section{padding:50px 20px}.section h2{text-align:center;font-size:2rem;margin-bottom:25px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{background:#fff;color:#111;border-radius:14px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.08);overflow:hidden}
+.card img{width:100%;height:170px;object-fit:cover;border-radius:10px}
+.ad-slot{margin:12px auto;max-width:1100px}
+/* PRO ADS */
+.fos-floating{position:fixed;z-index:99990;background:#fff;color:#111;padding:14px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);max-width:330px;animation:pop .3s ease}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.fos-floating-br{bottom:20px;right:20px}.fos-floating-bl{bottom:20px;left:20px}
+.fos-sticky-bottom{position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)}
+.fos-top-bar{position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center}
+.fos-fullscreen{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px}
+.fos-fullscreen-inner{background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative}
+.fos-close{position:absolute;top:-10px;right:-10px;background:#ef4444;color:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-weight:700;font-size:18px}
+footer{background:#000;color:#718096;padding:30px;text-align:center}
+</style>
+</head>
+<body>
 
-<div class="card" style="border:2px solid #2A4B7C">
-<h3>⚙️ GitHub Connection (1 time)</h3>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<input id="ghOwner" placeholder="Owner e.g. fosnalictechs" value="fosnalictechs">
-<input id="ghRepo" placeholder="Repo e.g. fosnalic" value="fosnalic">
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<input id="ghBranch" placeholder="Branch" value="main">
-<input id="ghToken" type="password" placeholder="ghp_ token — needs repo scope">
-</div>
-<input type="hidden" id="gistId" value="0f719dd44c5c9bce109b0bce767f9162">
-<button onclick="saveConfig()">Save Config</button> <span id="cfgOk" class="ok"></span>
-<p style="font-size:0.75rem;color:#888">Token needs: repo + gist. Create at github.com/settings/tokens/new — check repo and gist</p>
-</div>
+<!-- LIVE TICKER FROM ADMIN -->
+<div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — We Build Technology That Actually Works</span></div>
 
-<div class="card">
-<h3>📢 Ticker / Apps / Ads — Instant (Gist)</h3>
-<input id="tickerInput" placeholder="Ticker"><button onclick="addTicker()">Add Ticker</button><span id="sTicker" class="ok"></span><div id="tickerList"></div>
-<hr style="margin:12px 0">
-<h4>Ads — Full HTML Allowed</h4><select id="adSlot"><option value="adHeader">Header</option><option value="adMiddle">Middle</option><option value="adFooter">Footer</option></select><textarea id="adText" style="min-height:80px" placeholder="Paste <div> or <script> or <img>"></textarea><button onclick="saveAd()">Save Ad to ALL</button><span id="sAd" class="ok"></span>
-</div>
+<header><div class="container"><h1>FOSNALIC Techs</h1><nav><a href="my-apps.html" style="color:#1a365d;text-decoration:none;font-weight:600">My Apps</a></nav></div></header>
 
-<div class="card" style="border:2px solid #111">
-<h3>📝 Edit All 9 Codes — Changes Apply to Everyone</h3>
-<div style="display:flex;flex-wrap:wrap" id="fileList">
-<button class="file-btn active" onclick="loadPage('index.html')">index.html</button>
-<button class="file-btn" onclick="loadPage('services.html')">services.html</button>
-<button class="file-btn" onclick="loadPage('portfolio.html')">portfolio.html</button>
-<button class="file-btn" onclick="loadPage('academy.html')">academy.html</button>
-<button class="file-btn" onclick="loadPage('pricing.html')">pricing.html</button>
-<button class="file-btn" onclick="loadPage('about.html')">about.html</button>
-<button class="file-btn" onclick="loadPage('extra-help.html')">extra-help.html</button>
-<button class="file-btn" onclick="loadPage('contact.html')">contact.html</button>
-<button class="file-btn" onclick="loadPage('live-chat.html')">live-chat.html</button>
-<button class="file-btn" onclick="loadPage('my-apps.html')">my-apps.html</button>
+<!-- HEADER AD -->
+<div id="adHeader" class="ad-slot"></div>
+<div id="adHeaderContainer" class="ad-slot"></div>
+
+<section class="hero">
+<div>
+<h2 id="heroTitle">Welcome to<br><span>FOSNALIC Techs</span></h2>
+<p id="heroSub">We Build Technology That Actually Works. From school systems to business websites, we deliver professional ICT solutions trusted by 10+ schools across Uganda.</p>
+<a href="services.html" class="btn btn-primary">Explore Services →</a>
+<a href="live-chat.html" class="btn btn-outline"><i class="fas fa-comments"></i> Live Chat</a>
+<p style="margin-top:30px;font-size:.85rem;color:#94a3b8">Built by <span style="color:#fff;font-weight:700">Possible Shadrach</span> — possyshad@gmail.com</p>
 </div>
-<textarea id="pageEditor" style="min-height:380px;font-family:monospace;font-size:0.82rem" placeholder="Loading..."></textarea>
-<button onclick="savePageToGitHub()" style="background:#111;width:100%;margin-top:8px;font-size:1rem">💾 SAVE THIS PAGE TO GITHUB → LIVE FOR ALL</button>
-<span id="pageStatus" class="ok"></span>
-<p style="font-size:0.75rem;color:#e53e3e;margin-top:6px">When you save, Cloudflare will redeploy in 30-60 seconds. No download needed.</p>
+</section>
+
+<!-- MIDDLE AD -->
+<div id="adMiddle" class="ad-slot"></div>
+<div id="adMiddleContainer" class="ad-slot"></div>
+
+<section class="section" style="background:#F5F7FA;color:#111">
+<h2 style="color:#1a365d">📰 Latest Updates — Controlled from Admin</h2>
+<div id="newsContainer" class="grid">
+<div class="card"><h3>No updates yet</h3><p>Add updates with pictures from Admin V4.1 → Updates tab</p></div>
 </div>
+</section>
+
+<section class="section">
+<h2>📱 My Apps</h2>
+<div id="appsPreview" class="grid">
+<div class="card" style="color:#111"><h3>Apps loading...</h3><p>Control from Admin → Apps tab</p></div>
+</div>
+<div style="text-align:center;margin-top:20px"><a href="my-apps.html" class="btn btn-primary">View All Apps</a></div>
+</section>
+
+<!-- FOOTER AD -->
+<div id="adFooter" class="ad-slot"></div>
+<div id="adFooterContainer" class="ad-slot"></div>
+
+<footer>© 2026 FOSNALIC Techs — Built by Possible Shadrach — Kampala, Uganda — possyshad@gmail.com</footer>
+
+<!-- PRO ADS MOUNT -->
+<div id="fos-ad-mount"></div>
 
 <script>
-let GH = {owner:localStorage.getItem('gh_owner')||'fosnalictechs', repo:localStorage.getItem('gh_repo')||'fosnalic', branch:localStorage.getItem('gh_branch')||'main', token:localStorage.getItem('gh_token')||''};
-let GIST_ID="0f719dd44c5c9bce109b0bce767f9162";
-let CACHE=null; let currentPage='index.html'; let currentSha=null;
+// ===== YOUR GIST ID — CHANGE IF YOU CREATED NEW ONE =====
+let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
+const RAW = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
 
-document.getElementById('ghOwner').value=GH.owner; document.getElementById('ghRepo').value=GH.repo; document.getElementById('ghBranch').value=GH.branch; document.getElementById('ghToken').value=GH.token;
-
-function saveConfig(){ GH.owner=document.getElementById('ghOwner').value.trim(); GH.repo=document.getElementById('ghRepo').value.trim(); GH.branch=document.getElementById('ghBranch').value.trim(); GH.token=document.getElementById('ghToken').value.trim(); localStorage.setItem('gh_owner',GH.owner); localStorage.setItem('gh_repo',GH.repo); localStorage.setItem('gh_branch',GH.branch); localStorage.setItem('gh_token',GH.token); document.getElementById('cfgOk').textContent='✓ Saved'; loadData(); if(currentPage) loadPage(currentPage); }
-
-async function getFileSha(path){
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}?ref=${GH.branch}`,{headers:{Authorization:`token ${GH.token}`}}); if(!r.ok) return null; let j=await r.json(); return {sha:j.sha, content:atob(j.content.replace(/\n/g,''))};
-}
-
-async function loadPage(name){
- currentPage=name; document.querySelectorAll('.file-btn').forEach(b=>b.classList.remove('active')); event?.target?.classList.add('active');
- document.getElementById('pageStatus').textContent='Loading '+name+' from GitHub...';
+async function loadAll(){
  try{
-  let data=await getFileSha(name);
-  if(data){ currentSha=data.sha; document.getElementById('pageEditor').value=data.content; document.getElementById('pageStatus').textContent='Loaded: '+name+' (sha:'+data.sha.slice(0,7)+')'; }
-  else{ document.getElementById('pageEditor').value='// File not found, will create new '+name; currentSha=null; document.getElementById('pageStatus').textContent='New file'; }
- }catch(e){ document.getElementById('pageEditor').value='// Error: '+e+'\n// Check repo name and token'; }
-}
+  let r = await fetch(RAW+"?t="+Date.now(),{cache:"no-store"});
+  if(!r.ok) throw new Error('Gist '+r.status);
+  let d = await r.json();
+  console.log('FOSNALIC LIVE', d);
 
-async function savePageToGitHub(){
- if(!GH.token){ alert('Paste GitHub token with repo access'); return; }
- let content=document.getElementById('pageEditor').value;
- let b64=btoa(unescape(encodeURIComponent(content)));
- let body={message:`Update ${currentPage} via Super Admin`, content:b64, branch:GH.branch};
- if(currentSha) body.sha=currentSha;
- document.getElementById('pageStatus').textContent='Saving to GitHub...';
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{method:'PUT', headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'}, body:JSON.stringify(body)});
- let j=await r.json();
- if(r.ok){ currentSha=j.content.sha; document.getElementById('pageStatus').textContent='✅ Saved! '+currentPage+' LIVE for all in 30-60s (Cloudflare rebuilding)'; alert('SUCCESS: '+currentPage+' saved to GitHub. Cloudflare will update in 1 minute for everyone.'); }
- else{ document.getElementById('pageStatus').textContent='❌ Failed: '+j.message; alert(JSON.stringify(j)); }
-}
+  // TICKER
+  if(d.ticker && d.ticker.length){
+    document.getElementById('tickerContent').innerHTML = d.ticker.join(' ••• ');
+  }
+  // HERO
+  if(d.hero){
+    if(d.hero.title) document.getElementById('heroTitle').innerHTML = d.hero.title;
+    if(d.hero.subtitle) document.getElementById('heroSub').innerHTML = d.hero.subtitle;
+  }
+  // OLD AD COMPAT
+  ['adHeader','adMiddle','adFooter'].forEach(id=>{
+    if(d[id] && d[id].text){
+      let el=document.getElementById(id); if(el) el.innerHTML=d[id].text;
+      let el2=document.getElementById(id+'Container'); if(el2) el2.innerHTML=d[id].text;
+    }
+  });
+  // NEWS WITH PICTURES
+  if(d.news && d.news.length){
+    let c=document.getElementById('newsContainer');
+    c.innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`
+      <div class="card">
+        ${n.img ? `<img src="${n.img}" onerror="this.src='https://via.placeholder.com/400x200?text=FOSNALIC'">` : ''}
+        <div style="padding:10px 0">
+          <span style="background:#2A4B7C;color:#fff;padding:3px 8px;border-radius:12px;font-size:.7rem">${n.tag||'Update'}</span>
+          <h3 style="margin:8px 0 6px">${n.title}</h3>
+          <p style="font-size:.88rem;color:#4a5568">${n.desc||''}</p>
+          <small style="color:#a0aec0">${n.date?new Date(n.date).toLocaleDateString():''}</small>
+        </div>
+      </div>
+    `).join('');
+  }
+  // APPS
+  if(d.apps && d.apps.length){
+    let a=document.getElementById('appsPreview');
+    a.innerHTML = d.apps.slice().reverse().slice(0,3).map(ap=>`
+      <div class="card">
+        ${ap.img?`<img src="${ap.img}" style="height:120px">`:''}
+        <h3>📱 ${ap.name}</h3>
+        <p style="font-size:.8rem;color:#718096">${ap.version||''} • ${ap.size||''}</p>
+        <p style="font-size:.9rem;margin:8px 0">${ap.desc||''}</p>
+        ${ap.file?`<a href="${ap.file}" style="display:inline-block;padding:8px 16px;background:#22c55e;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">Download</a>`:''}
+      </div>
+    `).join('');
+  }
+  // PRO ADS — FLOATING / FULLSCREEN / STICKY WITH X
+  let mount=document.getElementById('fos-ad-mount'); mount.innerHTML='';
+  (d.ads||[]).forEach(ad=>{
+    if(ad.enabled===false) return;
+    let wrap=document.createElement('div');
+    let close=`${ad.closable?`<button class="fos-close" onclick="this.closest('.fos-floating,.fos-sticky-bottom,.fos-top-bar,.fos-fullscreen').remove()">×</button>`:''}`;
+    if(ad.type==='floating-br'){wrap.className='fos-floating fos-floating-br';wrap.innerHTML=close+ad.html;}
+    else if(ad.type==='floating-bl'){wrap.className='fos-floating fos-floating-bl';wrap.innerHTML=close+ad.html;}
+    else if(ad.type==='sticky-bottom'){wrap.className='fos-sticky-bottom';wrap.innerHTML=close+ad.html;}
+    else if(ad.type==='top-bar'){wrap.className='fos-top-bar';wrap.innerHTML=close+ad.html;}
+    else if(ad.type==='fullscreen'){wrap.className='fos-fullscreen';wrap.innerHTML=`<div class="fos-fullscreen-inner">${close}${ad.html}</div>`;}
+    else{ // banner
+      let el=document.getElementById(ad.slot)||document.getElementById(ad.slot+'Container');
+      if(el){
+        el.innerHTML=ad.closable?`<div style="position:relative">${ad.html}<button onclick="this.parentElement.innerHTML=''" style="position:absolute;top:4px;right:6px;background:#000;color:#fff;border:none;border-radius:50%;width:22px;height:22px">×</button></div>`:ad.html;
+        return;
+      }else{wrap.className='fos-floating fos-floating-br';wrap.innerHTML=close+ad.html;}
+    }
+    mount.appendChild(wrap);
+  });
 
-// GIST PART for ticker/ads
-async function loadData(){
- try{ let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:GH.token?{Authorization:`token ${GH.token}`}:{}}); let j=await r.json(); CACHE=JSON.parse(j.files['fosnalic-data.json'].content); renderTicker(); }catch(e){}
+ }catch(e){console.log('Load fail',e);}
 }
-async function saveToGist(){ let body=JSON.stringify({files:{'fosnalic-data.json':{content:JSON.stringify(CACHE,null,2)}}}); await fetch(`https://api.github.com/gists/${GIST_ID}`,{method:'PATCH', headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'}, body}); }
-function renderTicker(){ document.getElementById('tickerList').innerHTML=(CACHE?.ticker||[]).map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:5px;border-bottom:1px solid #eee"><span>${x}</span><button onclick="removeTicker(${i})" style="background:red;color:white;border:none;padding:2px 8px">X</button></div>`).join(''); }
-async function addTicker(){ let v=document.getElementById('tickerInput').value.trim(); if(!v)return; CACHE.ticker=CACHE.ticker||[]; CACHE.ticker.push(v); document.getElementById('tickerInput').value=''; await saveToGist(); renderTicker(); document.getElementById('sTicker').textContent='✓ Live'; }
-async function removeTicker(i){ CACHE.ticker.splice(i,1); await saveToGist(); renderTicker(); }
-async function saveAd(){ let slot=document.getElementById('adSlot').value; CACHE[slot]={text:document.getElementById('adText').value}; await saveToGist(); document.getElementById('sAd').textContent='✓ Ad live for all'; }
-
-saveConfig(); loadData(); loadPage('index.html');
-</script></body></html>
+loadAll();
+setInterval(loadAll,60000);
+</script>
+</body>
+ </html>
