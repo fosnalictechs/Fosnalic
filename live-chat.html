@@ -1,18 +1,51 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live — FOSNALIC</title>
-<style>body{margin:0;font-family:sans-serif;background:#F7F9FC}.box{max-width:650px;margin:0 auto;padding:16px}.card{background:#fff;padding:16px;border-radius:12px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}input,textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;margin:6px 0}button{width:100%;padding:12px;border-radius:8px;border:0;background:#0F1C2E;color:#fff;font-weight:bold}.msg{background:#fff;padding:12px;border-radius:8px;margin:8px 0;border-left:4px solid #2A4B7C}</style>
+<title>Live Chat - FOSNALIC</title>
+<style>
+body{margin:0;font-family:system-ui;background:#F7F9FC}
+.box{max-width:650px;margin:auto;padding:16px}
+.card{background:#fff;padding:18px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:14px}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ddd;border-radius:10px;margin:7px 0;font-size:15px}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:#0F1C2E;color:#fff;font-weight:bold;font-size:15px;cursor:pointer}
+.msg{background:#fff;padding:12px 14px;border-radius:10px;margin:9px 0;border-left:4px solid #2A4B7C;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+small{color:#666}
+</style>
 </head><body>
 <div class="box">
-<div class="card"><h3>💬 Live Chat — Contribute</h3>
-<input id="n" placeholder="Your name"><textarea id="t" rows="3" placeholder="Your message..."></textarea>
-<button onclick="post()">Post Live</button><div id="s" style="font-size:12px;margin-top:6px"></div></div>
-<div id="feed">Loading...</div>
+<div class="card">
+<h3 style="margin:0 0 10px">💬 Live — Contribute</h3>
+<input id="n" placeholder="Your name (optional)">
+<textarea id="t" rows="3" placeholder="Write something..."></textarea>
+<button onclick="post()">Post Live</button>
+<div id="s" style="font-size:13px;color:#2A4B7C;margin-top:8px"></div>
 </div>
+<div id="feed">Loading messages...</div>
+</div>
+
 <script>
-const API="https://fosnalic-live-api.YOURNAME.workers.dev"; // CHANGE TO YOUR WORKER URL
-async function load(){let r=await fetch(API);let d=await r.json();document.getElementById('feed').innerHTML=d.map(m=>`<div class=msg><b>${m.name}</b> <small>${new Date(m.time).toLocaleString()}</small><div>${m.text.replace(/</g,'&lt;')}</div></div>`).join('')||"No messages yet";}
-async function post(){let name=document.getElementById('n').value;let text=document.getElementById('t').value;if(!text)return;document.getElementById('s').innerText="Posting...";await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text})});document.getElementById('t').value="";document.getElementById('s').innerText="Posted!";load();}
-load();setInterval(load,5000);
+const API = "https://fosnalic-live.onrender.com/messages";
+
+async function load(){
+  try{
+    let r = await fetch(API);
+    let d = await r.json();
+    document.getElementById('feed').innerHTML = d.map(m=>`
+      <div class="msg"><b>${(m.name||'Guest').replace(/</g,'&lt;')}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin-top:6px">${m.text.replace(/</g,'&lt;')}</div></div>
+    `).join('') || "<div class=card>No messages yet — be first!</div>";
+  }catch(e){ document.getElementById('feed').innerHTML="Can't load — server sleeping, wait 50 sec and refresh"; }
+}
+async function post(){
+  let name = document.getElementById('n').value;
+  let text = document.getElementById('t').value.trim();
+  if(!text) return;
+  document.getElementById('s').innerText="Posting...";
+  await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text})});
+  document.getElementById('t').value="";
+  document.getElementById('s').innerText="Posted! ✅";
+  load();
+}
+load();
+setInterval(load, 5000);
 </script>
 </body></html>
