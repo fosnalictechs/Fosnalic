@@ -1,51 +1,70 @@
-<!DOCTYPE html>
-<html><head>
+<!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Live Chat - FOSNALIC</title>
 <style>
 body{margin:0;font-family:system-ui;background:#F7F9FC}
-.box{max-width:650px;margin:auto;padding:16px}
-.card{background:#fff;padding:18px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:14px}
-input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ddd;border-radius:10px;margin:7px 0;font-size:15px}
-button{width:100%;padding:13px;border:0;border-radius:10px;background:#0F1C2E;color:#fff;font-weight:bold;font-size:15px;cursor:pointer}
-.msg{background:#fff;padding:12px 14px;border-radius:10px;margin:9px 0;border-left:4px solid #2A4B7C;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-small{color:#666}
+.box{max-width:680px;margin:auto;padding:14px}
+.card{background:#fff;padding:16px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:12px}
+input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}
+button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#fff;font-weight:bold;cursor:pointer}
+.btn-sm{padding:6px 10px;font-size:13px;background:#E9EEF6;color:#0F1C2E;margin-right:6px}
+.msg{background:#fff;padding:12px 14px;border-radius:10px;margin:10px 0;border-left:4px solid #2A4B7C}
+.reply{margin-left:18px;border-left-color:#7AA5D6;background:#F0F5FF}
+.searchRow{display:flex;gap:8px}
 </style>
 </head><body>
 <div class="box">
 <div class="card">
-<h3 style="margin:0 0 10px">💬 Live — Contribute</h3>
-<input id="n" placeholder="Your name (optional)">
-<textarea id="t" rows="3" placeholder="Write something..."></textarea>
-<button onclick="post()">Post Live</button>
-<div id="s" style="font-size:13px;color:#2A4B7C;margin-top:8px"></div>
+<div class="searchRow"><input id="q" placeholder="🔍 Search messages..." oninput="load()"><button onclick="load()" class="btn-sm">Search</button></div>
 </div>
-<div id="feed">Loading messages...</div>
+<div class="card">
+<h3 style="margin:0 0 8px">💬 Live</h3>
+<div id="replyInfo" style="display:none;background:#FFF3CD;padding:8px;border-radius:8px;margin-bottom:8px;font-size:13px"></div>
+<input id="n" placeholder="Your name">
+<textarea id="t" rows="3" placeholder="Write..."></textarea>
+<button onclick="post()" style="width:100%">Post</button>
+<div id="s" style="font-size:13px;margin-top:6px;color:#2A4B7C"></div>
 </div>
-
+<div id="feed">Loading...</div>
+</div>
 <script>
-const API = "https://fosnalic-live.onrender.com/messages";
+const API="https://fosnalic-live.onrender.com/messages";
+let replyTo=null;
+let all=[];
+
+function setReply(id, name){
+ replyTo=id;
+ document.getElementById('replyInfo').style.display='block';
+ document.getElementById('replyInfo').innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕ Cancel</a>`;
+ document.getElementById('t').focus();
+}
+function cancelReply(){ replyTo=null; document.getElementById('replyInfo').style.display='none'; }
 
 async function load(){
-  try{
-    let r = await fetch(API);
-    let d = await r.json();
-    document.getElementById('feed').innerHTML = d.map(m=>`
-      <div class="msg"><b>${(m.name||'Guest').replace(/</g,'&lt;')}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin-top:6px">${m.text.replace(/</g,'&lt;')}</div></div>
-    `).join('') || "<div class=card>No messages yet — be first!</div>";
-  }catch(e){ document.getElementById('feed').innerHTML="Can't load — server sleeping, wait 50 sec and refresh"; }
+ let q=document.getElementById('q').value.trim();
+ let url=API + (q ? "?q="+encodeURIComponent(q) : "");
+ let r=await fetch(url); all=await r.json();
+ let map={}; all.forEach(m=>map[m.id]=m);
+ let html="";
+ all.filter(m=>!m.replyTo).forEach(m=>{
+   html+=renderMsg(m);
+   // replies to this
+   all.filter(x=>x.replyTo===m.id).reverse().forEach(rep=>{ html+=renderMsg(rep,true); });
+ });
+ // orphan replies (if parent deleted)
+ document.getElementById('feed').innerHTML=html || "<div class=card>No messages found</div>";
 }
+function renderMsg(m, isReply){
+ let cls = isReply ? "msg reply" : "msg";
+ return `<div class="${cls}"><b>${esc(m.name)}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin:6px 0">${esc(m.text)}</div><button class="btn-sm" onclick="setReply('${m.id}','${esc(m.name)}')">↩ Reply</button></div>`;
+}
+function esc(s){ return (s||"").replace(/</g,'&lt;'); }
 async function post(){
-  let name = document.getElementById('n').value;
-  let text = document.getElementById('t').value.trim();
-  if(!text) return;
-  document.getElementById('s').innerText="Posting...";
-  await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text})});
-  document.getElementById('t').value="";
-  document.getElementById('s').innerText="Posted! ✅";
-  load();
+ let name=document.getElementById('n').value; let text=document.getElementById('t').value.trim(); if(!text) return;
+ document.getElementById('s').innerText="Posting...";
+ await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text,replyTo})});
+ document.getElementById('t').value=""; cancelReply(); document.getElementById('s').innerText="Posted!"; load();
 }
-load();
-setInterval(load, 5000);
+load(); setInterval(load,5000);
 </script>
 </body></html>
