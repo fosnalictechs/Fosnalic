@@ -1,30 +1,160 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin V2 FIXED - FOSNALIC</title>
-<style>body{font-family:Segoe UI;background:#F5F7FA;padding:15px}.card{background:#fff;padding:18px;border-radius:14px;margin:0 auto 18px;max-width:1100px;box-shadow:0 8px 20px rgba(0,0,0,.06)}input,textarea,select{width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:8px;margin:6px 0}button{padding:10px 16px;background:#2A4B7C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}.file-btn{padding:6px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:8px;margin:3px;cursor:pointer}.file-btn.active{background:#2A4B7C;color:#fff}.ok{color:#16A34A;font-size:.85rem;margin-left:8px}.err{color:#E53E3E;font-size:.85rem}</style></head><body>
-<h2 style="max-width:1100px;margin:0 auto 15px">Admin V2 FIXED ✅</h2>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin V4.1 FIXED PAGES - FOSNALIC</title>
+<style>body{font-family:Segoe UI;background:#F5F7FA;padding:12px}.card{background:#fff;padding:16px;border-radius:14px;margin:0 auto 16px;max-width:1150px;box-shadow:0 8px 20px rgba(0,0,0,.06)}input,textarea,select{width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:8px;margin:5px 0}button{padding:10px 14px;background:#2A4B7C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}.ok{color:#16A34A;font-size:.85rem}.err{color:#E53E3E}.tab{padding:8px 14px;background:#eee;border-radius:8px;cursor:pointer;margin:3px;display:inline-block}.tab.active{background:#2A4B7C;color:#fff}.hidden{display:none}.file-btn{padding:6px 12px;background:#fff;border:1px solid #E2E8F0;border-radius:8px;margin:3px;cursor:pointer}.file-btn.active{background:#2A4B7C;color:#fff}</style></head><body>
+<h2 style="max-width:1150px;margin:0 auto 12px">Admin V4.1 — Pages Fixed ✅</h2>
+
 <div class="card" style="border:2px solid #2A4B7C">
-<h3>⚙️ GitHub Connection</h3>
+<h3>⚙️ GitHub Connection — Same as V2 that worked</h3>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="ghOwner" value="fosnalictechs"><input id="ghRepo" value="fosnalic"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><input id="ghBranch" value="main"><input id="ghToken" type="password" placeholder="ghp_ token repo+gist"></div>
-<button onclick="saveConfig()">Save Config</button> <span id="cfgOk" class="ok"></span></div>
-<div class="card"><h3>📢 Ticker + Ads — Instant Gist</h3>
-<div style="display:flex;gap:8px"><input id="tickerInput" placeholder="Ticker text"><button onclick="addTicker()">Add</button></div><div id="tickerList" style="margin-top:10px"></div><span id="sTicker" class="ok"></span><span id="eTicker" class="err"></span><hr>
-<select id="adSlot"><option value="adHeader">adHeader Top</option><option value="adMiddle">adMiddle</option><option value="adFooter">adFooter Bottom</option></select><textarea id="adText" style="min-height:90px" placeholder="<div> ad code"></textarea><button onclick="saveAd()">Save Ad</button> <span id="sAd" class="ok"></span></div>
-<div class="card" style="border:2px solid #111"><h3>📝 Edit 9 Pages</h3>
-<div style="display:flex;flex-wrap:wrap"><button class="file-btn active" onclick="loadPage('index.html',this)">index.html</button><button class="file-btn" onclick="loadPage('services.html',this)">services.html</button><button class="file-btn" onclick="loadPage('portfolio.html',this)">portfolio.html</button><button class="file-btn" onclick="loadPage('academy.html',this)">academy.html</button><button class="file-btn" onclick="loadPage('pricing.html',this)">pricing.html</button><button class="file-btn" onclick="loadPage('about.html',this)">about.html</button><button class="file-btn" onclick="loadPage('extra-help.html',this)">extra-help.html</button><button class="file-btn" onclick="loadPage('contact.html',this)">contact.html</button><button class="file-btn" onclick="loadPage('live-chat.html',this)">live-chat.html</button><button class="file-btn" onclick="loadPage('my-apps.html',this)">my-apps.html</button></div>
-<textarea id="pageEditor" style="min-height:380px;font-family:monospace;font-size:.82rem"></textarea><button onclick="savePageToGitHub()" style="background:#111;width:100%;margin-top:8px">💾 SAVE PAGE TO GITHUB</button><span id="pageStatus" class="ok"></span></div>
+<button onclick="saveConfig()">Save Config + Test Token</button> <span id="cfgOk" class="ok"></span> <span id="cfgErr" class="err"></span>
+</div>
+
+<div class="card">
+<div><span class="tab active" onclick="showTab('ticker',this)">📢 Ticker</span><span class="tab" onclick="showTab('ads',this)">🎯 PRO Ads</span><span class="tab" onclick="showTab('news',this)">📰 Updates + Pictures</span><span class="tab" onclick="showTab('pages',this)">📝 Pages (Fixed)</span></div>
+
+<div id="tab-ticker"><h3>📢 Ticker</h3><div style="display:flex;gap:8px"><input id="tickerInput" placeholder="Ticker text"><button onclick="addTicker()">Add</button></div><div id="tickerList" style="margin-top:8px"></div></div>
+
+<div id="tab-ads" class="hidden"><h3>🎯 PRO Ads</h3>
+<select id="adType"><option value="banner">📦 Banner In-Page</option><option value="floating-br">🟣 Floating Bottom Right X</option><option value="floating-bl">🟣 Floating Bottom Left X</option><option value="sticky-bottom">🟡 Sticky Bottom X</option><option value="top-bar">🟢 Top Bar X</option><option value="fullscreen">🔴 Fullscreen Popup X</option></select>
+<select id="adSlot"><option value="adHeader">Header</option><option value="adMiddle">Middle</option><option value="adFooter">Footer</option><option value="floating">Floating</option></select>
+<textarea id="adText" style="min-height:90px" placeholder="<div>Your ad HTML"></textarea>
+<label><input type="checkbox" id="adClosable" checked> Show X</label> <label><input type="checkbox" id="adEnabled" checked> Enabled</label>
+<button onclick="saveAd()" style="background:#8b5cf6;width:100%">Save Ad Live</button><div id="adsList"></div></div>
+
+<div id="tab-news" class="hidden"><h3>📰 Updates With Pictures</h3>
+<input id="newsTitle" placeholder="Title"><textarea id="newsDesc" placeholder="Description"></textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input id="newsTag" placeholder="Tag"><input id="newsImg" placeholder="Image URL"></div>
+<div style="display:flex;gap:8px"><input type="file" id="newsFile" accept="image/*"><button onclick="uploadImage()">Upload to GitHub</button></div><span id="newsUploadStatus" class="ok"></span>
+<button onclick="saveNews()" style="background:#111;width:100%">Save Update</button><div id="newsList"></div></div>
+
+<div id="tab-pages" class="hidden">
+<h3>📝 Edit 10 Pages — RESTORED FROM V2 (WORKING)</h3>
+<div style="display:flex;flex-wrap:wrap">
+<button class="file-btn active" onclick="loadPage('index.html',this)">index.html</button>
+<button class="file-btn" onclick="loadPage('services.html',this)">services.html</button>
+<button class="file-btn" onclick="loadPage('portfolio.html',this)">portfolio.html</button>
+<button class="file-btn" onclick="loadPage('academy.html',this)">academy.html</button>
+<button class="file-btn" onclick="loadPage('pricing.html',this)">pricing.html</button>
+<button class="file-btn" onclick="loadPage('about.html',this)">about.html</button>
+<button class="file-btn" onclick="loadPage('extra-help.html',this)">extra-help.html</button>
+<button class="file-btn" onclick="loadPage('contact.html',this)">contact.html</button>
+<button class="file-btn" onclick="loadPage('live-chat.html',this)">live-chat.html</button>
+<button class="file-btn" onclick="loadPage('my-apps.html',this)">my-apps.html</button>
+</div>
+<textarea id="pageEditor" style="min-height:380px;font-family:monospace;font-size:.82rem;margin-top:10px"></textarea>
+<button onclick="savePageToGitHub()" style="background:#111;width:100%;margin-top:8px">💾 SAVE PAGE TO GITHUB</button><span id="pageStatus" class="ok"></span>
+</div>
+</div>
+
 <script>
-let GH={owner:localStorage.getItem('gh_owner')||'fosnalictechs',repo:localStorage.getItem('gh_repo')||'fosnalic',branch:localStorage.getItem('gh_branch')||'main',token:localStorage.getItem('gh_token')||''};const GIST_ID="0f719dd44c5c9bce109b0bce767f9162";let CACHE=null;let currentPage='index.html';let currentSha=null;
-document.getElementById('ghOwner').value=GH.owner;document.getElementById('ghRepo').value=GH.repo;document.getElementById('ghBranch').value=GH.branch;document.getElementById('ghToken').value=GH.token;
-function saveConfig(){GH.owner=document.getElementById('ghOwner').value.trim();GH.repo=document.getElementById('ghRepo').value.trim();GH.branch=document.getElementById('ghBranch').value.trim();GH.token=document.getElementById('ghToken').value.trim();localStorage.setItem('gh_owner',GH.owner);localStorage.setItem('gh_repo',GH.repo);localStorage.setItem('gh_branch',GH.branch);localStorage.setItem('gh_token',GH.token);document.getElementById('cfgOk').textContent='✓ Saved';loadData();}
-async function getFileSha(p){let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}`,{headers:{Authorization:`token ${GH.token}`}});if(!r.ok)return null;let j=await r.json();return{sha:j.sha,content:atob(j.content.replace(/\n/g,''))};}
-async function loadPage(n,b){currentPage=n;if(b){document.querySelectorAll('.file-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}document.getElementById('pageStatus').textContent='Loading '+n+'...';try{let d=await getFileSha(n);if(d){currentSha=d.sha;document.getElementById('pageEditor').value=d.content;document.getElementById('pageStatus').textContent='Loaded '+n;}else{document.getElementById('pageEditor').value='';currentSha=null;document.getElementById('pageStatus').textContent='New file';}}catch(e){document.getElementById('pageStatus').textContent='Error '+e;}}
-async function savePageToGitHub(){if(!GH.token)return alert('Paste token');let c=document.getElementById('pageEditor').value;let b64=btoa(unescape(encodeURIComponent(c)));let body={message:`Update ${currentPage}`,content:b64,branch:GH.branch};if(currentSha)body.sha=currentSha;document.getElementById('pageStatus').textContent='Saving...';let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});let j=await r.json();if(r.ok){currentSha=j.content.sha;document.getElementById('pageStatus').textContent='✅ Saved! 60s live';alert('Saved '+currentPage);}else{document.getElementById('pageStatus').textContent='❌ '+j.message;alert(JSON.stringify(j));}}
-async function loadData(){try{let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:GH.token?{Authorization:`token ${GH.token}`}:{}});let j=await r.json();if(!j.files||!j.files['fosnalic-data.json']){CACHE={ticker:[],adHeader:{text:""},adMiddle:{text:""},adFooter:{text:""}};}else{CACHE=JSON.parse(j.files['fosnalic-data.json'].content);}if(!CACHE.ticker)CACHE.ticker=[];if(!CACHE.adHeader)CACHE.adHeader={text:""};renderTicker();if(CACHE.adHeader?.text)document.getElementById('adText').value=CACHE.adHeader.text;}catch(e){document.getElementById('eTicker').textContent='Load fail '+e;CACHE={ticker:[],adHeader:{text:""},adMiddle:{text:""},adFooter:{text:""}};}}
-async function saveToGist(){if(!GH.token){alert('Need gist token');return false;}if(!CACHE)CACHE={ticker:[]};let body=JSON.stringify({files:{'fosnalic-data.json':{content:JSON.stringify(CACHE,null,2)}}});let r=await fetch(`https://api.github.com/gists/${GIST_ID}`,{method:'PATCH',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body});let j=await r.json();if(!r.ok){alert('Gist fail: '+(j.message||''));return false;}return true;}
-function renderTicker(){document.getElementById('tickerList').innerHTML=(CACHE?.ticker||[]).map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:6px;border-bottom:1px solid #eee"><span>${x}</span><button onclick="removeTicker(${i})" style="background:red;color:#fff;border:none;padding:2px 8px">X</button></div>`).join('')||'<i>No tickers</i>';}
-async function addTicker(){let v=document.getElementById('tickerInput').value.trim();if(!v)return;CACHE.ticker=CACHE.ticker||[];CACHE.ticker.push(v);document.getElementById('tickerInput').value='';document.getElementById('sTicker').textContent='Saving...';if(await saveToGist()){renderTicker();document.getElementById('sTicker').textContent='✅ Live!';}}
+let GH={owner:localStorage.getItem('gh_owner')||'fosnalictechs',repo:localStorage.getItem('gh_repo')||'fosnalic',branch:localStorage.getItem('gh_branch')||'main',token:localStorage.getItem('gh_token')||''};
+const GIST_ID="0f719dd44c5c9bce109b0bce767f9162";
+let CACHE=null;let currentPage='index.html';let currentSha=null;
+
+document.getElementById('ghOwner').value=GH.owner;
+document.getElementById('ghRepo').value=GH.repo;
+document.getElementById('ghBranch').value=GH.branch;
+document.getElementById('ghToken').value=GH.token;
+
+function showTab(id,el){document.querySelectorAll('[id^=tab-]').forEach(d=>d.classList.add('hidden'));document.getElementById('tab-'+id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+
+function saveConfig(){
+  GH.owner=document.getElementById('ghOwner').value.trim();
+  GH.repo=document.getElementById('ghRepo').value.trim();
+  GH.branch=document.getElementById('ghBranch').value.trim();
+  GH.token=document.getElementById('ghToken').value.trim();
+  localStorage.setItem('gh_owner',GH.owner);
+  localStorage.setItem('gh_repo',GH.repo);
+  localStorage.setItem('gh_branch',GH.branch);
+  localStorage.setItem('gh_token',GH.token);
+  document.getElementById('cfgOk').textContent='✓ Saved — Testing...';
+  document.getElementById('cfgErr').textContent='';
+  loadData();
+  loadPage('index.html', document.querySelector('.file-btn'));
+}
+
+// === V2 WORKING PAGE LOADER — RESTORED ===
+async function getFileSha(p){
+  let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}`,{
+    headers:{Authorization:`token ${GH.token}`}
+  });
+  if(!r.ok){
+    let j=await r.json();
+    console.log('getFileSha fail', j);
+    document.getElementById('pageStatus').textContent='❌ '+j.message;
+    return null;
+  }
+  let j=await r.json();
+  return{sha:j.sha,content:atob(j.content.replace(/\n/g,''))};
+}
+
+async function loadPage(n,b){
+  currentPage=n;
+  if(b){document.querySelectorAll('.file-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
+  document.getElementById('pageStatus').textContent='Loading '+n+'...';
+  try{
+    let d=await getFileSha(n);
+    if(d){
+      currentSha=d.sha;
+      document.getElementById('pageEditor').value=d.content;
+      document.getElementById('pageStatus').textContent='✅ Loaded '+n+' ('+d.content.length+' chars)';
+    }else{
+      document.getElementById('pageEditor').value='';
+      currentSha=null;
+      document.getElementById('pageStatus').textContent='New file — will create';
+    }
+  }catch(e){
+    document.getElementById('pageStatus').textContent='❌ Error '+e;
+  }
+}
+
+async function savePageToGitHub(){
+  if(!GH.token)return alert('Paste token');
+  let c=document.getElementById('pageEditor').value;
+  let b64=btoa(unescape(encodeURIComponent(c)));
+  let body={message:`Update ${currentPage}`,content:b64,branch:GH.branch};
+  if(currentSha)body.sha=currentSha;
+  document.getElementById('pageStatus').textContent='Saving...';
+  let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{
+    method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)
+  });
+  let j=await r.json();
+  if(r.ok){
+    currentSha=j.content.sha;
+    document.getElementById('pageStatus').textContent='✅ Saved! Live in 60s';
+  }else{
+    document.getElementById('pageStatus').textContent='❌ '+j.message;
+    alert(JSON.stringify(j));
+  }
+}
+
+// === GIST ===
+async function loadData(){
+  try{
+    let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`}});
+    if(!r.ok){let j=await r.json();document.getElementById('cfgErr').textContent='Gist error: '+j.message;return;}
+    let j=await r.json();
+    CACHE=j.files&&j.files['fosnalic-data.json']?JSON.parse(j.files['fosnalic-data.json'].content):{ticker:[],ads:[],news:[]};
+    CACHE.ticker=CACHE.ticker||[];CACHE.ads=CACHE.ads||[];CACHE.news=CACHE.news||[];
+    document.getElementById('cfgOk').textContent='✅ Token OK — Loaded '+CACHE.ticker.length+' tickers';
+    renderTicker();renderAds();renderNews();
+  }catch(e){document.getElementById('cfgErr').textContent='Load fail '+e;}
+}
+async function saveToGist(){let body=JSON.stringify({files:{'fosnalic-data.json':{content:JSON.stringify(CACHE,null,2)}}});let r=await fetch(`https://api.github.com/gists/${GIST_ID}`,{method:'PATCH',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body});return r.ok;}
+
+function renderTicker(){document.getElementById('tickerList').innerHTML=CACHE.ticker.map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:5px;border-bottom:1px solid #eee">${x}<button onclick="removeTicker(${i})" style="background:red;padding:2px 8px">X</button></div>`).join('')||'<i>None</i>';}
+async function addTicker(){let v=document.getElementById('tickerInput').value.trim();if(!v)return;CACHE.ticker.push(v);document.getElementById('tickerInput').value='';await saveToGist();renderTicker();}
 async function removeTicker(i){CACHE.ticker.splice(i,1);await saveToGist();renderTicker();}
-async function saveAd(){let slot=document.getElementById('adSlot').value;let txt=document.getElementById('adText').value;if(!CACHE)CACHE={ticker:[]};CACHE[slot]={text:txt};document.getElementById('sAd').textContent='Saving...';if(await saveToGist())document.getElementById('sAd').textContent='✅ Ad Live!';}
-loadData();loadPage('index.html');
-</script></body></html></html>
+
+function renderAds(){document.getElementById('adsList').innerHTML=CACHE.ads.map((a,i)=>`<div style="border:1px solid #ddd;padding:6px;margin:5px 0;border-radius:6px">${a.type} ${a.slot} <button onclick="CACHE.ads.splice(${i},1);saveToGist();renderAds()" style="float:right;background:red;padding:2px 6px">Del</button><div style="font-size:.8rem">${a.html.substring(0,80)}</div></div>`).join('')||'<i>No ads</i>';}
+async function saveAd(){let ad={id:Date.now(),type:document.getElementById('adType').value,slot:document.getElementById('adSlot').value,html:document.getElementById('adText').value,closable:document.getElementById('adClosable').checked,enabled:document.getElementById('adEnabled').checked};if(!ad.html)return alert('Add HTML');CACHE.ads.push(ad);CACHE[ad.slot]={text:ad.html};await saveToGist();renderAds();}
+
+function renderNews(){document.getElementById('newsList').innerHTML=CACHE.news.slice().reverse().map((n,i)=>`<div style="display:flex;gap:8px;padding:6px;border:1px solid #eee;margin:4px 0"><img src="${n.img}" style="width:60px;height:50px;object-fit:cover"><div><b>${n.title}</b><br><button onclick="CACHE.news.splice(${CACHE.news.length-1-i},1);saveToGist();renderNews()" style="background:red;padding:2px 6px">Del</button></div></div>`).join('');}
+async function saveNews(){let n={title:document.getElementById('newsTitle').value,desc:document.getElementById('newsDesc').value,tag:document.getElementById('newsTag').value,img:document.getElementById('newsImg').value,date:new Date().toISOString()};if(!n.title)return alert('Title');CACHE.news.push(n);await saveToGist();renderNews();}
+
+async function uploadImage(){let file=document.getElementById('newsFile').files[0];if(!file)return alert('Choose file');let reader=new FileReader();reader.onload=async function(){let b64=reader.result.split(',')[1];let path=`uploads/${Date.now()}_${file.name}`;let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify({message:`Upload ${path}`,content:b64,branch:GH.branch})});let j=await r.json();if(r.ok){let url=`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;document.getElementById('newsImg').value=url;document.getElementById('newsUploadStatus').textContent='✅ '+url;}else alert(j.message);};reader.readAsDataURL(file);}
+
+loadData();
+loadPage('index.html');
+</script></body></html>
