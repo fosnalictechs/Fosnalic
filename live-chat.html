@@ -1,70 +1,110 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live Chat - FOSNALIC</title>
+<title>Live - FOSNALIC</title>
 <style>
-body{margin:0;font-family:system-ui;background:#F7F9FC}
-.box{max-width:680px;margin:auto;padding:14px}
-.card{background:#fff;padding:16px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:12px}
-input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ddd;border-radius:10px;margin:6px 0}
+body{margin:0;font-family:system-ui;background:#F3F6FB}
+.box{max-width:700px;margin:auto;padding:12px}
+.card{background:#fff;padding:14px;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:10px}
+.tabs{display:flex;gap:6px;overflow:auto;padding-bottom:6px}
+.tab{padding:8px 14px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:13px;white-space:nowrap}
+.tab.active{background:#0F1C2E;color:#fff;border-color:#0F1C2E}
+input,textarea{width:100%;box-sizing:border-box;padding:11px;border:1px solid #ddd;border-radius:10px;margin:5px 0}
 button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#fff;font-weight:bold;cursor:pointer}
-.btn-sm{padding:6px 10px;font-size:13px;background:#E9EEF6;color:#0F1C2E;margin-right:6px}
-.msg{background:#fff;padding:12px 14px;border-radius:10px;margin:10px 0;border-left:4px solid #2A4B7C}
-.reply{margin-left:18px;border-left-color:#7AA5D6;background:#F0F5FF}
-.searchRow{display:flex;gap:8px}
+.btn-sm{padding:5px 10px;font-size:12px;background:#E9EEF6;color:#0F1C2E;margin-right:5px}
+.msg{background:#fff;padding:12px;border-radius:12px;margin:10px 0;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.reply{margin-left:20px;border-left:3px solid #7AA5D6}
+.media{max-width:100%;border-radius:10px;margin-top:8px}
+.audio{width:100%;margin-top:8px}
+.row{display:flex;gap:6px;flex-wrap:wrap}
 </style>
 </head><body>
 <div class="box">
 <div class="card">
-<div class="searchRow"><input id="q" placeholder="🔍 Search messages..." oninput="load()"><button onclick="load()" class="btn-sm">Search</button></div>
+<div class="tabs">
+<div class="tab active" onclick="setType('all',this)">All</div>
+<div class="tab" onclick="setType('text',this)">💬 Text</div>
+<div class="tab" onclick="setType('image',this)">🖼 Images</div>
+<div class="tab" onclick="setType('video',this)">🎥 Videos</div>
+<div class="tab" onclick="setType('audio',this)">🎙 Audio</div>
 </div>
+<div class="row" style="margin-top:10px">
+<input id="q" placeholder="🔍 Search..." oninput="load()" style="flex:1">
+<button class="btn-sm" onclick="load()">Search</button>
+</div>
+</div>
+
 <div class="card">
-<h3 style="margin:0 0 8px">💬 Live</h3>
 <div id="replyInfo" style="display:none;background:#FFF3CD;padding:8px;border-radius:8px;margin-bottom:8px;font-size:13px"></div>
 <input id="n" placeholder="Your name">
-<textarea id="t" rows="3" placeholder="Write..."></textarea>
-<button onclick="post()" style="width:100%">Post</button>
-<div id="s" style="font-size:13px;margin-top:6px;color:#2A4B7C"></div>
+<textarea id="t" rows="2" placeholder="Message (optional if you attach media)"></textarea>
+
+<div id="mediaPreview" style="display:none;margin:8px 0"></div>
+
+<div class="row">
+<label class="btn-sm" style="cursor:pointer">🖼 Image<input type="file" id="fImage" accept="image/*" hidden onchange="uploadFile(this,'image')"></label>
+<label class="btn-sm" style="cursor:pointer">🎥 Video<input type="file" id="fVideo" accept="video/*" hidden onchange="uploadFile(this,'video')"></label>
+<label class="btn-sm" style="cursor:pointer">🎙 Audio<input type="file" id="fAudio" accept="audio/*" hidden onchange="uploadFile(this,'audio')"></label>
+<button style="flex:1" onclick="post()">Post Live</button>
 </div>
+<div id="s" style="font-size:12px;margin-top:6px"></div>
+</div>
+
 <div id="feed">Loading...</div>
 </div>
-<script>
-const API="https://fosnalic-live.onrender.com/messages";
-let replyTo=null;
-let all=[];
 
-function setReply(id, name){
- replyTo=id;
- document.getElementById('replyInfo').style.display='block';
- document.getElementById('replyInfo').innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕ Cancel</a>`;
- document.getElementById('t').focus();
-}
+<script>
+const API="https://fosnalic-live.onrender.com";
+let replyTo=null, mediaUrl=null, mediaType=null, curType="all";
+
+function setType(t,el){ curType=t; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); load(); }
+function setReply(id,name){ replyTo=id; document.getElementById('replyInfo').style.display='block'; document.getElementById('replyInfo').innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>`; }
 function cancelReply(){ replyTo=null; document.getElementById('replyInfo').style.display='none'; }
 
+async function uploadFile(input,type){
+ let file=input.files[0]; if(!file) return;
+ document.getElementById('s').innerText="Uploading "+type+"...";
+ let fd=new FormData(); fd.append('file', file);
+ let r=await fetch(API+"/upload",{method:"POST", body:fd});
+ let j=await r.json();
+ mediaUrl=j.url; mediaType=type;
+ document.getElementById('mediaPreview').style.display='block';
+ if(type==='image') document.getElementById('mediaPreview').innerHTML=`<img src="${mediaUrl}" class="media" style="max-height:200px"><br><small>${file.name}</small> <a href="#" onclick="clearMedia()">Remove</a>`;
+ if(type==='video') document.getElementById('mediaPreview').innerHTML=`<video src="${mediaUrl}" controls class="media" style="max-height:200px"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;
+ if(type==='audio') document.getElementById('mediaPreview').innerHTML=`<audio src="${mediaUrl}" controls class="audio"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;
+ document.getElementById('s').innerText="Ready to post!";
+}
+function clearMedia(){ mediaUrl=null; mediaType=null; document.getElementById('mediaPreview').style.display='none'; document.getElementById('mediaPreview').innerHTML=""; }
+
 async function load(){
- let q=document.getElementById('q').value.trim();
- let url=API + (q ? "?q="+encodeURIComponent(q) : "");
- let r=await fetch(url); all=await r.json();
- let map={}; all.forEach(m=>map[m.id]=m);
+ let q=document.getElementById('q').value;
+ let url=`${API}/messages?type=${curType}&q=${encodeURIComponent(q)}`;
+ let r=await fetch(url); let data=await r.json();
  let html="";
- all.filter(m=>!m.replyTo).forEach(m=>{
-   html+=renderMsg(m);
-   // replies to this
-   all.filter(x=>x.replyTo===m.id).reverse().forEach(rep=>{ html+=renderMsg(rep,true); });
+ data.filter(m=>!m.replyTo).forEach(m=>{
+   html+=render(m);
+   data.filter(x=>x.replyTo===m.id).reverse().forEach(rep=> html+=render(rep,true));
  });
- // orphan replies (if parent deleted)
- document.getElementById('feed').innerHTML=html || "<div class=card>No messages found</div>";
+ document.getElementById('feed').innerHTML=html||"<div class=card>No posts in this category</div>";
 }
-function renderMsg(m, isReply){
- let cls = isReply ? "msg reply" : "msg";
- return `<div class="${cls}"><b>${esc(m.name)}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin:6px 0">${esc(m.text)}</div><button class="btn-sm" onclick="setReply('${m.id}','${esc(m.name)}')">↩ Reply</button></div>`;
+function render(m,isReply){
+ let cls=isReply?"msg reply":"msg";
+ let media="";
+ if(m.mediaUrl){
+  if(m.mediaType==="image") media=`<img src="${m.mediaUrl}" class="media">`;
+  if(m.mediaType==="video") media=`<video src="${m.mediaUrl}" controls class="media"></video>`;
+  if(m.mediaType==="audio") media=`<audio src="${m.mediaUrl}" controls class="audio"></audio>`;
+ }
+ return `<div class="${cls}"><b>${esc(m.name)}</b> <small>${new Date(m.time).toLocaleString()}</small><div style="margin:6px 0">${esc(m.text)}</div>${media}<div style="margin-top:8px"><button class="btn-sm" onclick="setReply('${m.id}','${esc(m.name)}')">↩ Reply</button></div></div>`;
 }
-function esc(s){ return (s||"").replace(/</g,'&lt;'); }
+function esc(s){return (s||"").replace(/</g,'&lt;');}
+
 async function post(){
- let name=document.getElementById('n').value; let text=document.getElementById('t').value.trim(); if(!text) return;
+ let name=document.getElementById('n').value; let text=document.getElementById('t').value.trim();
+ if(!text && !mediaUrl) { alert("Add text or media"); return; }
  document.getElementById('s').innerText="Posting...";
- await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text,replyTo})});
- document.getElementById('t').value=""; cancelReply(); document.getElementById('s').innerText="Posted!"; load();
+ await fetch(API+"/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text,replyTo,mediaUrl,mediaType})});
+ document.getElementById('t').value=""; clearMedia(); cancelReply(); document.getElementById('s').innerText="Posted! ✅"; load();
 }
-load(); setInterval(load,5000);
+load(); setInterval(load,6000);
 </script>
 </body></html>
