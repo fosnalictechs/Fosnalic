@@ -154,5 +154,73 @@ showAd('adHeader','adHeaderContainer');
 showAd('adMiddle','adMiddleContainer');
 showAd('adFooter','adFooterContainer');
 </script>
+<script>
+// FINAL GIST SYNC — fosnalictechs — 0f719dd44c5c9bce109b0bce767f9162
+const GIST_RAW_URL = "https://gist.githubusercontent.com/fosnalictechs/0f719dd44c5c9bce109b0bce767f9162/raw/fosnalic-data.json";
+let GIST_CACHE = null;
+
+async function getGistData(){
+ if(GIST_CACHE) return GIST_CACHE;
+ try{
+  let r = await fetch(GIST_RAW_URL + "?t=" + Date.now(), {cache:"no-store"});
+  if(!r.ok) throw new Error("Gist failed");
+  GIST_CACHE = await r.json();
+  return GIST_CACHE;
+ }catch(e){
+  console.log("Gist offline, using local", e);
+  return null;
+ }
+}
+
+async function loadTicker(){
+ const el = document.getElementById('ticker');
+ if(!el) return;
+ let data = await getGistData();
+ let fallback = JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');
+ let t = data?.ticker?.length ? data.ticker : (fallback.length?fallback:["Welcome to FOSNALIC Techs — Best Tech Solutions","New School Apps Available"]);
+ el.innerHTML = (t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('') + t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join(''));
+}
+
+async function loadAds(){
+ let data = await getGistData(); if(!data) return;
+ ['adHeader','adMiddle','adFooter'].forEach(id=>{
+  let d = data[id]; 
+  if(!d || (!d.image && !d.text)) return;
+  let slot=document.getElementById(id); 
+  let content=document.getElementById(id+'Content');
+  if(!slot||!content) return;
+  slot.classList.add('has-content');
+  slot.style.display='block';
+  if(d.text && d.text.trim().startsWith('<')){ 
+   content.innerHTML=d.text; 
+  } else {
+   let html=''; 
+   if(d.image) html+=`<a href="${d.link||'#'}" target="_blank" rel="noopener"><img src="${d.image}" style="width:100%;border-radius:12px;display:block"></a>`; 
+   if(d.text) html+=`<div style="padding:12px">${d.text}</div>`; 
+   content.innerHTML=html;
+  }
+ });
+}
+
+async function loadAppsGist(){
+ let data = await getGistData();
+ if(!data) return;
+ let apps = data.apps || [];
+ let container = document.getElementById('appsGrid') || document.getElementById('myAppsList');
+ if(!container || !apps.length) return;
+ // Render for my-apps page
+ container.innerHTML = apps.map(app=>`
+  <div class="app-card" style="background:white;border-radius:14px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,0.06)">
+   <h3>${app.name}</h3>
+   <p style="color:#718096;font-size:0.85rem">${app.desc||''}</p>
+   <div style="display:flex;gap:8px;margin:8px 0;font-size:0.8rem"><span>${app.version||''}</span><span>${app.size||''}</span><span>${app.date||''}</span></div>
+   <a href="${app.file}" download style="display:block;text-align:center;background:#2A4B7C;color:white;padding:10px;border-radius:8px;text-decoration:none">Download</a>
+  </div>
+ `).join('');
+}
+
+// Run — one fetch for all
+(async()=>{ await loadTicker(); await loadAds(); await loadAppsGist(); })();
+</script>
 </body>
 </html>
