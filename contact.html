@@ -49,7 +49,7 @@ footer{background:var(--dark);color:white;padding:40px 0 20px}
 <section><div class="container"><div class="contact-grid">
 <div><div class="card"><div class="card-body">
 <h3 style="margin-bottom:6px">Send Us a Message</h3>
-<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form — stays on page, sends to possyshad@gmail.com</p>
+<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form — Send immediately</p>
 
 <form id="contactForm" action="https://formsubmit.co/possyshad@gmail.com" method="POST">
 <input type="hidden" name="_captcha" value="false">
@@ -64,7 +64,7 @@ footer{background:var(--dark);color:white;padding:40px 0 20px}
 <button type="submit" class="btn" id="submitBtn" style="width:100%">Send Message</button>
 <div id="formResult"></div>
 </form>
-<p style="font-size:0.8rem;color:#718096;margin-top:12px;text-align:center">Secure via FormSubmit - Direct to possyshad@gmail.com</p>
+<p style="font-size:0.8rem;color:#718096;margin-top:12px;text-align:center">Secure and Reliable</p>
 </div></div></div>
 
 <div><div class="card"><div class="card-body">
@@ -115,7 +115,7 @@ form.addEventListener('submit',async(e)=>{
   let res=await fetch(form.action,{method:'POST',body:fd,headers:{'Accept':'application/json'}});
   if(res.ok){
     result.style.display='block';result.style.background='#F0FDF4';result.style.color='#166534';result.style.border='1px solid #BBF7D0';
-    result.innerHTML='✅ Message sent! Check your email possyshad@gmail.com - You will receive it like the screenshot.<br><small>Submitted at '+new Date().toLocaleString()+'</small>';
+    result.innerHTML='✅ Message sent! Wait for a reply immediately.<br><small>Submitted at '+new Date().toLocaleString()+'</small>';
     form.reset();
   }else{throw new Error('Failed');}
  }catch(err){
