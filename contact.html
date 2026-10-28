@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="google-site-verification" content="h4awi3_WYQkyIkpYgVEAfaQ0ODd80zTPPkRz2Se6LpA" />
-<title>Contact â FOSNALIC Techs</title>
+<title>Contact — FOSNALIC Techs</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -15,16 +15,14 @@ body{background:var(--gray);color:var(--text);line-height:1.7;overflow-x:hidden}
 section{padding:90px 0}
 .btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;border:none;cursor:pointer;transition:var(--transition)}
 .btn:hover{transform:translateY(-2px)}
-.btn-dark{background:#111!important}
-.btn:disabled{opacity:0.6;cursor:not-allowed}
 .btn-link{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:white;border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);font-weight:600;margin-bottom:12px;box-shadow:var(--shadow);transition:var(--transition)}
 .btn-link:hover{transform:translateY(-2px)}
 .btn-link i{width:42px;height:42px;min-width:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem}
 .card{background:white;border-radius:16px;box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
 .card-body{padding:22px}
 .contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:30px;align-items:start}
-.input, .textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:10px;margin-bottom:14px;font-size:0.95rem;background:white;transition:var(--transition)}
-.input:focus, .textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(42,75,124,0.1)}
+.input,.textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:10px;margin-bottom:14px;font-size:0.95rem;background:white;transition:var(--transition)}
+.input:focus,.textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(42,75,124,0.1)}
 .textarea{resize:vertical;min-height:120px}
 header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.98);backdrop-filter:blur(10px);z-index:1000;padding:8px 0;box-shadow:0 2px 20px rgba(0,0,0,0.05)}
 .navbar{display:flex;justify-content:space-between;align-items:center}
@@ -34,41 +32,24 @@ header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.98);backdro
 .nav-links li{margin-left:16px}
 .nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
 .menu-toggle{display:none;font-size:1.5rem;cursor:pointer;padding:6px}
-.ticker-wrap{position:fixed;top:60px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap;border-bottom:2px solid var(--secondary)}
-.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
-.ticker-item{display:inline-block;margin-right:60px;font-size:0.85rem}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.hero-contact{margin-top:100px;background:linear-gradient(135deg,rgba(10,10,10,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1556157388-97ed244727b2?w=2000') center/cover;color:white;text-align:center;padding:80px 0}
+#tickerBar{background:var(--dark);color:#fff;padding:0;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:fixed;top:52px;width:100%;z-index:999;border-bottom:2px solid var(--secondary)}
+#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;color:#fff;line-height:44px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-200%)}}
+.hero-contact{margin-top:96px;background:linear-gradient(135deg,rgba(10,10,10,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1556157388-97ed244727b2?w=2000') center/cover;color:white;text-align:center;padding:80px 0}
 .back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:var(--transition);border:none;z-index:999}
 .back-to-top.visible{opacity:1;visibility:visible}
 footer{background:var(--dark);color:white;padding:40px 0 20px}
 .footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;margin-top:20px;color:rgba(255,255,255,0.4);font-size:0.85rem}
 #formResult{display:none;padding:14px;border-radius:10px;margin-top:14px;text-align:center;font-weight:600;font-size:0.9rem}
-@media(max-width:1024px){.contact-grid{grid-template-columns:1fr 1fr;gap:20px}}
-@media(max-width:768px){
-.menu-toggle{display:block}
-.nav-links{position:fixed;top:60px;left:-100%;width:100%;background:white;flex-direction:column;padding:20px 0;box-shadow:0 15px 30px rgba(0,0,0,0.1);transition:var(--transition);border-top:1px solid var(--border);align-items:stretch;z-index:999}
-.nav-links.active{left:0}
-.nav-links li{margin:0;text-align:center;padding:12px 0;border-bottom:1px solid var(--gray)}
-.container{width:95%;padding:0 15px}
-.hero-contact{padding:60px 0;margin-top:90px}
-.hero-contact h2{font-size:1.8rem}
-section{padding:50px 0}
-.contact-grid{grid-template-columns:1fr;gap:20px}
-.card-body{padding:18px}
-}
-@media(max-width:480px){
-.logo{font-size:1.1rem}
-.logo img{height:30px;width:30px}
-.hero-contact h2{font-size:1.5rem}
-.input, .textarea{padding:11px 13px;font-size:0.9rem}
-.btn{padding:11px 20px;font-size:0.9rem}
-}
+.fos-floating{position:fixed;z-index:99990;background:#fff;color:#111;padding:14px;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);max-width:300px}
+.fos-floating-br{bottom:20px;right:15px}.fos-floating-bl{bottom:20px;left:15px}
+.fos-close{position:absolute;top:-10px;right:-10px;background:#ef4444;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:700}
+@media(max-width:768px){.menu-toggle{display:block}.nav-links{position:fixed;top:60px;left:-100%;width:100%;background:white;flex-direction:column;padding:20px 0;box-shadow:0 15px 30px rgba(0,0,0,0.1);transition:var(--transition);border-top:1px solid var(--border);align-items:stretch;z-index:999}.nav-links.active{left:0}.nav-links li{margin:0;text-align:center;padding:12px 0;border-bottom:1px solid var(--gray)}.contact-grid{grid-template-columns:1fr;gap:20px}}
 </style>
 </head>
 <body>
-<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-<header style="top:40px">
+<div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — Contact Us — We reply within 1 hour</span></div>
+<header>
 <div class="container navbar">
 <a href="index.html" class="logo"><img src="fosnalic-logo.png" onerror="this.style.display='none'"> FOSNALIC Techs</a>
 <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
@@ -85,19 +66,17 @@ section{padding:50px 0}
 <section class="hero-contact">
 <div class="container">
 <h2 style="color:white;font-size:2.5rem">Contact Us</h2>
-<p style="opacity:0.9;margin-top:8px">Get in touch â We reply within 1 hour</p>
+<p style="opacity:0.9;margin-top:8px">Get in touch — We reply within 1 hour</p>
 </div>
 </section>
 
 <section>
 <div class="container">
 <div class="contact-grid">
-
 <div>
 <div class="card"><div class="card-body">
 <h3 style="margin-bottom:6px">Send Us a Message</h3>
-<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form â we will reply to your email directly</p>
-
+<p style="color:#718096;font-size:0.85rem;margin-bottom:16px">Fill the form — we will reply to your email directly</p>
 <form id="contactForm">
 <input type="hidden" name="access_key" value="aa4676f3-a86a-4db7-b801-b7f215a8e266">
 <input type="hidden" name="subject" value="New Message from FOSNALIC Website">
@@ -109,14 +88,13 @@ section{padding:50px 0}
 <button type="submit" class="btn" id="submitBtn" style="width:100%">Send Message</button>
 <div id="formResult"></div>
 </form>
-
-<p style="font-size:0.8rem;color:#718096;margin-top:12px;text-align:center">Secure form</p>
+<p style="font-size:0.8rem;color:#718096;margin-top:12px;text-align:center">Secure form powered by Web3Forms</p>
 </div></div>
 </div>
 
 <div>
 <div class="card"><div class="card-body">
-<h3 style="margin-bottom:14px">All My Links â Possible Shadrach</h3>
+<h3 style="margin-bottom:14px">All My Links — Possible Shadrach</h3>
 <a href="https://github.com/fosnalictechs" target="_blank" class="btn-link"><i class="fab fa-github" style="background:#111"></i><div><strong>GitHub</strong></div></a>
 <a href="https://share.google/MnHgD7JdXlJiYEdkF" target="_blank" class="btn-link"><i class="fab fa-linkedin" style="background:#0A66C2"></i><div><strong>LinkedIn</strong></div></a>
 <a href="https://instagram.com/fosnalictechs" target="_blank" class="btn-link"><i class="fab fa-instagram" style="background:#E4405F"></i><div><strong>Instagram</strong></div></a>
@@ -124,20 +102,10 @@ section{padding:50px 0}
 <a href="https://fosnalic.medium.com" target="_blank" class="btn-link"><i class="fab fa-medium" style="background:#000"></i><div><strong>Medium</strong></div></a>
 <a href="https://fosnalic.substack.com" target="_blank" class="btn-link"><i class="fas fa-newspaper" style="background:#FF6B35"></i><div><strong>Substack</strong></div></a>
 <a href="mailto:possyshad@gmail.com" class="btn-link" style="border:2px solid #EA4335"><i class="fas fa-envelope" style="background:#EA4335"></i><div><strong>Email</strong></div></a>
-<!-- Telegram Chat -->
-<a href="https://t.me/possyshad" target="_blank" class="btn-link">
-<i class="fab fa-telegram" style="background:#0088cc"></i>
-<div><strong>Telegram</strong><br><small>Chat on Telegram</small></div>
-</a>
-
-<!-- Telegram Channel -->
-<a href="https://t.me/fosnalictech" target="_blank" class="btn-link">
-<i class="fab fa-telegram" style="background:#0088cc"></i>
-<div><strong>Telegram Channel</strong><br><small>Join Our Channel Now</small></div>
-</a>
+<a href="https://t.me/possyshad" target="_blank" class="btn-link"><i class="fab fa-telegram" style="background:#0088cc"></i><div><strong>Telegram</strong><br><small>Chat on Telegram</small></div></a>
+<a href="https://t.me/fosnalictech" target="_blank" class="btn-link"><i class="fab fa-telegram" style="background:#0088cc"></i><div><strong>Telegram Channel</strong><br><small>Join Our Channel Now</small></div></a>
 <a href="https://wa.me/256740495806" target="_blank" class="btn-link"><i class="fab fa-whatsapp" style="background:#25D366"></i><div><strong>WhatsApp</strong><br><small>Chat on WhatsApp</small></div></a>
 </div></div>
-
 <div class="card" style="margin-top:20px"><div class="card-body">
 <h3 style="margin-bottom:8px">Location & Info</h3>
 <p style="color:#718096;font-size:0.9rem;line-height:1.8">
@@ -149,65 +117,48 @@ Support: 24/7 via WhatsApp<br>
 </p>
 </div></div>
 </div>
-
 </div>
 </div>
 </section>
 
-<footer><div class="container"><div class="footer-bottom">Â© <span id="year"></span> FOSNALIC Techs â¢ possyshad@gmail.com</div></div></footer>
-<button class="back-to-top" id="backToTop">ð</button>
+<footer><div class="container"><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs • possyshad@gmail.com</div></div></footer>
+<button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+<div id="fos-ad-mount"></div>
 
 <script>
 document.getElementById('menuToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('active');
 document.getElementById('year').textContent=new Date().getFullYear();
-function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Contact possyshad@gmail.com","Live Chat â Ask Problems","My Apps â Download"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('')+t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('');}
-loadTicker();
 const backBtn=document.getElementById('backToTop');window.addEventListener('scroll',()=>{if(window.scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});backBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-
-// STAYS ON PAGE â NO REDIRECT
-const form = document.getElementById('contactForm');
-const result = document.getElementById('formResult');
-const btn = document.getElementById('submitBtn');
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-  result.style.display = 'none';
-  const formData = new FormData(form);
-  const object = Object.fromEntries(formData);
-  const json = JSON.stringify(object);
-  try {
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: json
-    });
-    const data = await res.json();
-    if (data.success) {
-      result.style.display = 'block';
-      result.style.background = '#F0FDF4';
-      result.style.color = '#166534';
-      result.style.border = '1px solid #BBF7D0';
-      result.textContent = 'â Message sent! We will reply within 1 hour.';
-      form.reset();
-    } else {
-      result.style.display = 'block';
-      result.style.background = '#FEF2F2';
-      result.style.color = '#991B1B';
-      result.style.border = '1px solid #FECACA';
-      result.textContent = 'â ' + data.message;
-    }
-  } catch (err) {
-    result.style.display = 'block';
-    result.style.background = '#FEF2F2';
-    result.style.color = '#991B1B';
-    result.style.border = '1px solid #FECACA';
-    result.textContent = 'â Something went wrong, try again.';
+let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
+async function loadGist(){
+ try{
+  let r=await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});
+  let d=r.ok?await r.json():{ticker:[]};
+  if(d.ticker&&d.ticker.length){
+    let clean=[...new Set(d.ticker.filter(t=>t&&!t.includes('2.5M')&&!t.includes('Get Now')))];
+    if(clean.length) document.getElementById('tickerContent').innerHTML=clean.join(' ••• ');
   }
-  btn.textContent = 'Send Message';
-  btn.disabled = false;
-  setTimeout(() => { result.style.display = 'none'; }, 7000);
-});
+  let mount=document.getElementById('fos-ad-mount'); if(mount) mount.innerHTML='';
+  let seenAds=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');
+  let seenHtml=new Set(); let unique=[];
+  (d.ads||[]).slice().reverse().forEach(ad=>{if(!ad.html)return;let k=ad.html.trim().substring(0,120);if(k.includes('2.5M'))return;if(!seenHtml.has(k)){seenHtml.add(k);unique.push(ad)}});
+  let shown={fullscreen:0,sticky:0,floating:0,topbar:0}; let toShow=[];
+  unique.forEach(ad=>{if(ad.enabled===false)return;if(ad.showOnce&&seenAds['ad_'+ad.id])return;if(ad.type==='fullscreen'&&shown.fullscreen>=1)return;if(ad.type==='sticky-bottom'&&shown.sticky>=1)return;if(ad.type==='top-bar'&&shown.topbar>=1)return;if(ad.type.startsWith('floating')&&shown.floating>=2)return;toShow.push(ad);if(ad.type==='fullscreen')shown.fullscreen++;else if(ad.type==='sticky-bottom')shown.sticky++;else if(ad.type==='top-bar')shown.topbar++;else shown.floating++;});
+  let floatCount=0;
+  toShow.reverse().forEach(ad=>{
+    let wrap=document.createElement('div');
+    let closeBtn=`<button class="fos-close" onclick="let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');s['ad_${ad.id}']=Date.now();localStorage.setItem('fos_ads_seen',JSON.stringify(s));this.parentElement.parentElement.remove();">×</button>`;
+    if(ad.type.startsWith('floating')){wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');wrap.style.bottom=(20+floatCount*110)+'px';floatCount++;wrap.innerHTML=closeBtn+'<div style="position:relative">'+ad.html+'</div>';}
+    else if(ad.type==='sticky-bottom'){wrap.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)';wrap.innerHTML=closeBtn+ad.html;}
+    else if(ad.type==='top-bar'){wrap.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center';wrap.innerHTML=closeBtn+ad.html;}
+    else if(ad.type==='fullscreen'){wrap.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px';wrap.innerHTML=`<div style="background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative">${closeBtn}${ad.html}</div>`;}
+    mount.appendChild(wrap);
+  });
+ }catch(e){console.log(e)}
+}
+loadGist(); setInterval(loadGist,60000);
+const form=document.getElementById('contactForm');const result=document.getElementById('formResult');const btn=document.getElementById('submitBtn');
+form.addEventListener('submit',async(e)=>{e.preventDefault();btn.textContent='Sending...';btn.disabled=true;result.style.display='none';const formData=new FormData(form);const object=Object.fromEntries(formData);const json=JSON.stringify(object);try{const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:json});const data=await res.json();if(data.success){result.style.display='block';result.style.background='#F0FDF4';result.style.color='#166534';result.style.border='1px solid #BBF7D0';result.textContent='✅ Message sent! We will reply within 1 hour.';form.reset();}else{result.style.display='block';result.style.background='#FEF2F2';result.style.color='#991B1B';result.style.border='1px solid #FECACA';result.textContent='❌ '+data.message;}}catch(err){result.style.display='block';result.style.background='#FEF2F2';result.style.color='#991B1B';result.style.border='1px solid #FECACA';result.textContent='❌ Something went wrong, try again.';}btn.textContent='Send Message';btn.disabled=false;setTimeout(()=>{result.style.display='none';},7000);});
 </script>
 </body>
 </html>
