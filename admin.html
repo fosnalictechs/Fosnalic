@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin V5.1 - Full Manager</title>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin V5.2 - Full Manager + Apps</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--primary:#1A365D;--accent:#FF6B35;--bg:#F5F7FA;--card:#fff;--border:#E2E8F0}
@@ -20,151 +20,67 @@ button{padding:9px 14px;border:none;border-radius:10px;cursor:pointer;font-weigh
 .ok{color:#16A34A;font-weight:600}.err{color:#E53E3E}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:700px){.grid-2{grid-template-columns:1fr}}
 </style></head><body>
-<div class="header"><h1><i class="fas fa-shield-halved"></i> FOSNALIC Admin V5.1</h1><div><span id="cfgOk" class="ok"></span> <span id="cfgErr" class="err" style="font-size:.8rem"></span></div></div>
-
+<div class="header"><h1><i class="fas fa-shield-halved"></i> FOSNALIC Admin V5.2</h1><div><span id="cfgOk" class="ok"></span> <span id="cfgErr" class="err" style="font-size:.8rem"></span></div></div>
 <div class="card" style="border-left:4px solid var(--primary)"><h3><i class="fas fa-gear"></i> GitHub Connection</h3><div class="grid-2"><input id="ghOwner" placeholder="Owner"><input id="ghRepo" placeholder="Repo"></div><div class="grid-2"><input id="ghBranch" placeholder="Branch"><input id="ghToken" type="password" placeholder="ghp_ token"></div><button class="btn-primary" onclick="saveConfig()"><i class="fas fa-floppy-disk"></i> Save & Connect</button></div>
-
 <div class="card">
-<div class="tabs"><span class="tab active" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker</span><span class="tab" onclick="showTab('ads',this)"><i class="fas fa-rectangle-ad"></i> Ads</span><span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates (Detailed)</span><span class="tab" onclick="showTab('pages',this)"><i class="fas fa-folder-tree"></i> File Manager (All Files)</span></div>
-
+<div class="tabs"><span class="tab active" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker</span><span class="tab" onclick="showTab('ads',this)"><i class="fas fa-rectangle-ad"></i> Ads</span><span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates</span><span class="tab" onclick="showTab('apps',this)"><i class="fas fa-mobile-screen"></i> My Apps</span><span class="tab" onclick="showTab('pages',this)"><i class="fas fa-folder-tree"></i> File Manager</span></div>
 <div id="tab-ticker"><h3>Ticker</h3><div style="display:flex;gap:8px"><input id="tickerInput" placeholder="New ticker"><button class="btn-primary" onclick="addTicker()">Add</button></div><div id="tickerList" style="margin-top:10px"></div><button class="btn-dark" style="width:100%;margin-top:8px" onclick="fixTickerNow()">Clean Old Ads</button></div>
-
 <div id="tab-ads" class="hidden"><h3>Ads</h3><div class="grid-2"><select id="adType"><option value="floating-br">Floating BR</option><option value="floating-bl">Floating BL</option><option value="banner">Banner</option><option value="sticky-bottom">Sticky Bottom</option><option value="top-bar">Top Bar</option><option value="fullscreen">Fullscreen</option></select><select id="adSlot"><option value="floating">Floating</option><option value="adHeader">Header</option><option value="adMiddle">Middle</option><option value="adFooter">Footer</option></select></div><textarea id="adText" style="min-height:90px" placeholder="Ad HTML"></textarea><button class="btn-primary" style="width:100%" onclick="saveAd()">Save Ad</button><button class="btn-dark" style="width:100%;margin-top:6px" onclick="clearAllBanners()">Clear All Ads + Banners</button><div id="bannerStatus" style="margin-top:8px"></div><div id="adsList"></div></div>
-
-<div id="tab-news" class="hidden"><h3>Updates - Full Details</h3><input id="newsTitle" placeholder="Title"><textarea id="newsDesc" placeholder="Full Description"></textarea><div class="grid-2"><input id="newsTag" placeholder="Tag"><input id="newsImg" placeholder="Image URL or upload below"></div><div style="display:flex;gap:8px"><input type="file" id="newsFile" accept="image/*"><button class="btn-ghost" onclick="uploadImage()">Upload Image</button></div><span id="newsUploadStatus" class="ok"></span><button class="btn-dark" style="width:100%;margin-top:8px" onclick="saveNews()"><i class="fas fa-plus"></i> Save Update</button>
-<div id="newsList" style="margin-top:14px"></div></div>
-
-<div id="tab-pages" class="hidden"><h3><i class="fas fa-folder-tree"></i> File Manager - All Files</h3>
+<div id="tab-news" class="hidden"><h3>Updates - Full Details</h3><input id="newsTitle" placeholder="Title"><textarea id="newsDesc" placeholder="Full Description"></textarea><div class="grid-2"><input id="newsTag" placeholder="Tag"><input id="newsImg" placeholder="Image URL or upload below"></div><div style="display:flex;gap:8px"><input type="file" id="newsFile" accept="image/*"><button class="btn-ghost" onclick="uploadImage()">Upload Image</button></div><span id="newsUploadStatus" class="ok"></span><button class="btn-dark" style="width:100%;margin-top:8px" onclick="saveNews()"><i class="fas fa-plus"></i> Save Update</button><div id="newsList" style="margin-top:14px"></div></div>
+<div id="tab-apps" class="hidden">
+<h3><i class="fas fa-mobile-screen"></i> My Apps - Organized Versions</h3>
+<div style="background:#F0F9FF;padding:14px;border-radius:12px;margin-bottom:14px;border:1px solid #BAE6FD">
+<b>Add New App</b>
+<div class="grid-2"><input id="appName" placeholder="App Name e.g. FOSNALIC POS"><input id="appIcon" placeholder="Icon: fa-mobile, fa-school"></div>
+<textarea id="appDesc" placeholder="App description"></textarea>
+<button class="btn-primary" style="width:100%" onclick="addApp()"><i class="fas fa-plus"></i> Create App</button>
+</div>
+<div id="appsList"></div>
+<div id="versionBox" class="hidden" style="background:#FFFBEB;padding:14px;border-radius:12px;margin-top:14px;border:1px solid #FCD34D">
+<h4>Add Version to: <span id="verAppName" style="color:var(--primary)"></span></h4>
+<div class="grid-2"><input id="verNum" placeholder="Version e.g. v3.1.0"><input id="verDate" type="date"></div>
+<div class="grid-2"><input id="verSize" placeholder="Size e.g. 18MB"><input id="verFile" placeholder="Or paste link if already uploaded"></div>
+<textarea id="verNotes" placeholder="What's new in this version"></textarea>
+<div style="background:white;padding:10px;border-radius:10px;margin:8px 0;border:1px dashed #F59E0B">
+<b><i class="fas fa-file-arrow-up"></i> Or Upload APK Directly:</b>
+<div style="display:flex;gap:8px;margin-top:8px"><input type="file" id="apkFile" accept=".apk,.aab,.zip"><button class="btn-accent" onclick="uploadApkDirect()"><i class="fas fa-upload"></i> Upload APK</button></div>
+<span id="apkStatus" class="ok"></span>
+</div>
+<button class="btn-ok" style="width:100%" onclick="saveVersion()"><i class="fas fa-floppy-disk"></i> Save Version</button>
+<button class="btn-ghost" style="width:100%;margin-top:6px" onclick="document.getElementById('versionBox').classList.add('hidden')">Cancel</button>
+</div>
+</div>
+<div id="tab-pages" class="hidden"><h3><i class="fas fa-folder-tree"></i> File Manager</h3>
 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"><span style="background:#E0F2FF;padding:6px 12px;border-radius:20px;font-size:.82rem"><i class="fas fa-code"></i> Repo: <b id="repoName">-</b></span><span style="background:#DCFCE7;padding:6px 12px;border-radius:20px;font-size:.82rem">Files: <b id="fileCount">0</b></span><button class="btn-ghost" style="padding:6px 12px" onclick="listRepoFiles()"><i class="fas fa-rotate"></i> Reload</button></div>
 <div id="pageButtons" style="display:flex;flex-wrap:wrap;gap:6px">Connect to load</div>
-<div style="background:#FFF7ED;padding:12px;border-radius:10px;margin-top:14px"><b><i class="fas fa-plus"></i> Add New File</b><div class="grid-2" style="margin-top:8px"><input id="newPageName" placeholder="e.g., contact.html or assets/style.css or data.json"><select id="newFileType"><option value="html">HTML Page</option><option value="css">CSS File</option><option value="js">JS File</option><option value="json">JSON File</option><option value="txt">Text / Other</option></select></div><button class="btn-ok" style="width:100%;margin-top:6px" onclick="createPage()"><i class="fas fa-file-circle-plus"></i> Create File</button></div>
-<div style="margin-top:12px;display:flex;gap:8px"><input type="file" id="anyFile" ><button class="btn-primary" onclick="uploadAnyFile()"><i class="fas fa-upload"></i> Upload Any File to Repo</button></div><span id="anyFileStatus" class="ok"></span>
+<div style="background:#FFF7ED;padding:12px;border-radius:10px;margin-top:14px"><b><i class="fas fa-plus"></i> Add New File</b><div class="grid-2" style="margin-top:8px"><input id="newPageName" placeholder="e.g., contact.html"><select id="newFileType"><option value="html">HTML Page</option><option value="css">CSS File</option><option value="js">JS File</option><option value="json">JSON File</option><option value="txt">Text / Other</option></select></div><button class="btn-ok" style="width:100%;margin-top:6px" onclick="createPage()"><i class="fas fa-file-circle-plus"></i> Create File</button></div>
+<div style="margin-top:12px;display:flex;gap:8px"><input type="file" id="anyFile" ><button class="btn-primary" onclick="uploadAnyFile()"><i class="fas fa-upload"></i> Upload Any File</button></div><span id="anyFileStatus" class="ok"></span>
 <textarea id="pageEditor" style="min-height:500px;font-family:Consolas,monospace;font-size:.84rem;margin-top:12px;background:#0F172A;color:#E2E8F0"></textarea>
 <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn-dark" style="flex:1" onclick="savePageToGitHub()"><i class="fas fa-floppy-disk"></i> Save File</button><button class="btn-danger" onclick="deleteCurrentFile()"><i class="fas fa-trash"></i> Delete This File</button><button class="btn-ghost" onclick="listRepoFiles()"><i class="fas fa-rotate"></i> Refresh List</button></div><span id="pageStatus" class="ok"></span></div>
 </div>
-
 <script>
 let GH={owner:localStorage.getItem('gh_owner')||'fosnalictechs',repo:localStorage.getItem('gh_repo')||'fosnalic',branch:localStorage.getItem('gh_branch')||'main',token:localStorage.getItem('gh_token')||''};
 let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
-let CACHE=null;let currentPage='index.html';let currentSha=null;
+let CACHE=null;let currentPage='index.html';let currentSha=null;let currentAppId=null;
 document.getElementById('ghOwner').value=GH.owner;document.getElementById('ghRepo').value=GH.repo;document.getElementById('ghBranch').value=GH.branch;document.getElementById('ghToken').value=GH.token;
 function showTab(id,el){document.querySelectorAll('[id^=tab-]').forEach(d=>d.classList.add('hidden'));document.getElementById('tab-'+id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');}
 function saveConfig(){GH.owner=document.getElementById('ghOwner').value.trim();GH.repo=document.getElementById('ghRepo').value.trim();GH.branch=document.getElementById('ghBranch').value.trim();GH.token=document.getElementById('ghToken').value.trim();localStorage.setItem('gh_owner',GH.owner);localStorage.setItem('gh_repo',GH.repo);localStorage.setItem('gh_branch',GH.branch);localStorage.setItem('gh_token',GH.token);document.getElementById('cfgOk').textContent='✅ Saved';loadData();listRepoFiles();}
 async function getFileSha(p){let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}&t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`},cache:"no-store"});if(!r.ok){if(r.status===404)return{sha:null,content:null,notfound:true};return null;}let j=await r.json();try{let bin=atob(j.content.replace(/\n/g,''));let bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);let content=new TextDecoder().decode(bytes);return{sha:j.sha,content:content,path:p}}catch(e){return{sha:j.sha,content:'',path:p}}}
-async function listRepoFiles(){
- document.getElementById('pageButtons').innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';
- document.getElementById('repoName').textContent=GH.owner+'/'+GH.repo;
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents?ref=${GH.branch}&t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`},cache:"no-store"});
- if(!r.ok){document.getElementById('pageButtons').innerHTML='❌ '+ (await r.text()).substring(0,200);return;}
- let files=await r.json();
- files=files.sort((a,b)=>a.name.localeCompare(b.name));
- document.getElementById('fileCount').textContent=files.length;
- document.getElementById('pageButtons').innerHTML=files.map(f=>{
-   let icon=f.type==='dir'?'📁':(f.name.endsWith('.html')?'📄':f.name.endsWith('.css')?'🎨':f.name.endsWith('.js')?'⚙️':f.name.endsWith('.json')?'📦':'📄');
-   let delBtn=`<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path||f.name}')"><i class='fas fa-trash'></i></button>`;
-   if(f.type==='dir') return `<span class="file-btn" style="background:#FEF3C7" onclick="listFolder('${f.path}')">${icon} ${f.name}/</span>`;
-   return `<span class="file-btn ${f.name===currentPage?'active':''}" onclick="loadPage('${f.path||f.name}',this)">${icon} ${f.name}</span>${delBtn}`;
- }).join('');
-}
-async function listFolder(path){
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}?ref=${GH.branch}`,{headers:{Authorization:`token ${GH.token}`}});
- let files=await r.json();
- document.getElementById('pageButtons').innerHTML=`<button class="file-btn" onclick="listRepoFiles()">⬅ Back to root</button>`+files.map(f=>`<span class="file-btn" onclick="loadPage('${f.path}',this)">${f.name}</span><button class="btn-danger" style="padding:2px 8px" onclick="deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`).join('');
-}
+async function listRepoFiles(){document.getElementById('pageButtons').innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';document.getElementById('repoName').textContent=GH.owner+'/'+GH.repo;let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents?ref=${GH.branch}&t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`},cache:"no-store"});if(!r.ok){document.getElementById('pageButtons').innerHTML='❌ '+ (await r.text()).substring(0,200);return;}let files=await r.json();files=files.sort((a,b)=>a.name.localeCompare(b.name));document.getElementById('fileCount').textContent=files.length;document.getElementById('pageButtons').innerHTML=files.map(f=>{let icon=f.type==='dir'?'📁':(f.name.endsWith('.html')?'📄':f.name.endsWith('.css')?'🎨':f.name.endsWith('.js')?'⚙️':f.name.endsWith('.json')?'📦':'📄');let delBtn=`<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path||f.name}')"><i class='fas fa-trash'></i></button>`;if(f.type==='dir') return `<span class="file-btn" style="background:#FEF3C7" onclick="listFolder('${f.path}')">${icon} ${f.name}/</span>`;return `<span class="file-btn ${f.name===currentPage?'active':''}" onclick="loadPage('${f.path||f.name}',this)">${icon} ${f.name}</span>${delBtn}`;}).join('');}
+async function listFolder(path){let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}?ref=${GH.branch}`,{headers:{Authorization:`token ${GH.token}`}});let files=await r.json();document.getElementById('pageButtons').innerHTML=`<button class="file-btn" onclick="listRepoFiles()">⬅ Back to root</button>`+files.map(f=>`<span class="file-btn" onclick="loadPage('${f.path}',this)">${f.name}</span><button class="btn-danger" style="padding:2px 8px" onclick="deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`).join('');}
 async function loadPage(n,b){currentPage=n;document.querySelectorAll('.file-btn').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');document.getElementById('pageStatus').textContent='Loading '+n+'...';let d=await getFileSha(n);if(d&&d.content!==null){currentSha=d.sha;document.getElementById('pageEditor').value=d.content;document.getElementById('pageStatus').textContent='✅ Loaded '+n+' ('+d.content.length+' chars)';}else{document.getElementById('pageEditor').value='';currentSha=null;document.getElementById('pageStatus').textContent='New file';}}
-async function createPage(){
- let name=document.getElementById('newPageName').value.trim(); if(!name)return alert('Enter file name');
- let type=document.getElementById('newFileType').value;
- if(!name.includes('.')) name+='.'+type;
- currentPage=name;
- let templates={
-   html:`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title><style>body{font-family:Segoe UI;background:#0a0e1a;color:#fff;padding:20px}</style></head><body><h1>${name}</h1><p>FOSNALIC Techs professional page</p></body></html>`,
-   css:`/* ${name} - FOSNALIC Techs */\nbody{font-family:Segoe UI;}\n`,
-   js:`// ${name} - FOSNALIC Techs\nconsole.log('Loaded ${name}');\n`,
-   json:`{\n  "name": "${name}",\n  "created": "${new Date().toISOString()}"\n}`,
-   txt:`${name} - FOSNALIC Techs\n`
- };
- document.getElementById('pageEditor').value=templates[type]||templates.txt;
- currentSha=null;document.getElementById('pageStatus').textContent='Ready to save '+name;
-}
-async function savePageToGitHub(){
- if(!GH.token)return alert('Token missing');
- document.getElementById('pageStatus').textContent='Saving...';
- let latest=await getFileSha(currentPage); if(latest&&latest.sha) currentSha=latest.sha;
- let c=document.getElementById('pageEditor').value;
- let b64=btoa(new TextEncoder().encode(c).reduce((a,b)=>a+String.fromCharCode(b),''));
- let body={message:`Update ${currentPage}`,content:b64,branch:GH.branch}; if(currentSha) body.sha=currentSha;
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
- let j=await r.json(); if(r.ok){currentSha=j.content.sha;document.getElementById('pageStatus').textContent='✅ Saved '+currentPage; listRepoFiles();} else{document.getElementById('pageStatus').textContent='❌ '+j.message; if(j.message.includes('sha')){currentSha=null; setTimeout(savePageToGitHub,600);}}
-}
-async function deleteFile(path){
- if(!confirm('Delete file '+path+'? This cannot be undone!')) return;
- let d=await getFileSha(path); if(!d||!d.sha) return alert('File not found');
- let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'DELETE',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify({message:`Delete ${path}`,sha:d.sha,branch:GH.branch})});
- let j=await r.json(); if(r.ok){alert('✅ Deleted '+path); listRepoFiles();} else alert('❌ '+j.message);
-}
+async function createPage(){let name=document.getElementById('newPageName').value.trim(); if(!name)return alert('Enter file name');let type=document.getElementById('newFileType').value;if(!name.includes('.')) name+='.'+type;currentPage=name;let templates={html:`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title><style>body{font-family:Segoe UI;background:#0a0e1a;color:#fff;padding:20px}</style></head><body><h1>${name}</h1><p>FOSNALIC Techs</p></body></html>`,css:`/* ${name} */\nbody{font-family:Segoe UI;}\n`,js:`// ${name}\nconsole.log('Loaded ${name}');\n`,json:`{\n  "name": "${name}"\n}`,txt:`${name}\n`};document.getElementById('pageEditor').value=templates[type]||templates.txt;currentSha=null;document.getElementById('pageStatus').textContent='Ready to save '+name;}
+async function savePageToGitHub(){if(!GH.token)return alert('Token missing');document.getElementById('pageStatus').textContent='Saving...';let latest=await getFileSha(currentPage); if(latest&&latest.sha) currentSha=latest.sha;let c=document.getElementById('pageEditor').value;let b64=btoa(new TextEncoder().encode(c).reduce((a,b)=>a+String.fromCharCode(b),''));
+let body={message:`Update ${currentPage}`,content:b64,branch:GH.branch}; if(currentSha) body.sha=currentSha;
+let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+let j=await r.json(); if(r.ok){currentSha=j.content.sha;document.getElementById('pageStatus').textContent='✅ Saved '+currentPage; listRepoFiles();} else{document.getElementById('pageStatus').textContent='❌ '+j.message; if(j.message.includes('sha')){currentSha=null; setTimeout(savePageToGitHub,600);}}}
+async function deleteFile(path){if(!confirm('Delete file '+path+'?')) return;let d=await getFileSha(path); if(!d||!d.sha) return alert('File not found');let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'DELETE',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify({message:`Delete ${path}`,sha:d.sha,branch:GH.branch})});let j=await r.json(); if(r.ok){alert('✅ Deleted '+path); listRepoFiles();} else alert('❌ '+j.message);}
 async function deleteCurrentFile(){ if(!currentPage) return; await deleteFile(currentPage); document.getElementById('pageEditor').value='';}
-async function uploadAnyFile(){
- let file=document.getElementById('anyFile').files[0]; if(!file) return alert('Choose file');
- document.getElementById('anyFileStatus').textContent='Uploading...';
- let reader=new FileReader(); reader.onload=async function(){
-   let b64=reader.result.split(',')[1];
-   let path=file.name;
-   let existing=await getFileSha(path);
-   let body={message:`Upload ${path}`,content:b64,branch:GH.branch}; if(existing&&existing.sha) body.sha=existing.sha;
-   let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
-   let j=await r.json(); if(r.ok){document.getElementById('anyFileStatus').textContent='✅ Uploaded '+path; listRepoFiles();} else document.getElementById('anyFileStatus').textContent='❌ '+j.message;
- }; reader.readAsDataURL(file);
-}
+async function uploadAnyFile(){let file=document.getElementById('anyFile').files[0]; if(!file) return alert('Choose file');document.getElementById('anyFileStatus').textContent='Uploading...';let reader=new FileReader(); reader.onload=async function(){let b64=reader.result.split(',')[1];let path=file.name;let existing=await getFileSha(path);let body={message:`Upload ${path}`,content:b64,branch:GH.branch}; if(existing&&existing.sha) body.sha=existing.sha;let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});let j=await r.json(); if(r.ok){document.getElementById('anyFileStatus').textContent='✅ Uploaded '+path; listRepoFiles();} else document.getElementById('anyFileStatus').textContent='❌ '+j.message;}; reader.readAsDataURL(file);}
 async function createNewGist(){let init={ticker:["Welcome to FOSNALIC Techs"],ads:[],news:[],apps:[],adHeader:{text:""},adMiddle:{text:""},adFooter:{text:""}};let r=await fetch('https://api.github.com/gists',{method:'POST',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify({description:"fosnalic-data",public:true,files:{'fosnalic-data.json':{content:JSON.stringify(init,null,2)}}})});let j=await r.json();GIST_ID=j.id;localStorage.setItem('fos_gist_id',GIST_ID);return j;}
-async function loadData(){try{let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`}});if(!r.ok){if(r.status===404){await createNewGist();return loadData();}return;}let j=await r.json();CACHE=j.files&&j.files['fosnalic-data.json']?JSON.parse(j.files['fosnalic-data.json'].content):{ticker:[],ads:[],news:[]};CACHE.ticker=CACHE.ticker||[];CACHE.ads=CACHE.ads||[];CACHE.news=CACHE.news||[];CACHE.adHeader=CACHE.adHeader||{text:""};CACHE.adMiddle=CACHE.adMiddle||{text:""};CACHE.adFooter=CACHE.adFooter||{text:""};document.getElementById('cfgOk').textContent='✅ Connected';renderTicker();renderAds();renderNews();}catch(e){}}
+async function loadData(){try{let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{headers:{Authorization:`token ${GH.token}`}});if(!r.ok){if(r.status===404){await createNewGist();return loadData();}return;}let j=await r.json();CACHE=j.files&&j.files['fosnalic-data.json']?JSON.parse(j.files['fosnalic-data.json'].content):{ticker:[],ads:[],news:[],apps:[]};CACHE.ticker=CACHE.ticker||[];CACHE.ads=CACHE.ads||[];CACHE.news=CACHE.news||[];CACHE.apps=CACHE.apps||[];CACHE.adHeader=CACHE.adHeader||{text:""};CACHE.adMiddle=CACHE.adMiddle||{text:""};CACHE.adFooter=CACHE.adFooter||{text:""};document.getElementById('cfgOk').textContent='✅ Connected';renderTicker();renderAds();renderNews();renderApps();}catch(e){}}
 async function saveToGist(){let body=JSON.stringify({files:{'fosnalic-data.json':{content:JSON.stringify(CACHE,null,2)}}});let r=await fetch(`https://api.github.com/gists/${GIST_ID}`,{method:'PATCH',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body});if(!r.ok&&r.status===404){await createNewGist();return saveToGist();}return r.ok;}
 function renderTicker(){document.getElementById('tickerList').innerHTML=CACHE.ticker.map((x,i)=>`<div style="display:flex;justify-content:space-between;padding:6px;border:1px solid #eee;border-radius:8px;margin:4px 0">${x}<button class="btn-danger" style="padding:2px 8px" onclick="removeTicker(${i})">X</button></div>`).join('')||'<i>No ticker</i>';}
 async function addTicker(){let v=document.getElementById('tickerInput').value.trim();if(!v)return;CACHE.ticker.push(v);document.getElementById('tickerInput').value='';await saveToGist();renderTicker();}
 async function removeTicker(i){CACHE.ticker.splice(i,1);await saveToGist();renderTicker();}
-async function fixTickerNow(){CACHE.ticker=CACHE.ticker.filter(t=>!t.toLowerCase().includes('2.5m'));CACHE.adHeader={text:""};CACHE.adMiddle={text:""};CACHE.adFooter={text:""};CACHE.ads=[];if(CACHE.ticker.length===0)CACHE.ticker=["Welcome to FOSNALIC Techs"];await saveToGist();renderTicker();renderAds();}
-function renderAds(){document.getElementById('bannerStatus').innerHTML=`Ads: ${CACHE.ads.length} | Header: ${CACHE.adHeader.text?'HAS':'Empty'} | Middle: ${CACHE.adMiddle.text?'HAS':'Empty'}`;document.getElementById('adsList').innerHTML=CACHE.ads.map((a,i)=>`<div style="border:1px solid #ddd;padding:6px;margin:5px 0;border-radius:8px"><b>${a.type}</b> ${a.slot} <button style="float:right;background:red;color:#fff;padding:2px 6px;border:none;border-radius:6px" onclick="CACHE.ads.splice(${i},1);saveToGist();renderAds()">Del</button><div style="font-size:.8rem">${a.html.substring(0,120)}</div></div>`).join('')||'<i>No ads</i>';}
-async function saveAd(){let ad={id:Date.now(),type:document.getElementById('adType').value,slot:document.getElementById('adSlot').value,html:document.getElementById('adText').value,enabled:true,showOnce:true};if(!ad.html)return alert('Add HTML');CACHE.ads.push(ad);if(ad.type==='banner')CACHE[ad.slot]={text:ad.html};await saveToGist();renderAds();}
-async function clearAllBanners(){if(!confirm('Clear all?'))return;CACHE.ads=[];CACHE.adHeader={text:""};CACHE.adMiddle={text:""};CACHE.adFooter={text:""};await saveToGist();renderAds();}
-function renderNews(){
- document.getElementById('newsList').innerHTML=CACHE.news.slice().reverse().map((n,idx)=>{
-   let realIdx=CACHE.news.length-1-idx;
-   return `<div class="news-card">
-     <img src="${n.img||'https://via.placeholder.com/90x70?text=No+Img'}" onerror="this.src='https://via.placeholder.com/90x70'">
-     <div style="flex:1">
-       <div style="display:flex;justify-content:space-between"><b style="color:var(--primary)">${n.title||'Untitled'}</b><small style="color:#64748B">${n.date?new Date(n.date).toLocaleDateString():''}</small></div>
-       <div style="font-size:.82rem;color:#475569;margin:4px 0"><b>Tag:</b> ${n.tag||'-'} | <b>Desc:</b> ${n.desc? n.desc.substring(0,120)+(n.desc.length>120?'...':'') : '<i>No description</i>'}</div>
-       <div style="font-size:.75rem;color:#94A3B8;word-break:break-all"><i class="fas fa-link"></i> ${n.img||'No image URL'}</div>
-       <div style="margin-top:6px;display:flex;gap:6px"><button class="btn-primary" style="padding:4px 10px;font-size:.75rem" onclick="editNews(${realIdx})"><i class='fas fa-pen'></i> Edit</button><button class="btn-danger" style="padding:4px 10px;font-size:.75rem" onclick="deleteNews(${realIdx})"><i class='fas fa-trash'></i> Delete</button></div>
-     </div>
-   </div>`;
- }).join('')||'<div style="padding:20px;text-align:center;color:#94A3B8"><i class="fas fa-inbox"></i><br>No updates yet</div>';
-}
-function editNews(i){
- let n=CACHE.news[i];
- document.getElementById('newsTitle').value=n.title||'';
- document.getElementById('newsDesc').value=n.desc||'';
- document.getElementById('newsTag').value=n.tag||'';
- document.getElementById('newsImg').value=n.img||'';
- if(confirm('Edit loaded to form. Delete old entry and save edited? Click OK to delete old')){CACHE.news.splice(i,1);saveToGist();renderNews();}
-}
-async function deleteNews(i){if(!confirm('Delete this update?'))return;CACHE.news.splice(i,1);await saveToGist();renderNews();}
-async function saveNews(){
- let n={title:document.getElementById('newsTitle').value.trim(),desc:document.getElementById('newsDesc').value.trim(),tag:document.getElementById('newsTag').value.trim(),img:document.getElementById('newsImg').value.trim(),date:new Date().toISOString()};
- if(!n.title)return alert('Title required');
- CACHE.news.push(n);await saveToGist();renderNews();
- document.getElementById('newsTitle').value='';document.getElementById('newsDesc').value='';document.getElementById('newsTag').value='';document.getElementById('newsImg').value='';
- document.getElementById('newsUploadStatus').textContent='✅ Saved';
-}
-async function uploadImage(){
- let file=document.getElementById('newsFile').files[0];if(!file)return alert('Choose image');
- document.getElementById('newsUploadStatus').textContent='Uploading...';
- let reader=new FileReader();reader.onload=async function(){
-   let b64=reader.result.split(',')[1];
-   let path=`uploads/${Date.now()}_${file.name.replace(/\s/g,'_')}`;
-   let r=await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`,{method:'PUT',headers:{Authorization:`token ${GH.token}`,'Content-Type':'application/json'},body:JSON.stringify({message:`Upload ${path}`,content:b64,branch:GH.branch})});
-   let j=await r.json();if(r.ok){let url=`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;document.getElementById('newsImg').value=url;document.getElementById('newsUploadStatus').textContent='✅ Uploaded';}else document.getElementById('newsUploadStatus').textContent='❌ '+j.message;
- };reader.readAsDataURL(file);
-}
-loadData();
-</script></body></html>
+async function fixTickerNow(){CACHE.ticker=CACHE.ticker.filter(t=>!t.toLowerCase().includes('2.5m'));CACHE.adHeader={text:""};CACHE.adMiddle={text:""};CACHE.adFooter={te
