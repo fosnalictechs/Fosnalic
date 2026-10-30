@@ -49,6 +49,58 @@ img{max-width:100%; height:auto; border-radius:10px}
 </style>
 </head>
 <body id="home">
+<!-- FOSNALIC TOP AD - POPUP AFTER 8S -->
+<style>
+.fos-ad-wrap{
+  position:fixed; top:0; left:0; width:100%; z-index:9998;
+  background:#0a0e1a; color:white; height:44px;
+  display:none; align-items:center; justify-content:space-between;
+  padding:0 12px; box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  animation:slideDown 0.5s ease;
+}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+.fos-ticker{flex:1; overflow:hidden; white-space:nowrap;}
+.fos-ticker-track{display:inline-block; white-space:nowrap; animation:tickerFast 25s linear infinite;}
+@keyframes tickerFast{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.fos-home-btn{
+  background:#FF6B35; color:white; border:none; 
+  padding:6px 14px; border-radius:20px; font-weight:800; font-size:12px;
+  text-decoration:none; margin-left:10px; display:flex; align-items:center; gap:5px;
+}
+@media(max-width:768px){.fos-ad-wrap{height:42px; font-size:13px}}
+</style>
+
+<div class="fos-ad-wrap" id="fosAd">
+  <div class="fos-ticker">
+    <div class="fos-ticker-track" id="fosTickerTrack"></div>
+  </div>
+  <a href="home.html" class="fos-home-btn"><i class="fas fa-home"></i> Home</a>
+  <button onclick="document.getElementById('fosAd').style.display='none'" style="background:none;border:none;color:#A0AEC0;margin-left:10px;font-size:18px">✕</button>
+</div>
+
+<script>
+// POPUP AFTER 8 SECONDS
+setTimeout(()=>{
+  document.getElementById('fosAd').style.display='flex';
+  document.body.style.paddingTop='44px'; // push content down so it fits on phone
+}, 8000);
+
+// Load your ticker data from Gist (same as your file)
+let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
+async function loadFosTicker(){
+  try{
+    let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{cache:"no-store"});
+    let j=await r.json();
+    let data=JSON.parse(j.files['fosnalic-data.json'].content);
+    let t=data.ticker||["Ad: Build your website with FOSNALIC Techs","Academy Intake Open","Call: 076 000 0000"];
+    let html = t.map(x=>`<span style="margin-right:60px">🔥 ${x}</span>`).join('');
+    document.getElementById('fosTickerTrack').innerHTML = html + html; // double for loop
+  }catch(e){
+    document.getElementById('fosTickerTrack').innerHTML = "<span style='margin-right:60px'>🔥 Welcome to FOSNALIC Techs - Dealers in Software</span><span style='margin-right:60px'>🔥 Academy Intake Open</span>".repeat(2);
+  }
+}
+loadFosTicker();
+</script>
 
 <nav>
 <div class="logo">Firm Techs</div>
