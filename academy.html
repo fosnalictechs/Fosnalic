@@ -3,49 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <title>Academy — FOSNALIC Techs</title>
-<script>!function(){try{if(top!==self)top.location=self.location;}catch(e){}}();</script>
-<style>html{display:none}</style>
-<script>if(self==top){document.documentElement.style.display='block'}else{top.location=self.location}</script>
-<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#121212;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08);--transition:all 0.3s ease}
+:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#0a0e1a;--gray:#F5F7FA;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--gray);color:var(--text)}
-.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px}
-section{padding:90px 0}
-header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);z-index:1000;padding:12px 0}
-.navbar{display:flex;justify-content:space-between;align-items:center}
-.nav-links{display:flex;list-style:none} .nav-links li{margin-left:18px}
-.nav-links a{text-decoration:none;color:var(--text);font-weight:600}
-.ticker-wrap{position:fixed;top:64px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap}
-.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
+body{background:var(--gray);color:#2D3748}
+.container{width:90%;max-width:1100px;margin:0 auto}
+header{position:fixed;top:0;width:100%;background:white;z-index:1000;padding:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.06);height:64px;display:flex;align-items:center}
+.ticker-wrap{position:fixed;top:64px;width:100%;z-index:999;background:#0a0e1a;color:white;overflow:hidden;height:40px;display:flex;align-items:center}
+.ticker{display:inline-block;white-space:nowrap;animation:ticker 60s linear infinite}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
-.card{background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);padding:22px}
-.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;border:none;cursor:pointer}
-.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:var(--transition);border:none;z-index:999}
-.back-to-top.visible{opacity:1;visibility:visible}
-footer{background:var(--dark);color:white;padding:40px 0 20px} .footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;margin-top:20px;color:rgba(255,255,255,0.4)}
+.hero{background:linear-gradient(135deg,rgba(10,14,26,0.9),rgba(42,75,124,0.9)),url('https://images.unsplash.com/photo-1501504905252-473cbee65f87?w=2000') center/cover;color:white;text-align:center;padding:60px 0 60px;margin-top:104px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin-top:24px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+.card img{width:100%;height:180px;object-fit:cover}
+.card-body{padding:20px}
+.btn{padding:11px 22px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:700;display:inline-flex;gap:8px;align-items:center}
+.badge{background:#EEF2FF;color:#2A4B7C;padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:800}
+section{padding:60px 0}
+/* BLOCK ANY UNCONTROLLED AD INJECTION */
+#adHeader, #adMiddle, #adFooter, .ad-container, [id*="ad-"]{display:none !important; height:0 !important; margin:0 !important; padding:0 !important}
 </style>
 </head>
 <body>
 <div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-<header style="top:40px"><div class="container navbar"><a href="index.html" style="font-weight:800;color:var(--primary);text-decoration:none">FOSNALIC Techs</a><ul class="nav-links"><li><a href="index.html">Home</a></li><li><a href="academy.html" style="color:var(--primary)">Academy</a></li><li><a href="contact.html">Contact</a></li></ul></div></header>
-<section style="margin-top:100px;background:linear-gradient(135deg,rgba(10,10,10,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=2000') center/cover;color:white;text-align:center;padding:80px 0"><div class="container"><h2 style="color:white">FOSNALIC Academy — Full Stack Training</h2><p>3 Months Job-Ready — Built by Possible Shadrach</p></div></section>
-<section><div class="container"><div class="grid">
-<div class="card"><h3>Full Stack Web Development</h3><p style="color:#718096">HTML, CSS, JS, PHP, MySQL, MoMo API, Hosting — 3 months, certificate, internship. Trainer: Possible Shadrach.</p><p style="margin-top:10px"><strong>Fee: 1.2M UGX</strong></p><a href="contact.html" class="btn" style="margin-top:10px">Enroll</a></div>
-<div class="card"><h3>Graphic Design</h3><p style="color:#718096">Photoshop, Illustrator, Canva, Branding, Social Media — 2 months.</p><p style="margin-top:10px"><strong>Fee: 600k UGX</strong></p></div>
-<div class="card"><h3>Internship</h3><p style="color:#718096">Real projects — School System, Business sites — 3 months internship certificate.</p><p style="margin-top:10px"><strong>Fee: 300k UGX</strong></p></div>
-</div></div></section>
-<footer><div class="container"><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs •🔒</div></div></footer>
-<button class="back-to-top" id="backToTop">🔝</button>
+<header><div class="container" style="display:flex;justify-content:space-between;align-items:center"><a href="index.html" style="font-weight:900;color:#2A4B7C;text-decoration:none">FOSNALIC Techs</a><div style="display:flex;gap:16px"><a href="index.html" style="text-decoration:none;color:#2D3748;font-weight:700">Home</a><a href="my-apps.html" style="text-decoration:none;color:#2D3748;font-weight:700">My Apps</a><a href="academy.html" style="color:#2A4B7C;font-weight:800">Academy</a></div></div></header>
+
+<section class="hero"><div class="container">
+<span class="badge" style="background:#FF6B35;color:white">NEW CURRICULUM • E-LEARNING • COMPETENCE BASED</span>
+<h1 style="font-size:2.2rem;font-weight:900;margin:14px 0">Academics & E-Learning Academy</h1>
+<p style="color:#CBD5E0;max-width:700px;margin:0 auto">We teach ICT the way Uganda's New Curriculum wants it - practical, project-based, and online. Not theory cramming.</p>
+</div></section>
+
+<section><div class="container">
+<h2 style="color:#1A365D;text-align:center"><i class="fas fa-book-open" style="color:#FF6B35"></i> Academics Aligned to Uganda's New Curriculum</h2>
+<p style="text-align:center;color:#718096;max-width:800px;margin:10px auto 30px">Uganda shifted from knowledge-based to <b>Competence-Based Curriculum (CBC)</b> in 2020. FOSNALIC Academy follows the same: Learners do, not memorize.</p>
+<div class="grid">
+<div class="card"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800"><div class="card-body"><span class="badge">CBC: Learning by Doing</span><h3 style="margin:8px 0">Competence-Based Learning</h3><p style="color:#718096;font-size:.9rem">Like S1-S4 new curriculum, we assess skills, not notes. You build a real school website by Week 3. Focus on 4Cs: Creativity, Critical thinking, Communication, Collaboration.</p></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800"><div class="card-body"><span class="badge">Online + Offline</span><h3 style="margin:8px 0">E-Learning Platform</h3><p style="color:#718096;font-size:.9rem">For rural schools with weak internet, we give offline videos on USB like MathX. For online, live Google Meet + recorded. Learn from Arua, Gulu, Mbarara.</p></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800"><div class="card-body"><span class="badge">UNEB Practical Aligned</span><h3 style="margin:8px 0">Academics That Pay</h3><p style="color:#718096;font-size:.9rem">We map to ICT Syllabus: Word processing → company profile, Spreadsheets → marks system, Web → host .com site. After training, teach ICT or freelance.</p></div></div>
+</div>
+</div></section>
+
+<footer style="background:#0a0e1a;color:#A0AEC0;padding:30px 0;text-align:center">© <span id="year"></span> FOSNALIC Techs</footer>
+
 <script>
 document.getElementById('year').textContent=new Date().getFullYear();
-function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Academy Intake Open","Full Stack 3 Months Job-Ready","Built by Possible Shadrach"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('')+t.map(tx=>`<span style="margin-right:60px">${tx}</span>`).join('');}
+let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
+async function loadTicker(){try{let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{cache:"no-store"});let j=await r.json();let data=JSON.parse(j.files['fosnalic-data.json'].content);let t=data.ticker||["New Curriculum Based","E-Learning Available","Academy Intake Open"];document.getElementById('ticker').innerHTML=t.map(x=>`<span style="margin-right:60px">${x}</span>`).join('')+t.map(x=>`<span style="margin-right:60px">${x}</span>`).join('');}catch(e){}}
 loadTicker();
-const backBtn=document.getElementById('backToTop');addEventListener('scroll',()=>{if(scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});backBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 </script>
 </body>
 </html>
