@@ -57,7 +57,7 @@ async function loadApps(){
    let icon = app.iconUrl ? `<img src="${app.iconUrl}">` : `<i class="fas ${app.icon||'fa-mobile-alt'}" style="color:#2A4B7C"></i>`;
    let desc = app.desc || `This is the new version of ${app.name}, built with advanced features to suit the user.`;
    return `<div class="card" onclick="openApp(${idx})">
-     <div style="display:flex;gap:14px;align-items:center"><div class="icon-box">${icon}</div><div><h3>${app.name}</h3><p style="color:#A0AEC0;font-size:.8rem">${latest?latest.ver+' • '+latest.date:''} • ${vers.length} versions</p></div></div>
+     <div style="display:flex;gap:14px;align-items:center"><div class="icon-box">${icon}</div><div><h3>${app.name}</h3><p style="color:#A0AEC0;font-size:.8rem">${latest?latest.ver+' • '+latest.date:''} • ${vers.length} version(s)</p></div></div>
      <p style="color:#718096;font-size:.85rem;margin:12px 0;height:40px;overflow:hidden">${desc.substring(0,90)}...</p>
      <div style="display:flex;justify-content:space-between;align-items:center"><span class="badge"><i class="fas fa-download"></i> ${vers.length} versions</span><span style="color:#2A4B7C;font-weight:700;font-size:.85rem">Open <i class="fas fa-chevron-right"></i></span></div>
    </div>`;
