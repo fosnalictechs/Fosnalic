@@ -113,5 +113,103 @@ async function loadAll(){
 }
 loadAll();setInterval(loadAll,60000);
 </script>
+<!-- GOOGLE SCHEMA FOR FOSNALIC.PAGES.DEV - FIXES AI SCAN -->
+<script>
+// 1. ORGANIZATION SCHEMA (Site-wide)
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "FOSNALIC Techs",
+  "url": "https://fosnalic.pages.dev",
+  "logo": "https://fosnalic.pages.dev/logo.png",
+  "description": "Dealers in Laptops, Software, and ICT Academy in Uganda",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Kampala",
+    "addressCountry": "UG"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+256-741-632492",
+    "contactType": "customer service"
+  }
+};
+let orgScript = document.createElement('script');
+orgScript.type = 'application/ld+json';
+orgScript.text = JSON.stringify(orgSchema);
+document.head.appendChild(orgScript);
+
+// 2. DYNAMIC PRODUCT SCHEMA - AUTO FROM YOUR GIST
+async function injectProductSchemas() {
+  try {
+    let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
+    let r = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`, {cache:"no-store"});
+    let j = await r.json();
+    let data = JSON.parse(j.files['fosnalic-data.json'].content);
+    
+    // Change 'products' to your actual key - could be 'items' or 'store'
+    let products = data.products || data.items || data.store || [];
+    
+    if(products.length === 0) return;
+
+    // ITEM LIST SCHEMA (For homepage)
+    let itemListSchema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": products.slice(0,20).map((p,i)=>({
+        "@type": "ListItem",
+        "position": i+1,
+        "url": `https://fosnalic.pages.dev/product.html?id=${p.id||p.sku||i}`
+      }))
+    };
+    let listScript = document.createElement('script');
+    listScript.type = 'application/ld+json';
+    listScript.text = JSON.stringify(itemListSchema);
+    document.head.appendChild(listScript);
+
+    // INDIVIDUAL PRODUCT SCHEMAS (Google finds these)
+    products.forEach(p => {
+      let schema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": p.title || p.name || "FOSNALIC Product",
+        "image": [p.image || p.img || "https://fosnalic.pages.dev/images/default.jpg"],
+        "description": p.description || p.desc || (p.title + " available at FOSNALIC Techs Kampala"),
+        "sku": p.id || p.sku || ("FOS"+Math.random().toString(36).substr(2,6).toUpperCase()),
+        "mpn": p.mpn || p.sku || "FOSNALIC",
+        "brand": {
+          "@type": "Brand",
+          "name": p.brand || "FOSNALIC"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": `https://fosnalic.pages.dev/product.html?id=${p.id||p.sku}`,
+          "priceCurrency": "UGX",
+          "price": String(p.price||p.cost||"0").replace(/[^0-9]/g,''),
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "seller": {
+            "@type": "Organization",
+            "name": "FOSNALIC Techs"
+          }
+        }
+      };
+      // Only inject if price exists
+      if(schema.offers.price && parseInt(schema.offers.price) > 0){
+        let s = document.createElement('script');
+        s.type = 'application/ld+json';
+        s.text = JSON.stringify(schema);
+        document.head.appendChild(s);
+      }
+    });
+    
+    console.log(`✅ Injected ${products.length} Product schemas for Google`);
+
+  } catch(e){ console.log("Schema load failed", e); }
+}
+
+// Run after products load
+setTimeout(injectProductSchemas, 2000);
+</script>
 </body>
 </html>
