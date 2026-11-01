@@ -24,7 +24,8 @@ body{margin:0;font-family:sans-serif;background:#111;color:#fff}
 </div>
 
 <script>
-const STORAGE_URL = "https://api.npoint.io/bab682f56b4dedc1becd";
+// DIRECT TO YOUR OWN WEBSITE - NPOINT DELETED FOREVER
+const STORAGE_URL = "https://fosnalic.pages.dev/api/track";
 let map = L.map('map').setView([0.3476,32.5825], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
 let markers=[];
@@ -36,7 +37,6 @@ function openOSM(lat,lng){
   window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`,'_blank');
 }
 function openApp(lat,lng){
-  // This opens Google Maps app on Android, Apple Maps on iPhone
   window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`;
 }
 
@@ -60,11 +60,11 @@ async function load(){
     });
     if(markers.length>0) map.fitBounds(markers.map(m=>m.getLatLng()));
     document.getElementById('list').innerHTML = html || "No devices — click START on phone";
-    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()}`;
-  }catch(e){ document.getElementById('status').innerText="Error loading npoint"; }
+    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()} | DIRECT MODE`;
+  }catch(e){ document.getElementById('status').innerText="Error loading direct API"; }
 }
 load();
-setInterval(load,15000);
+setInterval(load,10000);
 </script>
 </body>
 </html>
