@@ -7,19 +7,21 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 body{margin:0;font-family:sans-serif;background:#111;color:#fff}
-#map{height:55vh;width:100%}
+#map{height:50vh;width:100%}
 .card{background:#1e1e1e;margin:10px;padding:12px;border-radius:12px}
 .btn{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;margin:4px;cursor:pointer}
 .btn-blue{background:#1976D2;color:#fff}
 .btn-green{background:#2e7d32;color:#fff}
 .btn-orange{background:#ef6c00;color:#fff}
 .btn-red{background:#d32f2f;color:#fff}
+.btn-purple{background:#7b1fa2;color:#fff}
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div style="padding:10px">
 <button class="btn btn-blue" onclick="load()">🔄 REFRESH</button>
+<button class="btn btn-purple" onclick="getMyLoc()">📍 MY LOCATION</button>
 <span id="status">Loading...</span>
 <div id="list"></div>
 </div>
@@ -29,47 +31,75 @@ const STORAGE_URL = "https://fosnalic.pages.dev/api/track";
 const COMMAND_URL = "https://fosnalic.pages.dev/api/command";
 let map = L.map('map').setView([0.3476,32.5825], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
-let markers=[];
+let markers=[], myMarker=null, myLat=null, myLng=null, lastData=[];
 
 function openOnline(lat,lng){ window.open(`https://www.google.com/maps?q=${lat},${lng}`,'_blank'); }
-function openOSM(lat,lng){ window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`,'_blank'); }
-function openApp(lat,lng){ window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`; }
 
-// WEBSITE TRIGGERS PHONE
+function getMyLoc(){
+  if(!navigator.geolocation){ alert("GPS not supported"); return; }
+  document.getElementById('status').innerText="Getting your location...";
+  navigator.geolocation.getCurrentPosition(pos=>{
+    myLat = pos.coords.latitude;
+    myLng = pos.coords.longitude;
+    if(myMarker) map.removeLayer(myMarker);
+    myMarker = L.marker([myLat,myLng],{icon:L.icon({iconUrl:'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',iconSize:[32,32]})}).addTo(map).bindPopup("YOU ARE HERE").openPopup();
+    map.setView([myLat,myLng], 13);
+    render(lastData);
+    document.getElementById('status').innerText=`Your location: ${myLat.toFixed(5)}, ${myLng.toFixed(5)}`;
+  }, err=>{ alert("Allow location for browser"); });
+}
+
+function calcDist(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
 async function trigger(id){
   document.getElementById('status').innerText = "Triggering "+id+"...";
-  await fetch(COMMAND_URL,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id:id, action:"track"})
-  });
-  document.getElementById('status').innerText = "Triggered "+id+" — phone will update in 5-10 sec";
+  await fetch(COMMAND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:id, action:"track"})});
+  document.getElementById('status').innerText = "Triggered "+id+" — update in 6 sec";
   setTimeout(load, 6000);
+}
+
+function render(data){
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  let html="";
+  data.forEach(d=>{
+    if(!d.lat) return;
+    const m = L.marker([d.lat,d.lng]).addTo(map).bindPopup(`<b>${d.id}</b>`);
+    markers.push(m);
+    let distText = "";
+    if(myLat!=null){
+      const km = calcDist(myLat, myLng, d.lat, d.lng);
+      distText = km < 1 ? `<b style="color:#4caf50">📏 ${(km*1000).toFixed(0)} meters away</b>` : `<b style="color:#4caf50">📏 ${km.toFixed(2)} KM away</b>`;
+      // draw line from you to device
+      L.polyline([[myLat,myLng],[d.lat,d.lng]],{color:'#7b1fa2', dashArray:'5,10'}).addTo(map);
+    } else {
+      distText = `<i>Click MY LOCATION to see distance</i>`;
+    }
+    html+=`<div class="card">
+      <b>${d.id}</b> — ${new Date(d.time).toLocaleString()}<br>
+      Lat: ${d.lat} Lng: ${d.lng} Acc: ${d.acc}m<br>
+      ${distText}<br>
+      <button class="btn btn-red" onclick="trigger('${d.id}')">⚡ TRACK NOW</button>
+      <button class="btn btn-blue" onclick="openOnline(${d.lat},${d.lng})">🌐 Google Maps</button>
+    </div>`;
+  });
+  if(markers.length>0 && myLat==null) map.fitBounds(markers.map(m=>m.getLatLng()));
+  document.getElementById('list').innerHTML = html || "No devices";
 }
 
 async function load(){
   try{
     const res = await fetch(STORAGE_URL);
     const data = await res.json();
-    markers.forEach(m=>map.removeLayer(m)); markers=[];
-    let html="";
-    data.forEach(d=>{
-      if(!d.lat) return;
-      const m = L.marker([d.lat,d.lng]).addTo(map).bindPopup(`<b>${d.id}</b>`);
-      markers.push(m);
-      html+=`<div class="card">
-        <b>${d.id}</b> — ${new Date(d.time).toLocaleString()}<br>
-        Lat: ${d.lat} Lng: ${d.lng} Acc: ${d.acc}m<br>
-        <button class="btn btn-red" onclick="trigger('${d.id}')">⚡ TRACK NOW</button>
-        <button class="btn btn-blue" onclick="openOnline(${d.lat},${d.lng})">🌐 Google</button>
-        <button class="btn btn-green" onclick="openOSM(${d.lat},${d.lng})">🗺️ OSM</button>
-        <button class="btn btn-orange" onclick="openApp(${d.lat},${d.lng})">📱 App</button>
-      </div>`;
-    });
-    if(markers.length>0) map.fitBounds(markers.map(m=>m.getLatLng()));
-    document.getElementById('list').innerHTML = html || "No devices — click START on phone";
-    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()} | TRIGGER READY`;
-  }catch(e){ document.getElementById('status').innerText="Error loading API"; }
+    lastData = data;
+    render(data);
+    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()}`;
+  }catch(e){ document.getElementById('status').innerText="Error"; }
 }
 load();
 setInterval(load,10000);
