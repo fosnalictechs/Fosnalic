@@ -1,10 +1,9 @@
 export async function onRequest(context){
   try{
-    const kv = context.env.FOS_TRACKER
+    const kv = context.env.TRACK_DB
     if(!kv){
-      return new Response(JSON.stringify({error:"KV binding FOS_TRACKER missing. Go to Cloudflare Dashboard > Pages > fosnalic > Settings > Functions > KV bindings > Add FOS_TRACKER"}), {status:500, headers:{"Content-Type":"application/json"}})
+      return new Response(JSON.stringify({error:"KV TRACK_DB not found"}), {status:500, headers:{"Content-Type":"application/json"}})
     }
-
     const url = new URL(context.request.url)
     const key = url.searchParams.get("key")
     if(!key) return new Response(JSON.stringify({error:"?key=NAME required"}), {status:400, headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"}})
@@ -22,6 +21,6 @@ export async function onRequest(context){
 
     return new Response("Method not allowed", {status:405})
   }catch(e){
-    return new Response(JSON.stringify({error: e.message, stack: e.stack}), {status:500, headers:{"Content-Type":"application/json"}})
+    return new Response(JSON.stringify({error:e.message}), {status:500, headers:{"Content-Type":"application/json"}})
   }
 }
