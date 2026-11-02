@@ -9,10 +9,11 @@
 body{margin:0;font-family:sans-serif;background:#111;color:#fff}
 #map{height:55vh;width:100%}
 .card{background:#1e1e1e;margin:10px;padding:12px;border-radius:12px}
-.btn{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;margin:4px}
+.btn{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;margin:4px;cursor:pointer}
 .btn-blue{background:#1976D2;color:#fff}
 .btn-green{background:#2e7d32;color:#fff}
 .btn-orange{background:#ef6c00;color:#fff}
+.btn-red{background:#d32f2f;color:#fff}
 </style>
 </head>
 <body>
@@ -24,20 +25,26 @@ body{margin:0;font-family:sans-serif;background:#111;color:#fff}
 </div>
 
 <script>
-// DIRECT TO YOUR OWN WEBSITE - NPOINT DELETED FOREVER
 const STORAGE_URL = "https://fosnalic.pages.dev/api/track";
+const COMMAND_URL = "https://fosnalic.pages.dev/api/command";
 let map = L.map('map').setView([0.3476,32.5825], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
 let markers=[];
 
-function openOnline(lat,lng){
-  window.open(`https://www.google.com/maps?q=${lat},${lng}`,'_blank');
-}
-function openOSM(lat,lng){
-  window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`,'_blank');
-}
-function openApp(lat,lng){
-  window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`;
+function openOnline(lat,lng){ window.open(`https://www.google.com/maps?q=${lat},${lng}`,'_blank'); }
+function openOSM(lat,lng){ window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}`,'_blank'); }
+function openApp(lat,lng){ window.location.href = `geo:${lat},${lng}?q=${lat},${lng}`; }
+
+// WEBSITE TRIGGERS PHONE
+async function trigger(id){
+  document.getElementById('status').innerText = "Triggering "+id+"...";
+  await fetch(COMMAND_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id:id, action:"track"})
+  });
+  document.getElementById('status').innerText = "Triggered "+id+" — phone will update in 5-10 sec";
+  setTimeout(load, 6000);
 }
 
 async function load(){
@@ -48,20 +55,21 @@ async function load(){
     let html="";
     data.forEach(d=>{
       if(!d.lat) return;
-      const m = L.marker([d.lat,d.lng]).addTo(map).bindPopup(`<b>${d.id}</b><br>${d.lat},${d.lng}`);
+      const m = L.marker([d.lat,d.lng]).addTo(map).bindPopup(`<b>${d.id}</b>`);
       markers.push(m);
       html+=`<div class="card">
         <b>${d.id}</b> — ${new Date(d.time).toLocaleString()}<br>
         Lat: ${d.lat} Lng: ${d.lng} Acc: ${d.acc}m<br>
-        <button class="btn btn-blue" onclick="openOnline(${d.lat},${d.lng})">🌐 Google Maps</button>
-        <button class="btn btn-green" onclick="openOSM(${d.lat},${d.lng})">🗺️ OSM Online</button>
-        <button class="btn btn-orange" onclick="openApp(${d.lat},${d.lng})">📱 Open in App</button>
+        <button class="btn btn-red" onclick="trigger('${d.id}')">⚡ TRACK NOW</button>
+        <button class="btn btn-blue" onclick="openOnline(${d.lat},${d.lng})">🌐 Google</button>
+        <button class="btn btn-green" onclick="openOSM(${d.lat},${d.lng})">🗺️ OSM</button>
+        <button class="btn btn-orange" onclick="openApp(${d.lat},${d.lng})">📱 App</button>
       </div>`;
     });
     if(markers.length>0) map.fitBounds(markers.map(m=>m.getLatLng()));
     document.getElementById('list').innerHTML = html || "No devices — click START on phone";
-    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()} | DIRECT MODE`;
-  }catch(e){ document.getElementById('status').innerText="Error loading direct API"; }
+    document.getElementById('status').innerText = `Devices: ${data.length} | Updated: ${new Date().toLocaleTimeString()} | TRIGGER READY`;
+  }catch(e){ document.getElementById('status').innerText="Error loading API"; }
 }
 load();
 setInterval(load,10000);
