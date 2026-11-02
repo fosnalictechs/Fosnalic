@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FOSNALIC STORAGE CONTROL</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#111;color:#fff;padding:12px}
+input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none;background:#222;color:#fff;box-sizing:border-box}
+.btn{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;margin:4px;cursor:pointer}
+.btn-blue{background:#1976D2;color:#fff}
+.btn-green{background:#2e7d32;color:#fff}
+.btn-red{background:#d32f2f;color:#fff}
+.card{background:#1e1e1e;margin:8px 0;padding:10px;border-radius:10px}
+</style>
+</head>
+<body>
+<h2>📦 FOSNALIC STORAGE CONTROL</h2>
+<p>Manage any data: users, notes, products, etc</p>
+
+<input id="keyInput" placeholder="Key name e.g: users, notes, orders, devices" value="devices">
+<div>
+<button class="btn btn-blue" onclick="loadKey()">📥 LOAD</button>
+<button class="btn btn-green" onclick="saveKey()">💾 SAVE</button>
+<button class="btn btn-red" onclick="delKey()">🗑️ DELETE</button>
+</div>
+
+<span id="status"></span>
+<textarea id="dataArea" rows="18" placeholder='{"your":"data"}'></textarea>
+
+<h3>Quick Keys</h3>
+<div id="quick"></div>
+
+<script>
+const BASE = "/api/storage";
+let keys = ["devices","notes","users","orders","products","settings"];
+
+function renderQuick(){
+  document.getElementById('quick').innerHTML = keys.map(k=>`<button class="btn btn-blue" onclick="setKey('${k}')">${k}</button>`).join('');
+}
+function setKey(k){ document.getElementById('keyInput').value=k; loadKey(); }
+
+async function loadKey(){
+  const k = document.getElementById('keyInput').value.trim();
+  if(!k) return alert("Enter key");
+  document.getElementById('status').innerText="Loading "+k+"...";
+  try{
+    const res = await fetch(`${BASE}?key=${k}`);
+    const txt = await res.text();
+    let pretty = txt;
+    try{ pretty = JSON.stringify(JSON.parse(txt), null, 2); }catch(e){}
+    document.getElementById('dataArea').value = pretty;
+    document.getElementById('status').innerText = `Loaded ${k} | ${txt.length} bytes | ${new Date().toLocaleTimeString()}`;
+  }catch(e){ document.getElementById('status').innerText="Error: "+e; }
+}
+
+async function saveKey(){
+  const k = document.getElementById('keyInput').value.trim();
+  const v = document.getElementById('dataArea').value;
+  if(!k) return alert("Enter key");
+  document.getElementById('status').innerText="Saving...";
+  const res = await fetch(`${BASE}?key=${k}`, {method:"POST", body:v});
+  document.getElementById('status').innerText = res.ok ? `Saved ${k} ✅` : "Save failed";
+}
+
+async function delKey(){
+  const k = document.getElementById('keyInput').value.trim();
+  if(!confirm("Delete "+k+"?")) return;
+  await fetch(`${BASE}?key=${k}`, {method:"DELETE"});
+  document.getElementById('dataArea').value="";
+  document.getElementById('status').innerText="Deleted "+k;
+}
+
+renderQuick();
+</script>
+</body>
+</html>
