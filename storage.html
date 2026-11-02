@@ -1,76 +1,119 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FOSNALIC STORAGE CONTROL</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Depot - Unlimited</title>
 <style>
-body{margin:0;font-family:sans-serif;background:#111;color:#fff;padding:12px}
-input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:8px;border:none;background:#222;color:#fff;box-sizing:border-box}
-.btn{padding:10px 14px;border:none;border-radius:8px;font-weight:bold;margin:4px;cursor:pointer}
-.btn-blue{background:#1976D2;color:#fff}
-.btn-green{background:#2e7d32;color:#fff}
-.btn-red{background:#d32f2f;color:#fff}
-.card{background:#1e1e1e;margin:8px 0;padding:10px;border-radius:10px}
+body{font-family:system-ui;background:#0f172a;color:#fff;padding:15px}
+.box{background:#1e293b;padding:15px;border-radius:12px;max-width:800px;margin:auto}
+input,button,textarea{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:0;box-sizing:border-box}
+button{background:#3b82f6;color:#fff;font-weight:bold;cursor:pointer}
+textarea{height:400px;background:#0f172a;color:#a5f3fc;font-family:monospace}
+.small{font-size:12px;opacity:.7}
 </style>
 </head>
 <body>
-<h2>📦 FOSNALIC STORAGE CONTROL</h2>
-<p>Manage any data: users, notes, products, etc</p>
-
-<input id="keyInput" placeholder="Key name e.g: users, notes, orders, devices" value="devices">
-<div>
-<button class="btn btn-blue" onclick="loadKey()">📥 LOAD</button>
-<button class="btn btn-green" onclick="saveKey()">💾 SAVE</button>
-<button class="btn btn-red" onclick="delKey()">🗑️ DELETE</button>
+<div class="box">
+<h2>Fosnalic Depot - Unlimited</h2>
+<input id="key" placeholder="Key name e.g. products, users, locations" value="locations">
+<div class="small">Size: <span id="size">0</span> chars | Chunks: <span id="chunks">0</span></div>
+<textarea id="data" placeholder="Paste ANY size JSON here..." oninput="updateSize()"></textarea>
+<input type="file" id="file" accept=".json,.txt,.csv">
+<div style="display:flex;gap:8px">
+<button onclick="loadData()">LOAD</button>
+<button onclick="saveData()" style="background:#22c55e">SAVE (auto-split)</button>
+<button onclick="clearData()" style="background:#ef4444">DELETE KEY</button>
 </div>
-
-<span id="status"></span>
-<textarea id="dataArea" rows="18" placeholder='{"your":"data"}'></textarea>
-
-<h3>Quick Keys</h3>
-<div id="quick"></div>
-
+<div id="status" class="small" style="margin-top:10px"></div>
+</div>
 <script>
-const BASE = "/api/storage";
-let keys = ["devices","notes","users","orders","products","settings"];
-
-function renderQuick(){
-  document.getElementById('quick').innerHTML = keys.map(k=>`<button class="btn btn-blue" onclick="setKey('${k}')">${k}</button>`).join('');
+const API = "/api/storage";
+function updateSize(){
+  const t = document.getElementById('data').value;
+  document.getElementById('size').textContent = t.length;
+  document.getElementById('chunks').textContent = Math.ceil(t.length/900000);
 }
-function setKey(k){ document.getElementById('keyInput').value=k; loadKey(); }
-
-async function loadKey(){
-  const k = document.getElementById('keyInput').value.trim();
-  if(!k) return alert("Enter key");
-  document.getElementById('status').innerText="Loading "+k+"...";
-  try{
-    const res = await fetch(`${BASE}?key=${k}`);
+document.getElementById('file').addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => { document.getElementById('data').value = ev.target.result; updateSize(); }
+  r.readAsText(f);
+});
+async function loadData(){
+  const key = document.getElementById('key').value.trim();
+  if(!key) return alert('Enter key');
+  status('Loading '+key+'...');
+  // try load chunks
+  let all = "";
+  let i=0;
+  while(true){
+    const k = i==0? key : key+"_part_"+i;
+    const res = await fetch(`${API}?key=${k}`);
     const txt = await res.text();
-    let pretty = txt;
-    try{ pretty = JSON.stringify(JSON.parse(txt), null, 2); }catch(e){}
-    document.getElementById('dataArea').value = pretty;
-    document.getElementById('status').innerText = `Loaded ${k} | ${txt.length} bytes | ${new Date().toLocaleTimeString()}`;
-  }catch(e){ document.getElementById('status').innerText="Error: "+e; }
+    if(!txt || txt=="[]" && i>0) break;
+    if(i==0 && txt.startsWith('[') && JSON.parse(txt).length==0){
+      // check if chunked
+      const chk = await fetch(`${API}?key=${key}_meta`);
+      if((await chk.text())=="[]") { all=txt; break; }
+    }
+    if(txt=="[]" && i==0){ all=txt; break; }
+    if(txt=="[]") break;
+    all += (i==0? "" : "") + txt;
+    if(txt.length < 900000) break;
+    i++;
+    if(i>100) break;
+  }
+  // If meta exists, reconstruct
+  const metaRes = await fetch(`${API}?key=${key}_meta`);
+  const metaTxt = await metaRes.text();
+  if(metaTxt && metaTxt!="[]"){
+    try{
+      const meta = JSON.parse(metaTxt);
+      if(meta.chunks){
+        let rebuilt="";
+        for(let j=0;j<meta.chunks;j++){
+          const kk = j==0? key : key+"_part_"+j;
+          const rr = await fetch(`${API}?key=${kk}`);
+          rebuilt += await rr.text();
+        }
+        all = rebuilt;
+      }
+    }catch(e){}
+  }
+  document.getElementById('data').value = all;
+  updateSize();
+  status('Loaded '+all.length+' chars');
 }
-
-async function saveKey(){
-  const k = document.getElementById('keyInput').value.trim();
-  const v = document.getElementById('dataArea').value;
-  if(!k) return alert("Enter key");
-  document.getElementById('status').innerText="Saving...";
-  const res = await fetch(`${BASE}?key=${k}`, {method:"POST", body:v});
-  document.getElementById('status').innerText = res.ok ? `Saved ${k} ✅` : "Save failed";
+async function saveData(){
+  const key = document.getElementById('key').value.trim();
+  const val = document.getElementById('data').value;
+  if(!key || !val) return alert('Key and data required');
+  const CHUNK = 900000;
+  const chunks = Math.ceil(val.length/CHUNK);
+  status('Saving '+chunks+' chunk(s)...');
+  for(let i=0;i<chunks;i++){
+    const part = val.slice(i*CHUNK, (i+1)*CHUNK);
+    const k = i==0? key : key+"_part_"+i;
+    await fetch(`${API}?key=${k}`, {method:"POST", body: part});
+    status(`Saved chunk ${i+1}/${chunks}`);
+  }
+  await fetch(`${API}?key=${key}_meta`, {method:"POST", body: JSON.stringify({chunks, total:val.length, time:Date.now()})});
+  status('✅ Saved total '+val.length+' chars in '+chunks+' keys');
 }
-
-async function delKey(){
-  const k = document.getElementById('keyInput').value.trim();
-  if(!confirm("Delete "+k+"?")) return;
-  await fetch(`${BASE}?key=${k}`, {method:"DELETE"});
-  document.getElementById('dataArea').value="";
-  document.getElementById('status').innerText="Deleted "+k;
+async function clearData(){
+  if(!confirm('Delete this key?')) return;
+  const key = document.getElementById('key').value.trim();
+  // we can't list all parts, but delete main + meta + try 0-50
+  await fetch(`${API}?key=${key}`, {method:"POST", body:"[]"});
+  await fetch(`${API}?key=${key}_meta`, {method:"POST", body:"[]"});
+  for(let i=1;i<50;i++){
+    await fetch(`${API}?key=${key}_part_${i}`, {method:"POST", body:"[]"});
+  }
+  status('Deleted');
 }
-
-renderQuick();
+function status(m){ document.getElementById('status').textContent=m; }
 </script>
 </body>
 </html>
