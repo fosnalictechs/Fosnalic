@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live - FOSNALIC</title>
+<title>Live - FOSNALIC - DEPOT</title>
 <style>
 body{margin:0;font-family:system-ui;background:#F3F6FB}
 .box{max-width:700px;margin:auto;padding:12px}
@@ -37,9 +37,7 @@ button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#ff
 <div id="replyInfo" style="display:none;background:#FFF3CD;padding:8px;border-radius:8px;margin-bottom:8px;font-size:13px"></div>
 <input id="n" placeholder="Your name">
 <textarea id="t" rows="2" placeholder="Message (optional if you attach media)"></textarea>
-
 <div id="mediaPreview" style="display:none;margin:8px 0"></div>
-
 <div class="row">
 <label class="btn-sm" style="cursor:pointer">🖼 Image<input type="file" id="fImage" accept="image/*" hidden onchange="uploadFile(this,'image')"></label>
 <label class="btn-sm" style="cursor:pointer">🎥 Video<input type="file" id="fVideo" accept="video/*" hidden onchange="uploadFile(this,'video')"></label>
@@ -48,12 +46,11 @@ button{padding:10px 14px;border:0;border-radius:8px;background:#0F1C2E;color:#ff
 </div>
 <div id="s" style="font-size:12px;margin-top:6px"></div>
 </div>
-
 <div id="feed">Loading...</div>
 </div>
 
 <script>
-const API="https://fosnalic-live.onrender.com";
+const API="/api/storage?key=live_messages";
 let replyTo=null, mediaUrl=null, mediaType=null, curType="all";
 
 function setType(t,el){ curType=t; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); load(); }
@@ -62,29 +59,40 @@ function cancelReply(){ replyTo=null; document.getElementById('replyInfo').style
 
 async function uploadFile(input,type){
  let file=input.files[0]; if(!file) return;
- document.getElementById('s').innerText="Uploading "+type+"...";
- let fd=new FormData(); fd.append('file', file);
- let r=await fetch(API+"/upload",{method:"POST", body:fd});
- let j=await r.json();
- mediaUrl=j.url; mediaType=type;
- document.getElementById('mediaPreview').style.display='block';
- if(type==='image') document.getElementById('mediaPreview').innerHTML=`<img src="${mediaUrl}" class="media" style="max-height:200px"><br><small>${file.name}</small> <a href="#" onclick="clearMedia()">Remove</a>`;
- if(type==='video') document.getElementById('mediaPreview').innerHTML=`<video src="${mediaUrl}" controls class="media" style="max-height:200px"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;
- if(type==='audio') document.getElementById('mediaPreview').innerHTML=`<audio src="${mediaUrl}" controls class="audio"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;
- document.getElementById('s').innerText="Ready to post!";
+ document.getElementById('s').innerText="Reading "+type+"...";
+ let reader=new FileReader();
+ reader.onload=()=>{
+   mediaUrl=reader.result; mediaType=type;
+   document.getElementById('mediaPreview').style.display='block';
+   if(type==='image') document.getElementById('mediaPreview').innerHTML=`<img src="${mediaUrl}" class="media" style="max-height:200px"><br><a href="#" onclick="clearMedia()">Remove</a>`;
+   if(type==='video') document.getElementById('mediaPreview').innerHTML=`<video src="${mediaUrl}" controls class="media" style="max-height:200px"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;
+   if(type==='audio') document.getElementById('mediaPreview').innerHTML=`<audio src="${mediaUrl}" controls class="audio"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;
+   document.getElementById('s').innerText="Ready to post! ("+Math.round(mediaUrl.length/1024)+"KB)";
+ };
+ reader.readAsDataURL(file);
 }
 function clearMedia(){ mediaUrl=null; mediaType=null; document.getElementById('mediaPreview').style.display='none'; document.getElementById('mediaPreview').innerHTML=""; }
 
+async function getMessages(){
+  let r=await fetch(API); let txt=await r.text();
+  try{ return JSON.parse(txt) || []; }catch{ return []; }
+}
+async function saveMessages(msgs){
+  await fetch(API, {method:"POST", body: JSON.stringify(msgs)});
+}
+
 async function load(){
- let q=document.getElementById('q').value;
- let url=`${API}/messages?type=${curType}&q=${encodeURIComponent(q)}`;
- let r=await fetch(url); let data=await r.json();
+ let q=document.getElementById('q').value.toLowerCase();
+ let data=await getMessages();
+ data=data.sort((a,b)=>b.time-a.time);
+ if(curType!=="all") data=data.filter(m=> (m.mediaType||"text")===curType);
+ if(q) data=data.filter(m=> (m.text+m.name).toLowerCase().includes(q));
  let html="";
  data.filter(m=>!m.replyTo).forEach(m=>{
    html+=render(m);
    data.filter(x=>x.replyTo===m.id).reverse().forEach(rep=> html+=render(rep,true));
  });
- document.getElementById('feed').innerHTML=html||"<div class=card>No posts in this category</div>";
+ document.getElementById('feed').innerHTML=html||"<div class=card>No posts yet. Be first!</div>";
 }
 function render(m,isReply){
  let cls=isReply?"msg reply":"msg";
@@ -99,10 +107,13 @@ function render(m,isReply){
 function esc(s){return (s||"").replace(/</g,'&lt;');}
 
 async function post(){
- let name=document.getElementById('n').value; let text=document.getElementById('t').value.trim();
+ let name=document.getElementById('n').value||"Anon"; let text=document.getElementById('t').value.trim();
  if(!text && !mediaUrl) { alert("Add text or media"); return; }
  document.getElementById('s').innerText="Posting...";
- await fetch(API+"/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,text,replyTo,mediaUrl,mediaType})});
+ let msgs=await getMessages();
+ msgs.unshift({id:Date.now().toString(), name, text, replyTo, mediaUrl, mediaType, time:Date.now()});
+ if(msgs.length>200) msgs=msgs.slice(0,200); // keep last 200 to avoid KV limit
+ await saveMessages(msgs);
  document.getElementById('t').value=""; clearMedia(); cancelReply(); document.getElementById('s').innerText="Posted! ✅"; load();
 }
 load(); setInterval(load,6000);
