@@ -14,9 +14,13 @@ header .container{display:flex;justify-content:space-between;align-items:center}
 .logo-wrap{display:flex;align-items:center;gap:10px}
 .logo-wrap img{width:42px;height:42px;border-radius:8px;background:#1a365d}
 header h1{color:#1a365d;font-weight:800;font-size:1.25rem}
-#tickerBar{background:#FF6B35;color:#fff;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:relative;z-index:99;border-bottom:2px solid #1a365d}
-#tickerContent{display:inline-block;white-space:nowrap;color:#fff;line-height:44px;animation:marquee 40s linear infinite;will-change:transform;padding-left:0}
-@keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* FIXED MARQUEE - LOOPS FOREVER */
+#tickerBar{background:#FF6B35;color:#fff;height:44px;overflow:hidden;white-space:nowrap;position:relative;border-bottom:2px solid #1a365d}
+#tickerTrack{display:inline-block;white-space:nowrap;animation:scroll 30s linear infinite}
+#tickerContent{display:inline-block;padding-right:50px}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
 .hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,0.88),rgba(10,14,26,0.97)),url('https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200');background-size:cover;background-position:center}
 .hero-content{position:relative;z-index:2;max-width:620px}
@@ -51,7 +55,9 @@ footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 </style>
 </head>
 <body>
-<div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — We Build Technology That Actually Works</span></div>
+
+<div id="tickerBar"><div id="tickerTrack"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — We Build Technology That Actually Works ••• </span></div></div>
+
 <header><div class="container"><div class="logo-wrap"><img src="logo.png" onerror="this.src='https://via.placeholder.com/42'"><h1>FOSNALIC Techs</h1></div><button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><i class="fas fa-bars"></i></button></div></header>
 <div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="my-apps.html">My Apps</a><a href="live-chat.html">Live Chat</a><a href="contact.html">Contact</a><button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="margin-top:20px;padding:10px">Close</button></div>
 
@@ -96,57 +102,13 @@ async function loadAll(){
   if(d.ticker && d.ticker.length){
     let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!='' && !t.includes('Get Now') && !t.includes('2.5M')))];
     if(clean.length){
-      let txt = clean.join(' ••• ');
-      document.getElementById('tickerContent').innerHTML = txt + ' ••• ' + txt + ' ••• ' + txt + ' ••• ';
+      let txt = clean.join(' ••• ') + ' ••• ';
+      document.getElementById('tickerTrack').innerHTML = `<span id="tickerContent">${txt}</span><span id="tickerContent">${txt}</span><span id="tickerContent">${txt}</span><span id="tickerContent">${txt}</span>`;
     }
   }
   if(d.news && d.news.length){
     document.getElementById('newsContainer').innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
   }
-  let mount=document.getElementById('fos-ad-mount'); if(mount) mount.innerHTML='';
-  let seenAds=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');
-  let unique=[];let seenHtml=new Set();
-  (d.ads||[]).slice().reverse().forEach(ad=>{
-    if(!ad.html) return;
-    let key=ad.html.trim().substring(0,120);
-    if(key.includes('2.5M')||key.includes('Get Now')&&key.length<200) return;
-    if(!seenHtml.has(key)){seenHtml.add(key);unique.push(ad);}
-  });
-  let shown={fullscreen:0,sticky:0,floating:0,topbar:0};let toShow=[];
-  unique.forEach(ad=>{
-    if(ad.enabled===false) return;
-    if(ad.showOnce && seenAds['ad_'+ad.id]) return;
-    if(ad.type==='fullscreen' && shown.fullscreen>=1) return;
-    if(ad.type==='sticky-bottom' && shown.sticky>=1) return;
-    if(ad.type==='top-bar' && shown.topbar>=1) return;
-    if(ad.type.startsWith('floating') && shown.floating>=2) return;
-    toShow.push(ad);
-    if(ad.type==='fullscreen') shown.fullscreen++;
-    else if(ad.type==='sticky-bottom') shown.sticky++;
-    else if(ad.type==='top-bar') shown.topbar++;
-    else shown.floating++;
-  });
-  let floatCount=0;
-  toShow.reverse().forEach(ad=>{
-    let wrap=document.createElement('div');
-    let closeBtn=`<button class="fos-close" onclick="let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_${ad.id}']=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); this.parentElement.parentElement.remove();">×</button>`;
-    if(ad.type.startsWith('floating')){
-      wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');
-      wrap.style.bottom=(20+floatCount*110)+'px'; floatCount++;
-      wrap.innerHTML=closeBtn+'<div style="position:relative">'+ad.html+'</div>';
-    } else if(ad.type==='sticky-bottom'){
-      wrap.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)';
-      wrap.innerHTML=closeBtn+ad.html;
-    } else if(ad.type==='top-bar'){
-      wrap.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center';
-      wrap.innerHTML=closeBtn+ad.html;
-    } else if(ad.type==='fullscreen'){
-      wrap.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px';
-      wrap.innerHTML=`<div style="background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative">${closeBtn}${ad.html}</div>`;
-      setTimeout(()=>{ let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_'+ad.id]=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); },4000);
-    }
-    mount.appendChild(wrap);
-  });
  }catch(e){console.log(e);}
 }
 loadAll();setInterval(loadAll,60000);
