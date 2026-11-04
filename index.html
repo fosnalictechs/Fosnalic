@@ -14,10 +14,10 @@ header .container{display:flex;justify-content:space-between;align-items:center}
 .logo-wrap{display:flex;align-items:center;gap:10px}
 .logo-wrap img{width:42px;height:42px;border-radius:8px;background:#1a365d}
 header h1{color:#1a365d;font-weight:800;font-size:1.25rem}
-#tickerBar{background:#FF6B35;color:#fff;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;border-bottom:2px solid #1a365d}
-#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;line-height:44px}
+#tickerBar{background:#FF6B35;color:#fff;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:relative;z-index:99;border-bottom:2px solid #1a365d}
+#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;color:#fff;line-height:44px}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-200%)}}
-.hero{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
+.hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,0.88),rgba(10,14,26,0.97)),url('https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200');background-size:cover;background-position:center}
 .hero-content{position:relative;z-index:2;max-width:620px}
 .developer-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #FF6B35;margin:0 auto 18px;display:block;background:#1a202c}
@@ -53,87 +53,102 @@ footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 <body>
 <div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — We Build Technology That Actually Works</span></div>
 <header><div class="container"><div class="logo-wrap"><img src="logo.png" onerror="this.src='https://via.placeholder.com/42'"><h1>FOSNALIC Techs</h1></div><button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><i class="fas fa-bars"></i></button></div></header>
+<div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="my-apps.html">My Apps</a><a href="live-chat.html">Live Chat</a><a href="contact.html">Contact</a><button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="margin-top:20px;padding:10px">Close</button></div>
 
-<!-- LINKS AS IN 1ST PAGE -->
-<div class="mobile-menu" id="mobileMenu">
-<a href="index.html">Home</a>
-<a href="services.html">Services</a>
-<a href="portfolio.html">Portfolio</a>
-<a href="my-apps.html">My Apps</a>
-<a href="live-chat.html">Live Chat</a>
-<a href="contact.html">Contact</a>
-<button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="margin-top:20px;padding:10px">Close</button>
-</div>
+<section class="hero"><div class="hero-bg"></div><div class="hero-content"><img src="shadrach.jpg" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'"><h2>Welcome to<br><span style="color:#FF6B35">FOSNALIC Techs</span></h2><p>We Build Technology That Actually Works. Professional ICT solutions.</p><a href="services.html" class="btn btn-primary">Explore Services →</a><a href="portfolio.html" class="btn btn-dark">View Portfolio</a><a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a><a href="my-apps.html" class="btn btn-green">My Apps — Download</a></div></section>
 
-<section class="hero"><div class="hero-bg"></div><div class="hero-content">
-<img src="shadrach.jpg" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'">
-<h2>Welcome to<br><span style="color:#FF6B35">FOSNALIC Techs</span></h2>
-<p>We Build Technology That Actually Works. Professional ICT solutions.</p>
-<a href="services.html" class="btn btn-primary">Explore Services →</a>
-<a href="portfolio.html" class="btn btn-dark">View Portfolio</a>
-<a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a>
-<a href="my-apps.html" class="btn btn-green">My Apps — Download</a>
-</div></section>
+<section class="section"><div class="container"><div class="kicker">01 — What we do</div><h2 style="font-size:2.2rem">From first thought<br>to <em style="color:#FF6B35">full launch.</em></h2><div class="service-list"><article class="service-item"><span class="service-number">01</span><h3>Digital products</h3><p style="color:#94A3B8">Web platforms and mobile experiences engineered around how your customers actually behave.</p></article><article class="service-item"><span class="service-number">02</span><h3>Brand systems</h3><p style="color:#94A3B8">Clear visual identities and flexible design systems that make every touchpoint feel unmistakably yours.</p></article><article class="service-item"><span class="service-number">03</span><h3>Software engineering</h3><p style="color:#94A3B8">Reliable, maintainable builds—from first technical decision to launch and what comes after.</p></article></div></div></section>
 
-<!-- MERGED SECTIONS FROM 2ND DESIGN -->
-<section class="section"><div class="container">
-<div class="kicker">01 — What we do</div>
-<h2 style="font-size:2.2rem">From first thought<br>to <em style="color:#FF6B35">full launch.</em></h2>
-<div class="service-list">
-<article class="service-item"><span class="service-number">01</span><h3>Digital products</h3><p style="color:#94A3B8">Web platforms and mobile experiences engineered around how your customers actually behave.</p></article>
-<article class="service-item"><span class="service-number">02</span><h3>Brand systems</h3><p style="color:#94A3B8">Clear visual identities and flexible design systems that make every touchpoint feel unmistakably yours.</p></article>
-<article class="service-item"><span class="service-number">03</span><h3>Software engineering</h3><p style="color:#94A3B8">Reliable, maintainable builds—from first technical decision to launch and what comes after.</p></article>
-</div></div></section>
-
-<section class="section approach"><div class="container approach-grid">
-<div><div class="kicker">02 — How we work</div><h2 style="font-size:2rem">Clear thinking.<br>Sharp execution.<br><em style="color:#FF6B35">No theatre.</em></h2><p style="color:#94A3B8;margin-top:12px">Good technology should feel obvious. We ask hard questions early, keep you close, and build only what earns its place.</p></div>
-<div>
-<div style="margin-bottom:18px"><span style="color:#FF6B35;font-weight:800">01</span><h3>Understand first</h3><p style="color:#94A3B8">Close to the problem, people, and commercial reality.</p></div>
-<div style="margin-bottom:18px"><span style="color:#FF6B35;font-weight:800">02</span><h3>Make it tangible</h3><p style="color:#94A3B8">Prototypes and honest conversations into confident decisions.</p></div>
-<div><span style="color:#FF6B35;font-weight:800">03</span><h3>Build for change</h3><p style="color:#94A3B8">Sturdy foundations that evolve with business.</p></div>
-</div></div></section>
+<section class="section approach"><div class="container approach-grid"><div><div class="kicker">02 — How we work</div><h2 style="font-size:2rem">Clear thinking.<br>Sharp execution.<br><em style="color:#FF6B35">No theatre.</em></h2><p style="color:#94A3B8;margin-top:12px">Good technology should feel obvious when you use it—even when the work behind it is anything but.</p></div><div><div style="margin-bottom:18px"><span style="color:#FF6B35;font-weight:800">01</span><h3>Understand first</h3><p style="color:#94A3B8">Close to the problem, people, and commercial reality.</p></div><div style="margin-bottom:18px"><span style="color:#FF6B35;font-weight:800">02</span><h3>Make it tangible</h3><p style="color:#94A3B8">Frequent prototypes turn ideas into confident decisions.</p></div><div><span style="color:#FF6B35;font-weight:800">03</span><h3>Build for change</h3><p style="color:#94A3B8">Sturdy foundations that evolve as your business does.</p></div></div></div></section>
 
 <section class="news-section"><div class="container"><h2 style="color:#111">Latest Updates</h2><div id="newsContainer" class="grid"></div></div></section>
 
-<section class="section"><div class="container">
-<div class="kicker">03 — About</div>
-<div class="ps-card">
-<img src="shadrach.jpg" onerror="this.src='https://ui-avatars.com/api/?name=PS&background=FF6B35&color=fff&size=90'">
-<div style="flex:1">
-<h3>Possible Shadrach</h3><p style="color:#94A3B8;margin:8px 0">Founded by Possible Shadrach, Fosnalic Techs brings thoughtful design and dependable technology together for teams ready to build with purpose.</p>
-<a href="contact.html" class="btn btn-primary" style="margin:12px 0 0 0;max-width:200px">Contact Me →</a>
-</div>
-</div>
-</div></section>
+<section class="section"><div class="container"><div class="kicker">03 — About Founder</div><div class="ps-card"><img src="shadrach.jpg" onerror="this.src='https://ui-avatars.com/api/?name=PS&background=FF6B35&color=fff&size=90'"><div style="flex:1"><h3>Possible Shadrach</h3><p style="color:#94A3B8;margin:8px 0">Founded by Possible Shadrach, Fosnalic Techs brings thoughtful design and dependable technology together for teams ready to build with purpose.</p><a href="contact.html" class="btn btn-primary" style="margin:12px 0 0 0;max-width:200px">Contact Me →</a></div></div></div></section>
 
-<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>possyshad@gmail.com</p></div></footer>
-<div id="fos-ad-mount"></div>
+<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>possyshad@gmail.com</p><p style="font-size:12px;margin-top:6px">© 2026 By Possible Shadrach — Designing what matters. Building what lasts.</p></div></footer>
+
+<div id="fos-ad-mount"></div><div id="adHeader"></div><div id="adHeaderContainer"></div><div id="adMiddle"></div><div id="adMiddleContainer"></div><div id="adFooter"></div><div id="adFooterContainer"></div>
 
 <script>
-// DEPOT - all devices sync
-const DEPOT_API = "/api/storage?key=fosnalic-data";
+let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
+const RAW_GIST = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
+const DEPOT_API = `/api/storage?key=fosnalic-data`;
+
 async function loadAll(){
  try{
-  let r = await fetch(DEPOT_API+"?t="+Date.now(),{cache:"no-store"});
-  let d={}; try{d=await r.json()}catch{d={}}
-  if(d.ticker?.length){
-    let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!=''))];
+  let d = {ticker:[], news:[], ads:[]};
+  // 1. Try DEPOT first (new system - saves for every device at once)
+  try{
+    let rDepot = await fetch(DEPOT_API+"?t="+Date.now(),{cache:"no-store"});
+    if(rDepot.ok){
+      let depotData = await rDepot.json();
+      if(depotData && (depotData.ticker?.length || depotData.news?.length)) d = depotData;
+    }
+  }catch(e){}
+
+  // 2. If depot empty, fallback to GIST (old system - this was displaying before)
+  if(!d.news || d.news.length===0){
+    let r = await fetch(RAW_GIST+"?t="+Date.now(),{cache:"no-store"});
+    let gd = r.ok ? await r.json() : {ticker:[]};
+    if(gd.ticker) d.ticker = gd.ticker;
+    if(gd.news) d.news = gd.news;
+    if(gd.ads) d.ads = gd.ads;
+  }
+
+  if(d.ticker && d.ticker.length){
+    let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!='' && !t.includes('Get Now') && !t.includes('2.5M')))];
     if(clean.length) document.getElementById('tickerContent').innerHTML=clean.join(' ••• ');
   }
-  if(d.news?.length){
+  if(d.news && d.news.length){
     document.getElementById('newsContainer').innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
   }
   let mount=document.getElementById('fos-ad-mount'); if(mount) mount.innerHTML='';
-  (d.ads||[]).forEach(ad=>{
-    if(!ad.html || ad.enabled===false) return;
+  let seenAds=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');
+  let unique=[];let seenHtml=new Set();
+  (d.ads||[]).slice().reverse().forEach(ad=>{
+    if(!ad.html) return;
+    let key=ad.html.trim().substring(0,120);
+    if(key.includes('2.5M')||key.includes('Get Now')&&key.length<200) return;
+    if(!seenHtml.has(key)){seenHtml.add(key);unique.push(ad);}
+  });
+  let shown={fullscreen:0,sticky:0,floating:0,topbar:0};let toShow=[];
+  unique.forEach(ad=>{
+    if(ad.enabled===false) return;
+    if(ad.showOnce && seenAds['ad_'+ad.id]) return;
+    if(ad.type==='fullscreen' && shown.fullscreen>=1) return;
+    if(ad.type==='sticky-bottom' && shown.sticky>=1) return;
+    if(ad.type==='top-bar' && shown.topbar>=1) return;
+    if(ad.type.startsWith('floating') && shown.floating>=2) return;
+    toShow.push(ad);
+    if(ad.type==='fullscreen') shown.fullscreen++;
+    else if(ad.type==='sticky-bottom') shown.sticky++;
+    else if(ad.type==='top-bar') shown.topbar++;
+    else shown.floating++;
+  });
+  let floatCount=0;
+  toShow.reverse().forEach(ad=>{
     let wrap=document.createElement('div');
-    wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');
-    wrap.innerHTML=`<button class="fos-close" onclick="this.parentElement.remove()">×</button><div>${ad.html}</div>`;
+    let closeBtn=`<button class="fos-close" onclick="let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_${ad.id}']=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); this.parentElement.parentElement.remove();">×</button>`;
+    if(ad.type.startsWith('floating')){
+      wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');
+      wrap.style.bottom=(20+floatCount*110)+'px'; floatCount++;
+      wrap.innerHTML=closeBtn+'<div style="position:relative">'+ad.html+'</div>';
+    } else if(ad.type==='sticky-bottom'){
+      wrap.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)';
+      wrap.innerHTML=closeBtn+ad.html;
+    } else if(ad.type==='top-bar'){
+      wrap.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center';
+      wrap.innerHTML=closeBtn+ad.html;
+    } else if(ad.type==='fullscreen'){
+      wrap.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px';
+      wrap.innerHTML=`<div style="background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative">${closeBtn}${ad.html}</div>`;
+      setTimeout(()=>{ let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_'+ad.id]=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); },4000);
+    }
     mount.appendChild(wrap);
   });
- }catch(e){console.log(e)}
+ }catch(e){console.log(e);}
 }
-loadAll(); setInterval(loadAll,60000);
+loadAll();setInterval(loadAll,60000);
 </script>
 </body>
 </html>
