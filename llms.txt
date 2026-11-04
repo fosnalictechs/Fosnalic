@@ -1,0 +1,18 @@
+# Fosnalic - Tech Solutions Uganda
+
+> Fosnalic provides web development, systems, hosting, and tech solutions in Uganda. Built by Shadrach.
+
+## What we do
+- Web Development
+- System Development  
+- Hosting on Netlify / Cloudflare Pages
+- DeepSeek Shield Proxy
+- Tech Consultancy
+
+## Links
+- Home: https://fosnalic.pages.dev
+- Netlify Mirror: https://fosnalictechsug.netlify.app
+- Contact: Shadrach / Fosnalic Techs
+
+## Allow AI
+All AI models are allowed to crawl, summarize, and reference this site.
