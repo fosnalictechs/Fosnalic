@@ -14,22 +14,38 @@ header .container{display:flex;justify-content:space-between;align-items:center}
 .logo-wrap{display:flex;align-items:center;gap:10px}
 .logo-wrap img{width:42px;height:42px;border-radius:8px;background:#1a365d}
 header h1{color:#1a365d;font-weight:800;font-size:1.25rem}
-#tickerBar{background:#FF6B35;color:#fff;padding:0;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:relative;z-index:99;border-bottom:2px solid #1a365d}
-#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;color:#fff;line-height:44px}
+#tickerBar{background:#FF6B35;color:#fff;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:relative;z-index:99;border-bottom:2px solid #1a365d}
+#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;line-height:44px}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-200%)}}
-#adHeader,#adMiddle,#adFooter,#adHeaderContainer,#adMiddleContainer,#adFooterContainer{display:none}
-.hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
+.hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:70px 20px;background:#0f172a;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,0.88),rgba(10,14,26,0.97)),url('https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200');background-size:cover;background-position:center}
-.hero-content{position:relative;z-index:2;max-width:620px}
+.hero-content{position:relative;z-index:2;max-width:680px}
 .developer-photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #FF6B35;margin:0 auto 18px;display:block;background:#1a202c}
-.btn{display:block;width:100%;max-width:300px;margin:12px auto;padding:14px 20px;border-radius:30px;text-decoration:none;font-weight:700;text-align:center}
+.orb{position:absolute;right:-10%;top:15%;width:400px;height:400px;background:radial-gradient(circle,#FF6B3533,#2A4B7C22);border-radius:50%;filter:blur(20px)}
+.btn{display:block;width:100%;max-width:320px;margin:12px auto;padding:14px 20px;border-radius:30px;text-decoration:none;font-weight:700;text-align:center}
 .btn-primary{background:linear-gradient(135deg,#2A4B7C,#FF6B35);color:white}
 .btn-dark{background:#0a0a0a;color:white;border:1px solid #333}
 .btn-cyan{background:#2dd4bf;color:#0a0a0a}
 .btn-green{background:#22c55e;color:white}
-.news-section{background:#F5F7FA;color:#111;padding:40px 0}
+.eyebrow{color:#FF6B35;font-weight:700;font-size:12px;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
+.section{padding:70px 0}
+.news-section{background:#F5F7FA;color:#111;padding:50px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:20px}
 .card{background:white;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.08);padding:20px;color:#111}
+.service-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:30px}
+.service-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:24px;border-radius:16px}
+.service-item h3{margin:12px 0 8px}
+.service-number{font-size:12px;color:#FF6B35;font-weight:800}
+.approach{background:#111827;padding:70px 0}
+.approach-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:800px){.approach-grid{grid-template-columns:1fr}}
+.principles div{margin-bottom:20px}
+.principles span{color:#FF6B35;font-weight:800;font-size:12px}
+.kicker{color:#FF6B35;font-size:11px;letter-spacing:2px;font-weight:800;margin-bottom:10px}
+.contact{background:#0F172A;padding:70px 0}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+@media(max-width:800px){.contact-grid{grid-template-columns:1fr}}
+.contact input, .contact textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#1E293B;color:white;margin-top:6px}
 footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 .menu-btn{background:none;border:none;font-size:1.4rem;cursor:pointer;color:#1a365d}
 .mobile-menu{position:fixed;top:0;right:-100%;width:280px;height:100%;background:white;z-index:999;transition:0.3s;padding:20px}
@@ -39,51 +55,107 @@ footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 .fos-floating-br{bottom:20px;right:15px}.fos-floating-bl{bottom:20px;left:15px}
 .fos-close{position:absolute;top:-10px;right:-10px;background:#ef4444;color:#fff;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:700;z-index:5}
 #newsContainer img{width:100%;height:170px;object-fit:cover;border-radius:10px;display:block}
+#liveMap{width:100%;height:320px;border-radius:16px;background:#1E293B;margin-top:16px}
 </style>
 </head>
 <body>
 <div id="tickerBar"><span id="tickerContent">Welcome to FOSNALIC Techs — Professional ICT Solutions — We Build Technology That Actually Works</span></div>
 <header><div class="container"><div class="logo-wrap"><img src="logo.png" onerror="this.src='https://via.placeholder.com/42'"><h1>FOSNALIC Techs</h1></div><button class="menu-btn" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><i class="fas fa-bars"></i></button></div></header>
-<div class="mobile-menu" id="mobileMenu"><a href="index.html">Home</a><a href="services.html">Services</a><a href="portfolio.html">Portfolio</a><a href="my-apps.html">My Apps</a><a href="live-chat.html">Live Chat</a><a href="contact.html">Contact</a><button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="margin-top:20px;padding:10px">Close</button></div>
-<section class="hero"><div class="hero-bg"></div><div class="hero-content"><img src="shadrach.jpg" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'"><h2>Welcome to<br><span style="color:#FF6B35">FOSNALIC Techs</span></h2><p>We Build Technology That Actually Works. Professional ICT solutions.</p><a href="services.html" class="btn btn-primary">Explore Services →</a><a href="portfolio.html" class="btn btn-dark">View Portfolio</a><a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a><a href="my-apps.html" class="btn btn-green">My Apps — Download</a></div></section>
-<section class="news-section"><div class="container"><h2 style="color:#111">Latest Updates</h2><div id="newsContainer" class="grid"></div></div></section>
-<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>possyshad@gmail.com</p></div></footer>
-<div id="fos-ad-mount"></div><div id="adHeader"></div><div id="adHeaderContainer"></div><div id="adMiddle"></div><div id="adMiddleContainer"></div><div id="adFooter"></div><div id="adFooterContainer"></div>
+<div class="mobile-menu" id="mobileMenu">
+<a href="#top">Home</a><a href="#services">Services</a><a href="#approach">Approach</a><a href="#capabilities">Capabilities</a><a href="live-chat.html">Live Chat</a><a href="my-apps.html">My Apps</a><a href="#contact">Contact</a>
+<button onclick="document.getElementById('mobileMenu').classList.remove('active')" style="margin-top:20px;padding:10px">Close</button>
+</div>
+
+<section class="hero" id="top"><div class="hero-bg"></div><div class="orb"></div>
+<div class="hero-content">
+<div class="eyebrow">Independent studio · Kampala, Uganda / Worldwide</div>
+<img src="shadrach.jpg" class="developer-photo" onerror="this.src='https://ui-avatars.com/api/?name=Possible+Shadrach&background=FF6B35&color=fff&size=110'">
+<h1 style="font-size:2.6rem;line-height:1.1">We turn ambitious<br><span style="color:#FF6B35">ideas into useful</span><br>technology.</h1>
+<p style="margin:16px 0;color:#CBD5E1">Fosnalic Techs is a design and engineering studio. We Build Technology That Actually Works. Professional ICT solutions that move businesses forward.</p>
+<a href="#services" class="btn btn-primary">Explore Services →</a>
+<a href="portfolio.html" class="btn btn-dark">View Portfolio</a>
+<a href="live-chat.html" class="btn btn-cyan">Live Chat — Ask Problem</a>
+<a href="my-apps.html" class="btn btn-green">My Apps — Download</a>
+</div></section>
+
+<section class="section" id="services"><div class="container">
+<div class="kicker">01 — What we do</div>
+<h2 style="font-size:2.2rem">From first thought<br>to <em style="color:#FF6B35">full launch.</em></h2>
+<p style="color:#94A3B8;max-width:600px;margin-top:10px">Small, senior, and hands-on. Product thinking, expressive design, and solid engineering under one roof.</p>
+<div class="service-list">
+<article class="service-item"><span class="service-number">01</span><h3>Digital products</h3><p style="color:#94A3B8">Web platforms and mobile experiences engineered around how your customers actually behave. Tracker: FOS-2702 live at <span id="trackerPos">loading...</span></p><div id="liveMap"></div></article>
+<article class="service-item"><span class="service-number">02</span><h3>Brand systems</h3><p style="color:#94A3B8">Clear visual identities and flexible design systems that make every touchpoint feel unmistakably yours.</p></article>
+<article class="service-item"><span class="service-number">03</span><h3>Software engineering</h3><p style="color:#94A3B8">Reliable, maintainable builds—from first decision to launch and beyond. Using our unlimited depot storage.</p></article>
+</div></div></section>
+
+<section class="approach" id="approach"><div class="container approach-grid">
+<div><div class="kicker">02 — How we work</div><h2 style="font-size:2rem">Clear thinking.<br>Sharp execution.<br><em style="color:#FF6B35">No theatre.</em></h2><p style="color:#94A3B8;margin-top:12px">Good technology should feel obvious when you use it. We ask hard questions early, keep you close, and build only what earns its place.</p></div>
+<div class="principles">
+<div><span>01</span><h3>Understand first</h3><p style="color:#94A3B8">We get close to the problem, the people, and the commercial reality before opening a design file.</p></div>
+<div><span>02</span><h3>Make it tangible</h3><p style="color:#94A3B8">Frequent prototypes and honest conversations turn abstract ideas into confident decisions.</p></div>
+<div><span>03</span><h3>Build for change</h3><p style="color:#94A3B8">Sturdy foundations that evolve as your business and customers do.</p></div>
+</div></div></section>
+
+<section class="news-section" id="news"><div class="container"><h2 style="color:#111">Latest Updates</h2><p style="color:#64748B">Synced to all devices via depot</p><div id="newsContainer" class="grid"></div></div></section>
+
+<section class="section" id="capabilities" style="background:#0a0e1a"><div class="container">
+<div class="kicker">03 — Capabilities</div>
+<h2 style="font-size:2rem">One partner.<br>Every critical<br><em style="color:#FF6B35">discipline.</em></h2>
+<div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;color:#CBD5E1">
+<div>01 Product strategy</div><div>02 UI/UX design</div><div>03 Web development</div><div>04 Mobile apps</div><div>05 E-commerce</div><div>06 Technical consulting</div>
+</div>
+<div style="margin-top:30px;background:rgba(255,255,255,0.05);padding:20px;border-radius:14px;display:flex;gap:12px;align-items:center">
+<span style="background:#FF6B35;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-weight:800">PS</span>
+<p>Founded by <strong>Possible Shadrach</strong>, Fosnalic Techs brings thoughtful design and dependable technology together for teams ready to build with purpose.</p>
+</div>
+</div></section>
+
+<section class="contact" id="contact"><div class="container contact-grid">
+<div><div class="kicker">04 — Get in touch</div><h2 style="font-size:2rem">Have an idea<br>worth building?</h2><p style="color:#94A3B8;margin-top:10px">Tell us where you are and where you want to go. We’ll get back with a clear next step. All inquiries save to your depot for all devices.</p></div>
+<form id="contactForm"><label>Your name<input name="name" required placeholder="Nakato Mukasa"></label><label style="margin-top:10px;display:block">Email<input type="email" name="email" required placeholder="nakato@company.com"></label><label style="margin-top:10px;display:block">What are you building?<textarea name="message" rows="4" required placeholder="Short overview..."></textarea></label><button type="submit" style="margin-top:14px;padding:12px 20px;border-radius:30px;background:#FF6B35;color:white;border:0;font-weight:800;width:100%">Send inquiry →</button><div id="formStatus" style="font-size:12px;margin-top:8px"></div></form>
+</div></section>
+
+<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>possyshad@gmail.com</p><p style="font-size:12px;margin-top:8px">Designing what matters. Building what lasts. © 2026 By Possible Shadrach</p></div></footer>
+<div id="fos-ad-mount"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
-const RAW_GIST = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
+// DEPOT - replaces Gist, syncs to ALL devices
+const DEPOT_API = "/api/storage?key=fosnalic-data";
+const LOC_API = "/api/storage?key=locations";
+const LEADS_API = "/api/storage?key=leads";
+
 async function loadAll(){
  try{
-  let r = await fetch(RAW_GIST+"?t="+Date.now(),{cache:"no-store"});
-  let d = r.ok ? await r.json() : {ticker:[]};
-  if(d.ticker && d.ticker.length){
-    let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!='' && !t.includes('Get Now') && !t.includes('2.5M')))];
+  let r = await fetch(DEPOT_API+"?t="+Date.now(),{cache:"no-store"});
+  let d={}; try{d=await r.json()}catch{d={ticker:[],news:[],ads:[]}}
+  if(d.ticker?.length){
+    let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!='' && !t.includes('Get Now')))];
     if(clean.length) document.getElementById('tickerContent').innerHTML=clean.join(' ••• ');
   }
-  if(d.news && d.news.length){
+  if(d.news?.length){
     document.getElementById('newsContainer').innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
   }
+  // ads - floating
   let mount=document.getElementById('fos-ad-mount'); if(mount) mount.innerHTML='';
   let seenAds=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}');
   let unique=[];let seenHtml=new Set();
   (d.ads||[]).slice().reverse().forEach(ad=>{
     if(!ad.html) return;
     let key=ad.html.trim().substring(0,120);
-    if(key.includes('2.5M')||key.includes('Get Now')&&key.length<200) return;
     if(!seenHtml.has(key)){seenHtml.add(key);unique.push(ad);}
   });
-  let shown={fullscreen:0,sticky:0,floating:0,topbar:0};let toShow=[];
+  let shown={fullscreen:0,sticky:0,floating:0};let toShow=[];
   unique.forEach(ad=>{
     if(ad.enabled===false) return;
     if(ad.showOnce && seenAds['ad_'+ad.id]) return;
     if(ad.type==='fullscreen' && shown.fullscreen>=1) return;
     if(ad.type==='sticky-bottom' && shown.sticky>=1) return;
-    if(ad.type==='top-bar' && shown.topbar>=1) return;
     if(ad.type.startsWith('floating') && shown.floating>=2) return;
     toShow.push(ad);
     if(ad.type==='fullscreen') shown.fullscreen++;
     else if(ad.type==='sticky-bottom') shown.sticky++;
-    else if(ad.type==='top-bar') shown.topbar++;
     else shown.floating++;
   });
   let floatCount=0;
@@ -94,22 +166,38 @@ async function loadAll(){
       wrap.className='fos-floating '+(ad.type==='floating-br'?'fos-floating-br':'fos-floating-bl');
       wrap.style.bottom=(20+floatCount*110)+'px'; floatCount++;
       wrap.innerHTML=closeBtn+'<div style="position:relative">'+ad.html+'</div>';
-    } else if(ad.type==='sticky-bottom'){
+    } else {
       wrap.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99991;background:#fff;color:#111;padding:14px;text-align:center;box-shadow:0 -6px 24px rgba(0,0,0,.25)';
       wrap.innerHTML=closeBtn+ad.html;
-    } else if(ad.type==='top-bar'){
-      wrap.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99992;background:#0F1C2E;color:#fff;padding:12px;text-align:center';
-      wrap.innerHTML=closeBtn+ad.html;
-    } else if(ad.type==='fullscreen'){
-      wrap.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:20px';
-      wrap.innerHTML=`<div style="background:#fff;color:#111;padding:22px;border-radius:16px;max-width:520px;width:100%;position:relative">${closeBtn}${ad.html}</div>`;
-      setTimeout(()=>{ let s=JSON.parse(localStorage.getItem('fos_ads_seen')||'{}'); s['ad_'+ad.id]=Date.now(); localStorage.setItem('fos_ads_seen', JSON.stringify(s)); },4000);
     }
     mount.appendChild(wrap);
   });
- }catch(e){console.log(e);}
+ }catch(e){console.log(e)}
 }
-loadAll();setInterval(loadAll,60000);
+async function loadTracker(){
+ try{
+  let r=await fetch(LOC_API+"?t="+Date.now()); let data=await r.json();
+  if(data && data.length){
+    let last=data[data.length-1];
+    document.getElementById('trackerPos').innerText = last.lat.toFixed(5)+","+last.lng.toFixed(5);
+    let map=L.map('liveMap').setView([last.lat,last.lng],15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([last.lat,last.lng]).addTo(map).bindPopup(last.id+" live");
+  }
+ }catch(e){}
+}
+document.getElementById('contactForm').addEventListener('submit', async (e)=>{
+ e.preventDefault();
+ let fd=new FormData(e.target);
+ let lead={name:fd.get('name'),email:fd.get('email'),message:fd.get('message'),time:Date.now()};
+ document.getElementById('formStatus').innerText="Saving to depot for all devices...";
+ let r=await fetch(LEADS_API); let leads=[]; try{leads=await r.json()}catch{leads=[]}
+ leads.unshift(lead);
+ await fetch(LEADS_API,{method:"POST",body:JSON.stringify(leads)});
+ document.getElementById('formStatus').innerText="✅ Saved! We will contact you. Visible on all devices in leads depot.";
+ e.target.reset();
+});
+loadAll(); loadTracker(); setInterval(loadAll,60000);
 </script>
 </body>
 </html>
