@@ -2,3 +2,10 @@
   X-Frame-Options: ALLOWALL
   Content-Security-Policy: frame-ancestors * 'self' https://*.netlify.app https://*.pages.dev
   Access-Control-Allow-Origin: *
+  X-Robots-Tag: all
+
+/sitemap.xml
+  Content-Type: application/xml
+
+/robots.txt
+  Content-Type: text/plain
