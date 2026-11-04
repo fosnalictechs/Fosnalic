@@ -15,8 +15,8 @@ header .container{display:flex;justify-content:space-between;align-items:center}
 .logo-wrap img{width:42px;height:42px;border-radius:8px;background:#1a365d}
 header h1{color:#1a365d;font-weight:800;font-size:1.25rem}
 #tickerBar{background:#FF6B35;color:#fff;height:44px;white-space:nowrap;overflow:hidden;font-weight:800;font-size:14px;display:flex;align-items:center;position:relative;z-index:99;border-bottom:2px solid #1a365d}
-#tickerContent{display:inline-block;padding-left:100%;animation:marquee 28s linear infinite;white-space:nowrap;color:#fff;line-height:44px}
-@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-200%)}}
+#tickerContent{display:inline-block;white-space:nowrap;color:#fff;line-height:44px;animation:marquee 40s linear infinite;will-change:transform;padding-left:0}
+@keyframes marquee{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 .hero{position:relative;min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:#0f172a;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,14,26,0.88),rgba(10,14,26,0.97)),url('https://images.unsplash.com/photo-1551650975-87deedd944c3?w=1200');background-size:cover;background-position:center}
 .hero-content{position:relative;z-index:2;max-width:620px}
@@ -67,7 +67,7 @@ footer{background:#000;color:#718096;padding:30px 0;text-align:center}
 
 <footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p>possyshad@gmail.com</p><p style="font-size:12px;margin-top:6px">© 2026 By Possible Shadrach — Designing what matters. Building what lasts.</p></div></footer>
 
-<div id="fos-ad-mount"></div><div id="adHeader"></div><div id="adHeaderContainer"></div><div id="adMiddle"></div><div id="adMiddleContainer"></div><div id="adFooter"></div><div id="adFooterContainer"></div>
+<div id="fos-ad-mount"></div>
 
 <script>
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
@@ -77,7 +77,6 @@ const DEPOT_API = `/api/storage?key=fosnalic-data`;
 async function loadAll(){
  try{
   let d = {ticker:[], news:[], ads:[]};
-  // 1. Try DEPOT first (new system - saves for every device at once)
   try{
     let rDepot = await fetch(DEPOT_API+"?t="+Date.now(),{cache:"no-store"});
     if(rDepot.ok){
@@ -86,7 +85,6 @@ async function loadAll(){
     }
   }catch(e){}
 
-  // 2. If depot empty, fallback to GIST (old system - this was displaying before)
   if(!d.news || d.news.length===0){
     let r = await fetch(RAW_GIST+"?t="+Date.now(),{cache:"no-store"});
     let gd = r.ok ? await r.json() : {ticker:[]};
@@ -97,7 +95,10 @@ async function loadAll(){
 
   if(d.ticker && d.ticker.length){
     let clean=[...new Set(d.ticker.filter(t=>t && t.trim()!='' && !t.includes('Get Now') && !t.includes('2.5M')))];
-    if(clean.length) document.getElementById('tickerContent').innerHTML=clean.join(' ••• ');
+    if(clean.length){
+      let txt = clean.join(' ••• ');
+      document.getElementById('tickerContent').innerHTML = txt + ' ••• ' + txt + ' ••• ' + txt + ' ••• ';
+    }
   }
   if(d.news && d.news.length){
     document.getElementById('newsContainer').innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
