@@ -1,4 +1,4 @@
 /*
-  X-Frame-Options: DENY
-  Content-Security-Policy: frame-ancestors 'none'
-  X-Content-Type-Options: nosniff
+  X-Frame-Options: ALLOWALL
+  Content-Security-Policy: frame-ancestors * 'self' https://*.netlify.app https://*.pages.dev
+  Access-Control-Allow-Origin: *
