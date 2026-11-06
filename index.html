@@ -243,7 +243,7 @@ header h1 {
 .btn-cyan { background: #2dd4bf; color: #0a0a0a; }
 .btn-green { background: #22c55e; color: white; }
 
-/* Latest Updates Section (Dot-scrollable / Manual Horizontal Swipe Carousel) */
+/* Latest Updates Section (Dot-scrollable / Swipeable Manual Carousel) */
 .news-section {
     background: #F5F7FA;
     color: #111;
@@ -611,8 +611,7 @@ footer {
 
 <script>
 // Typewriter effect for "Welcome to FOSNALIC Techs"
-const textParts = ["Welcome to
-", "<span>FOSNALIC Techs</span>"];
+const textParts = ["Welcome to\n", "<span>FOSNALIC Techs</span>"];
 const target = document.getElementById('typewriterTarget');
 let partIndex = 0;
 let charIndex = 0;
@@ -678,7 +677,15 @@ async function loadAll(){
     }
   }
   if(d.news && d.news.length){
-    let cardsHTML = d.news.map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
+    let cardsHTML = d.news.map(n=>`
+      <div class="card" style="padding:0;overflow:hidden">
+        ${n.img ? `<img src="${n.img}" onerror="this.style.display='none'">` : ''}
+        <div style="padding:16px">
+          <h3 style="color:#111;margin-bottom:8px;">${n.title}</h3>
+          <p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p>
+        </div>
+      </div>
+    `).join('');
     document.getElementById('newsTrack').innerHTML = cardsHTML;
     setupDots(d.news.length);
   }
