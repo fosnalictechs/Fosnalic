@@ -144,7 +144,7 @@ header h1 {
 #tickerTrack {
     display: inline-block;
     white-space: nowrap;
-    animation: scroll 2s linear infinite;
+    animation: scroll 30s linear infinite;
 }
 
 @keyframes scroll {
@@ -243,18 +243,36 @@ header h1 {
 .btn-cyan { background: #2dd4bf; color: #0a0a0a; }
 .btn-green { background: #22c55e; color: white; }
 
-/* News Section (Moved Above Mission Banner) */
+/* Latest Updates Section (Moved Above Mission Banner) */
 .news-section {
     background: #F5F7FA;
     color: #111;
     padding: 60px 0;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+/* Horizontal Auto-Scrolling News Container */
+.news-scroll-container {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
     margin-top: 20px;
+    display: flex;
+}
+
+.news-track {
+    display: flex;
+    gap: 20px;
+    animation: newsScroll 15s linear infinite;
+    width: max-content;
+}
+
+.news-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes newsScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .card {
@@ -263,9 +281,12 @@ header h1 {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     color: #111;
+    min-width: 300px;
+    max-width: 300px;
+    flex-shrink: 0;
 }
 
-#newsContainer img {
+.news-scroll-container img {
     width: 100%;
     height: 170px;
     object-fit: cover;
@@ -463,11 +484,15 @@ footer {
     </div>
 </section>
 
-<!-- Latest Updates Section (Moved Above Mission Banner) -->
+<!-- Latest Updates Section (Horizontal Auto-Scrolling) -->
 <section class="news-section">
     <div class="container">
         <h2 style="color:#111">Latest Updates</h2>
-        <div id="newsContainer" class="grid"></div>
+    </div>
+    <div class="news-scroll-container">
+        <div class="news-track" id="newsTrack">
+            <!-- Dynamically populated and duplicated for seamless horizontal infinite loop -->
+        </div>
     </div>
 </section>
 
@@ -578,7 +603,6 @@ function typeWriter() {
         }
         setTimeout(typeWriter, 80);
     } else {
-        // Remove blinking cursor after completion
         setTimeout(() => {
             let cursor = target.querySelector('.cursor');
             if(cursor) cursor.remove();
@@ -594,10 +618,9 @@ function getLengthUpTo(idx) {
     return len;
 }
 
-// Start typewriter after a short pause
 setTimeout(typeWriter, 500);
 
-// Data loading script for ticker and news
+// Data loading script for ticker and horizontal auto-scrolling news updates
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 const RAW_GIST = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
 const DEPOT_API = `/api/storage?key=fosnalic-data`;
@@ -629,7 +652,9 @@ async function loadAll(){
     }
   }
   if(d.news && d.news.length){
-    document.getElementById('newsContainer').innerHTML = d.news.slice().reverse().slice(0,6).map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
+    let cardsHTML = d.news.map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
+    // Duplicate inner content to create a continuous infinite horizontal marquee effect
+    document.getElementById('newsTrack').innerHTML = cardsHTML + cardsHTML;
   }
  }catch(e){console.log(e);}
 }
