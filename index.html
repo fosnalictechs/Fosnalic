@@ -243,54 +243,35 @@ header h1 {
 .btn-cyan { background: #2dd4bf; color: #0a0a0a; }
 .btn-green { background: #22c55e; color: white; }
 
-/* Latest Updates Section (Horizontal Auto-Scrolling & Interactive) */
+/* Latest Updates Section (Dot-scrollable / Manual Horizontal Swipe Carousel) */
 .news-section {
     background: #F5F7FA;
     color: #111;
     padding: 60px 0;
 }
 
+.news-scroll-wrapper {
+    position: relative;
+    margin-top: 20px;
+}
+
 .news-scroll-container {
     overflow-x: auto;
     width: 100%;
-    position: relative;
-    margin-top: 20px;
+    scroll-behavior: smooth;
     display: flex;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent-orange) #E2E8F0;
-    cursor: grab;
+    gap: 20px;
+    padding-bottom: 15px;
+    scrollbar-width: none; /* Hide scrollbar for clean UI */
 }
-
-.news-scroll-container:active {
-    cursor: grabbing;
-}
-
 .news-scroll-container::-webkit-scrollbar {
-    height: 8px;
-}
-.news-scroll-container::-webkit-scrollbar-track {
-    background: #E2E8F0;
-    border-radius: 4px;
-}
-.news-scroll-container::-webkit-scrollbar-thumb {
-    background: var(--accent-orange);
-    border-radius: 4px;
+    display: none;
 }
 
 .news-track {
     display: flex;
     gap: 20px;
-    animation: newsScroll 35s linear infinite;
     width: max-content;
-}
-
-.news-scroll-container:hover .news-track {
-    animation-play-state: paused;
-}
-
-@keyframes newsScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
 }
 
 .card {
@@ -302,7 +283,6 @@ header h1 {
     min-width: 300px;
     max-width: 300px;
     flex-shrink: 0;
-    user-select: none;
 }
 
 .news-scroll-container img {
@@ -310,7 +290,28 @@ header h1 {
     height: 170px;
     object-fit: cover;
     display: block;
-    pointer-events: none;
+}
+
+/* Dots Pagination Indicators */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.dot.active {
+    background: var(--accent-orange);
+    transform: scale(1.2);
 }
 
 /* Company Mission Definition Banner */
@@ -504,15 +505,19 @@ footer {
     </div>
 </section>
 
-<!-- Latest Updates Section (Randomized & Interactive Horizontal Auto-Scroll) -->
+<!-- Latest Updates Section (Dot-scrollable / Swipeable Manual Carousel) -->
 <section class="news-section">
     <div class="container">
         <h2 style="color:#111">Latest Updates</h2>
     </div>
-    <div class="news-scroll-container" id="newsScrollContainer">
-        <div class="news-track" id="newsTrack">
-            <!-- Dynamically populated, randomized, and duplicated for seamless infinite loop -->
+    <div class="news-scroll-wrapper container">
+        <div class="news-scroll-container" id="newsScrollContainer">
+            <div class="news-track" id="newsTrack">
+                <!-- Dynamically populated from admin / Gist data -->
+            </div>
         </div>
+        <!-- Pagination Dots -->
+        <div class="carousel-dots" id="carouselDots"></div>
     </div>
 </section>
 
@@ -606,7 +611,8 @@ footer {
 
 <script>
 // Typewriter effect for "Welcome to FOSNALIC Techs"
-const textParts = ["Welcome to\n", "<span>FOSNALIC Techs</span>"];
+const textParts = ["Welcome to
+", "<span>FOSNALIC Techs</span>"];
 const target = document.getElementById('typewriterTarget');
 let partIndex = 0;
 let charIndex = 0;
@@ -640,7 +646,7 @@ function getLengthUpTo(idx) {
 
 setTimeout(typeWriter, 500);
 
-// Data loading script for ticker and random horizontal auto-scrolling news updates
+// Data loading script for ticker and manual dot-scrollable news updates
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 const RAW_GIST = `https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json`;
 const DEPOT_API = `/api/storage?key=fosnalic-data`;
@@ -672,44 +678,44 @@ async function loadAll(){
     }
   }
   if(d.news && d.news.length){
-    // Shuffle updates array randomly
-    let shuffledNews = [...d.news].sort(() => Math.random() - 0.5);
-    let cardsHTML = shuffledNews.map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
-    
-    // Duplicate inner content for seamless infinite horizontal marquee effect
-    document.getElementById('newsTrack').innerHTML = cardsHTML + cardsHTML;
+    let cardsHTML = d.news.map(n=>`<div class="card" style="padding:0;overflow:hidden">${n.img ? `<img src="${n.img}">` : ''}<div style="padding:16px"><h3>${n.title}</h3><p style="font-size:.85rem;color:#4a5568">${n.desc||''}</p></div></div>`).join('');
+    document.getElementById('newsTrack').innerHTML = cardsHTML;
+    setupDots(d.news.length);
   }
  }catch(e){console.log(e);}
 }
 loadAll();setInterval(loadAll,60000);
 
-// Enable mouse drag scrolling for manual override
-const slider = document.getElementById('newsScrollContainer');
-let isDown = false;
-let startX;
-let scrollLeft;
-
-slider.addEventListener('mousedown', (e) => {
-    isDown = true;
-    slider.classList.add('active');
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-});
-slider.addEventListener('mouseleave', () => {
-    isDown = false;
-    slider.classList.remove('active');
-});
-slider.addEventListener('mouseup', () => {
-    isDown = false;
-    slider.classList.remove('active');
-});
-slider.addEventListener('mousemove', (e) => {
-    if(!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 2; //scroll-fast
-    slider.scrollLeft = scrollLeft - walk;
-});
+// Setup pagination dots for manual scrolling
+function setupDots(totalItems) {
+    const dotsContainer = document.getElementById('carouselDots');
+    const scrollContainer = document.getElementById('newsScrollContainer');
+    dotsContainer.innerHTML = '';
+    
+    for(let i = 0; i < totalItems; i++) {
+        let dot = document.createElement('div');
+        dot.className = i === 0 ? 'dot active' : 'dot';
+        dot.addEventListener('click', () => {
+            const cardWidth = 320; // card min-width (300) + gap (20)
+            scrollContainer.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+        });
+        dotsContainer.appendChild(dot);
+    }
+    
+    // Update active dot on scroll
+    scrollContainer.addEventListener('scroll', () => {
+        const cardWidth = 320;
+        const activeIndex = Math.round(scrollContainer.scrollLeft / cardWidth);
+        const dots = dotsContainer.querySelectorAll('.dot');
+        dots.forEach((d, idx) => {
+            if(idx === activeIndex) {
+                d.classList.add('active');
+            } else {
+                d.classList.remove('active');
+            }
+        });
+    });
+}
 </script>
 </body>
 </html>
