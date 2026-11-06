@@ -1,119 +1,473 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Depot - Unlimited</title>
+<meta charset="UTF-8">
+<title>FOS Depot &mdash; Unlimited Cloud Storage & Sync by FOSNALIC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body{font-family:system-ui;background:#0f172a;color:#fff;padding:15px}
-.box{background:#1e293b;padding:15px;border-radius:12px;max-width:800px;margin:auto}
-input,button,textarea{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:0;box-sizing:border-box}
-button{background:#3b82f6;color:#fff;font-weight:bold;cursor:pointer}
-textarea{height:400px;background:#0f172a;color:#a5f3fc;font-family:monospace}
-.small{font-size:12px;opacity:.7}
+:root {
+    --primary: #0F172A;
+    --primary-light: #1E293B;
+    --accent: #2563EB;
+    --orange-accent: #FF6B35;
+    --bg: #0A0E1A;
+    --card-bg: #111827;
+    --card-surface: #1F2937;
+    --text-main: #F3F4F6;
+    --text-muted: #9CA3AF;
+    --border: #374151;
+    --success: #10B981;
+    --danger: #EF4444;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', system-ui, -apple-system, sans-serif}
+body{background:var(--bg);color:var(--text-main);line-height:1.6;padding-bottom:80px; -webkit-text-size-adjust: 100%;}
+
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+header{background:var(--card-bg);padding:16px 24px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+header .header-wrap{display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.15rem;font-weight:700}
+header h1 a{color:var(--text-main);text-decoration:none;display:flex;align-items:center;gap:8px}
+header h1 a span{color:var(--orange-accent)}
+
+.hero-banner{text-align:center;padding:35px 20px 15px}
+.hero-banner h2{font-size:1.8rem;font-weight:800;margin-bottom:8px;color:var(--text-main)}
+.hero-banner p{color:var(--text-muted);font-size:0.95rem}
+
+.box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    margin-top: 15px;
+}
+
+label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 10px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card-surface);
+    color: var(--text-main);
+    margin: 6px 0 12px 0;
+    font-size: 16px !important;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--orange-accent);
+}
+
+textarea {
+    height: 340px;
+    background: #0A0E1A;
+    color: #A5F3FC;
+    font-family: monospace;
+    font-size: 0.9rem !important;
+}
+
+.meta-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--card-surface);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+button {
+    flex: 1;
+    min-width: 130px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+button:hover { opacity: 0.92; }
+button:active { transform: scale(0.98); }
+
+.btn-save { background: var(--success); }
+.btn-delete { background: var(--danger); }
+.btn-export { background: #059669; }
+
+/* Stored Files Explorer Section */
+.explorer-box {
+    background: var(--card-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+.explorer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.explorer-header h4 {
+    font-size: 0.95rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.explorer-header h4 i { color: var(--orange-accent); }
+.files-list {
+    max-height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+.file-item:hover { border-color: var(--orange-accent); }
+.file-info { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
+.file-info span { color: var(--text-main); font-weight: 600; }
+.file-actions { display: flex; gap: 6px; }
+.file-actions button {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    min-width: unset;
+    border-radius: 6px;
+}
+
+.status-msg {
+    margin-top: 15px;
+    padding: 12px;
+    background: var(--card-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.powered-footer {
+    text-align: center;
+    margin-top: 50px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
 </style>
 </head>
 <body>
-<div class="box">
-<h2>Fosnalic Depot - Unlimited</h2>
-<input id="key" placeholder="Key name e.g. products, users, locations" value="locations">
-<div class="small">Size: <span id="size">0</span> chars | Chunks: <span id="chunks">0</span></div>
-<textarea id="data" placeholder="Paste ANY size JSON here..." oninput="updateSize()"></textarea>
-<input type="file" id="file" accept=".json,.txt,.csv">
-<div style="display:flex;gap:8px">
-<button onclick="loadData()">LOAD</button>
-<button onclick="saveData()" style="background:#22c55e">SAVE (auto-split)</button>
-<button onclick="clearData()" style="background:#ef4444">DELETE KEY</button>
+
+<header>
+    <div class="container header-wrap">
+        <h1><a href="tools.html"><i class="fas fa-arrow-left"></i> FOSNALIC &mdash; <span>Depot Sync</span></a></h1>
+        <span style="color:var(--text-muted); font-size:0.85rem;"><i class="fas fa-database"></i> Unlimited Storage</span>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero-banner">
+        <h2>Fosnalic Depot &mdash; Unlimited Storage</h2>
+        <p>Store, sync, and retrieve large JSON payloads or text files across devices seamlessly.</p>
+    </div>
+
+    <div class="box">
+        
+        <!-- Stored Files Explorer & Search Bar -->
+        <div class="explorer-box">
+            <div class="explorer-header">
+                <h4><i class="fas fa-folder-open"></i> Stored Keys & Files Explorer</h4>
+                <button onclick="refreshStoredKeys()" style="padding:6px 12px; font-size:0.75rem; min-width:unset;"><i class="fas fa-rotate"></i> Refresh</button>
+            </div>
+            <input type="text" id="fileSearch" placeholder="Search saved keys by name..." oninput="filterStoredKeys()" style="margin-top:0; margin-bottom:10px;">
+            <div id="filesList" class="files-list">
+                <div style="text-align:center; color:var(--text-muted); padding:15px; font-size:0.85rem;">Click 'Refresh' to list stored keys...</div>
+            </div>
+        </div>
+
+        <label for="key">Storage Key Name</label>
+        <input id="key" placeholder="e.g. products, users, locations" value="locations">
+
+        <div class="meta-stats">
+            <span>Size: <strong id="size" style="color:var(--text-main);">0</strong> chars</span>
+            <span>Chunks: <strong id="chunks" style="color:var(--text-main);">0</strong></span>
+        </div>
+
+        <label for="data">Payload Data (JSON / Text)</label>
+        <textarea id="data" placeholder="Paste ANY size JSON or text here..." oninput="updateSize()"></textarea>
+
+        <label for="file">Upload Local File (.json, .txt, .csv)</label>
+        <input type="file" id="file" accept=".json,.txt,.csv">
+
+        <div class="button-group">
+            <button onclick="loadData()"><i class="fas fa-cloud-arrow-down"></i> Load Key</button>
+            <button onclick="saveData()" class="btn-save"><i class="fas fa-cloud-arrow-up"></i> Save (Auto-Split)</button>
+            <button onclick="exportData()" class="btn-export"><i class="fas fa-download"></i> Export TXT</button>
+            <button onclick="clearData()" class="btn-delete"><i class="fas fa-trash"></i> Delete Key</button>
+        </div>
+
+        <div id="status" class="status-msg">Ready. Enter a key and load or save data.</div>
+    </div>
 </div>
-<div id="status" class="small" style="margin-top:10px"></div>
+
+<div class="powered-footer container">
+    <p>&copy; <span id="year">2026</span> FOSNALIC Techs &mdash; Cloud Depot Sync. Engineered for African Developers & Businesses.</p>
 </div>
+
 <script>
+document.getElementById('year').textContent = new Date().getFullYear();
 const API = "/api/storage";
+
+// Keep track of discovered keys in session
+let knownKeys = JSON.parse(localStorage.getItem('fos_known_keys') || '["locations", "products", "users"]');
+
 function updateSize(){
-  const t = document.getElementById('data').value;
-  document.getElementById('size').textContent = t.length;
-  document.getElementById('chunks').textContent = Math.ceil(t.length/900000);
+    const t = document.getElementById('data').value;
+    document.getElementById('size').textContent = t.length.toLocaleString();
+    document.getElementById('chunks').textContent = Math.ceil(t.length / 900000);
 }
-document.getElementById('file').addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = ev => { document.getElementById('data').value = ev.target.result; updateSize(); }
-  r.readAsText(f);
-});
-async function loadData(){
-  const key = document.getElementById('key').value.trim();
-  if(!key) return alert('Enter key');
-  status('Loading '+key+'...');
-  // try load chunks
-  let all = "";
-  let i=0;
-  while(true){
-    const k = i==0? key : key+"_part_"+i;
-    const res = await fetch(`${API}?key=${k}`);
-    const txt = await res.text();
-    if(!txt || txt=="[]" && i>0) break;
-    if(i==0 && txt.startsWith('[') && JSON.parse(txt).length==0){
-      // check if chunked
-      const chk = await fetch(`${API}?key=${key}_meta`);
-      if((await chk.text())=="[]") { all=txt; break; }
+
+document.getElementById('file').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => { 
+        document.getElementById('data').value = ev.target.result; 
+        updateSize(); 
+        status('✅ File loaded: ' + f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)');
     }
-    if(txt=="[]" && i==0){ all=txt; break; }
-    if(txt=="[]") break;
-    all += (i==0? "" : "") + txt;
-    if(txt.length < 900000) break;
-    i++;
-    if(i>100) break;
-  }
-  // If meta exists, reconstruct
-  const metaRes = await fetch(`${API}?key=${key}_meta`);
-  const metaTxt = await metaRes.text();
-  if(metaTxt && metaTxt!="[]"){
-    try{
-      const meta = JSON.parse(metaTxt);
-      if(meta.chunks){
-        let rebuilt="";
-        for(let j=0;j<meta.chunks;j++){
-          const kk = j==0? key : key+"_part_"+j;
-          const rr = await fetch(`${API}?key=${kk}`);
-          rebuilt += await rr.text();
+    r.readAsText(f);
+});
+
+// Auto-populate explorer on load
+window.onload = () => {
+    refreshStoredKeys();
+};
+
+async function refreshStoredKeys() {
+    status('⏳ Scanning stored keys...');
+    let listEl = document.getElementById('filesList');
+    listEl.innerHTML = '';
+    
+    let activeKeys = [];
+    for(let k of knownKeys) {
+        try {
+            const res = await fetch(`${API}?key=${k}_meta`);
+            const txt = await res.text();
+            if(txt && txt !== "[]") {
+                const meta = JSON.parse(txt);
+                activeKeys.push({key: k, total: meta.total || 0, time: meta.time || Date.now()});
+            } else {
+                // Check if base key exists directly
+                const baseRes = await fetch(`${API}?key=${k}`);
+                const baseTxt = await baseRes.text();
+                if(baseTxt && baseTxt !== "[]") {
+                    activeKeys.push({key: k, total: baseTxt.length, time: Date.now()});
+                }
+            }
+        } catch(e){}
+    }
+
+    if(activeKeys.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:12px; font-size:0.85rem;">No keys found in depot yet. Save a key to see it here.</div>`;
+    } else {
+        activeKeys.forEach(item => {
+            let div = document.createElement('div');
+            div.className = 'file-item';
+            div.setAttribute('data-key', item.key.toLowerCase());
+            div.innerHTML = `
+                <div class="file-info" onclick="selectKey('${item.key}')">
+                    <i class="fas fa-key" style="color:var(--orange-accent);"></i>
+                    <span>${item.key}</span>
+                    <small style="color:var(--text-muted);">(${item.total.toLocaleString()} chars)</small>
+                </div>
+                <div class="file-actions">
+                    <button onclick="selectKey('${item.key}')" style="background:var(--accent);">Load</button>
+                    <button onclick="quickDelete('${item.key}')" class="btn-delete">Del</button>
+                </div>
+            `;
+            listEl.appendChild(div);
+        });
+    }
+    status('✅ Explorer updated.');
+}
+
+function filterStoredKeys() {
+    let q = document.getElementById('fileSearch').value.toLowerCase().trim();
+    let items = document.querySelectorAll('.file-item');
+    items.forEach(item => {
+        let k = item.getAttribute('data-key');
+        if(k.includes(q)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
         }
-        all = rebuilt;
-      }
-    }catch(e){}
-  }
-  document.getElementById('data').value = all;
-  updateSize();
-  status('Loaded '+all.length+' chars');
+    });
 }
+
+function selectKey(k) {
+    document.getElementById('key').value = k;
+    loadData();
+}
+
+async function quickDelete(k) {
+    if(!confirm(`Delete key "${k}"?`)) return;
+    document.getElementById('key').value = k;
+    await clearData();
+    refreshStoredKeys();
+}
+
+async function loadData(){
+    const key = document.getElementById('key').value.trim();
+    if(!key) return alert('Please enter a storage key name.');
+    status('⏳ Loading key: ' + key + '...');
+    
+    let all = "";
+    let i = 0;
+    while(true){
+        const k = i === 0 ? key : key + "_part_" + i;
+        try {
+            const res = await fetch(`${API}?key=${k}`);
+            const txt = await res.text();
+            if(!txt || txt === "[]" && i > 0) break;
+            if(i === 0 && txt.startsWith('[') && JSON.parse(txt).length === 0){
+                const chk = await fetch(`${API}?key=${key}_meta`);
+                if((await chk.text()) === "[]") { all = txt; break; }
+            }
+            if(txt === "[]" && i === 0){ all = txt; break; }
+            if(txt === "[]") break;
+            all += txt;
+            if(txt.length < 900000) break;
+            i++;
+            if(i > 100) break;
+        } catch(err) {
+            break;
+        }
+    }
+
+    try {
+        const metaRes = await fetch(`${API}?key=${key}_meta`);
+        const metaTxt = await metaRes.text();
+        if(metaTxt && metaTxt !== "[]"){
+            const meta = JSON.parse(metaTxt);
+            if(meta.chunks && meta.chunks > 1){
+                let rebuilt = "";
+                for(let j = 0; j < meta.chunks; j++){
+                    const kk = j === 0 ? key : key + "_part_" + j;
+                    const rr = await fetch(`${API}?key=${kk}`);
+                    rebuilt += await rr.text();
+                }
+                all = rebuilt;
+            }
+        }
+    } catch(e){}
+
+    document.getElementById('data').value = all;
+    updateSize();
+    status('✅ Successfully loaded ' + all.length.toLocaleString() + ' characters.');
+}
+
 async function saveData(){
-  const key = document.getElementById('key').value.trim();
-  const val = document.getElementById('data').value;
-  if(!key || !val) return alert('Key and data required');
-  const CHUNK = 900000;
-  const chunks = Math.ceil(val.length/CHUNK);
-  status('Saving '+chunks+' chunk(s)...');
-  for(let i=0;i<chunks;i++){
-    const part = val.slice(i*CHUNK, (i+1)*CHUNK);
-    const k = i==0? key : key+"_part_"+i;
-    await fetch(`${API}?key=${k}`, {method:"POST", body: part});
-    status(`Saved chunk ${i+1}/${chunks}`);
-  }
-  await fetch(`${API}?key=${key}_meta`, {method:"POST", body: JSON.stringify({chunks, total:val.length, time:Date.now()})});
-  status('✅ Saved total '+val.length+' chars in '+chunks+' keys');
+    const key = document.getElementById('key').value.trim();
+    const val = document.getElementById('data').value;
+    if(!key || !val) return alert('Key name and data content are both required.');
+    
+    // Add to known keys if new
+    if(!knownKeys.includes(key)) {
+        knownKeys.push(key);
+        localStorage.setItem('fos_known_keys', JSON.stringify(knownKeys));
+    }
+    
+    const CHUNK = 900000;
+    const chunks = Math.ceil(val.length / CHUNK);
+    status(`⏳ Saving ${chunks} chunk(s)...`);
+    
+    for(let i = 0; i < chunks; i++){
+        const part = val.slice(i * CHUNK, (i + 1) * CHUNK);
+        const k = i === 0 ? key : key + "_part_" + i;
+        await fetch(`${API}?key=${k}`, {method: "POST", body: part});
+        status(`💾 Saving chunk ${i + 1} of ${chunks}...`);
+    }
+    
+    await fetch(`${API}?key=${key}_meta`, {
+        method: "POST", 
+        body: JSON.stringify({chunks: chunks, total: val.length, time: Date.now()})
+    });
+    
+    status(`✅ Saved successfully! Total ${val.length.toLocaleString()} characters stored across ${chunks} key part(s).`);
+    refreshStoredKeys();
 }
+
+async function exportData() {
+    let val = document.getElementById('data').value;
+    let key = document.getElementById('key').value.trim() || 'depot-data';
+    if(!val.trim()) return alert("No data available to export!");
+    let blob = new Blob([val], {type: 'text/plain;charset=utf-8'});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = `${key}-export.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 async function clearData(){
-  if(!confirm('Delete this key?')) return;
-  const key = document.getElementById('key').value.trim();
-  // we can't list all parts, but delete main + meta + try 0-50
-  await fetch(`${API}?key=${key}`, {method:"POST", body:"[]"});
-  await fetch(`${API}?key=${key}_meta`, {method:"POST", body:"[]"});
-  for(let i=1;i<50;i++){
-    await fetch(`${API}?key=${key}_part_${i}`, {method:"POST", body:"[]"});
-  }
-  status('Deleted');
+    const key = document.getElementById('key').value.trim();
+    if(!key) return alert('Enter key to delete.');
+    if(!confirm(`Are you sure you want to delete storage key "${key}" and all its parts?`)) return;
+    
+    status('⏳ Deleting key and parts...');
+    await fetch(`${API}?key=${key}`, {method: "POST", body: "[]"});
+    await fetch(`${API}?key=${key}_meta`, {method: "POST", body: "[]"});
+    for(let i = 1; i < 50; i++){
+        await fetch(`${API}?key=${key}_part_${i}`, {method: "POST", body: "[]"});
+    }
+    document.getElementById('data').value = '';
+    updateSize();
+    status('🗑️ Storage key "' + key + '" deleted successfully.');
+    refreshStoredKeys();
 }
-function status(m){ document.getElementById('status').textContent=m; }
+
+function status(m){ 
+    document.getElementById('status').textContent = m; 
+}
 </script>
+<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f4043667174c4bcf8ce18fb577700342"}'></script><!-- Cloudflare Pages Analytics -->
 </body>
 </html>
