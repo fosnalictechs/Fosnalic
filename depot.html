@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FOS Depot &mdash; Unlimited Storage & Sync</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+    --bg: #0A0E1A;
+    --card-bg: #111827;
+    --card-surface: #1F2937;
+    --text-main: #F3F4F6;
+    --text-muted: #9CA3AF;
+    --border: #374151;
+    --accent: #2563EB;
+    --orange-accent: #FF6B35;
+    --success: #10B981;
+    --danger: #EF4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', sans-serif}
+body{background:var(--bg);color:var(--text-main);line-height:1.6;padding-bottom:50px}
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+header{background:var(--card-bg);padding:16px 24px;border-bottom:1px solid var(--border)}
+header .header-wrap{display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.15rem;font-weight:700}
+header h1 a{color:var(--text-main);text-decoration:none;display:flex;align-items:center;gap:8px}
+header h1 a span{color:var(--orange-accent)}
+.hero{text-align:center;padding:30px 20px 10px}
+.hero h2{font-size:1.6rem;font-weight:800;margin-bottom:6px}
+.hero p{color:var(--text-muted);font-size:0.9rem}
+.box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-top: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+label { font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 10px; }
+input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-surface); color: var(--text-main); margin: 6px 0 12px 0; outline: none; font-size: 1rem; }
+input:focus, textarea:focus { border-color: var(--orange-accent); }
+textarea { height: 280px; background: #0A0E1A; color: #A5F3FC; font-family: monospace; font-size: 0.9rem !important; }
+.meta-stats { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); background: var(--card-surface); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border); }
+.button-group { display: flex; gap: 10px; flex-wrap: map; margin-top: 15px; }
+button { flex: 1; min-width: 120px; padding: 12px; border-radius: 8px; border: none; background: var(--accent); color: white; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.88rem; }
+button:hover { opacity: 0.9; }
+.btn-save { background: var(--success); }
+.btn-delete { background: var(--danger); }
+.btn-export { background: #059669; }
+.explorer-box { background: var(--card-surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+.explorer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.files-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.file-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem; }
+.file-info { display: flex; align-items: center; gap: 8px; cursor: pointer; flex: 1; }
+.file-info span { color: var(--text-main); font-weight: 600; }
+.file-actions { display: flex; gap: 6px; }
+.file-actions button { padding: 4px 8px; font-size: 0.75rem; min-width: unset; }
+.status-msg { margin-top: 15px; padding: 10px; background: var(--card-surface); border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="container header-wrap">
+        <h1><a href="dashboard.html"><i class="fas fa-arrow-left"></i> FOSNALIC &mdash; <span>Depot Sync</span></a></h1>
+        <a href="dashboard.html" style="color:var(--text-muted); font-size:0.85rem; text-decoration:none;"><i class="fas fa-home"></i> Dashboard</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero">
+        <h2>Fosnalic Depot Storage</h2>
+        <p>Save and organize your keys, JSON payloads, and notes securely.</p>
+    </div>
+
+    <div class="box">
+        <div class="explorer-box">
+            <div class="explorer-header">
+                <h4 style="font-size:0.9rem;"><i class="fas fa-folder-open" style="color:var(--orange-accent);"></i> Stored Keys Explorer</h4>
+                <button onclick="refreshStoredKeys()" style="padding:6px 10px; font-size:0.75rem; min-width:unset;"><i class="fas fa-rotate"></i> Refresh</button>
+            </div>
+            <input type="text" id="fileSearch" placeholder="Search stored keys..." oninput="filterStoredKeys()" style="margin:0 0 10px 0;">
+            <div id="filesList" class="files-list">
+                <div style="text-align:center; color:var(--text-muted); padding:10px; font-size:0.8rem;">Loading keys...</div>
+            </div>
+        </div>
+
+        <label for="key">Storage Key Name</label>
+        <input id="key" placeholder="e.g. math_config, notes, dataset" value="math_config">
+
+        <div class="meta-stats">
+            <span>Size: <strong id="size" style="color:var(--text-main);">0</strong> chars</span>
+        </div>
+
+        <label for="data">Payload Data (JSON / Text)</label>
+        <textarea id="data" placeholder="Enter or paste text/JSON here..." oninput="updateSize()"></textarea>
+
+        <div class="button-group">
+            <button onclick="loadData()"><i class="fas fa-cloud-arrow-down"></i> Load</button>
+            <button onclick="saveData()" class="btn-save"><i class="fas fa-cloud-arrow-up"></i> Save Key</button>
+            <button onclick="exportData()" class="btn-export"><i class="fas fa-download"></i> Export</button>
+            <button onclick="clearData()" class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+
+        <div id="status" class="status-msg">Ready.</div>
+    </div>
+</div>
+
+<script>
+// Authentication check guard
+if (!localStorage.getItem('activeUser')) {
+    alert('Please log in first.');
+    window.location.href = 'auth.html';
+}
+
+function updateSize(){
+    const t = document.getElementById('data').value;
+    document.getElementById('size').textContent = t.length.toLocaleString();
+}
+
+window.onload = () => {
+    refreshStoredKeys();
+};
+
+function refreshStoredKeys() {
+    let listEl = document.getElementById('filesList');
+    listEl.innerHTML = '';
+    
+    let keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        let k = localStorage.key(i);
+        // Filter out system or user auth keys, display depot keys
+        if (k && !k.startsWith('fos_user_') && k !== 'activeUser' && k !== 'fos_known_keys') {
+            keys.push(k);
+        }
+    }
+
+    if (keys.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:10px; font-size:0.8rem;">No keys found in depot. Save one below!</div>`;
+    } else {
+        keys.forEach(k => {
+            let val = localStorage.getItem(k) || '';
+            let div = document.createElement('div');
+            div.className = 'file-item';
+            div.setAttribute('data-key', k.toLowerCase());
+            div.innerHTML = `
+                <div class="file-info" onclick="selectKey('${k}')">
+                    <i class="fas fa-key" style="color:var(--orange-accent);"></i>
+                    <span>${k}</span>
+                    <small style="color:var(--text-muted);">(${val.length.toLocaleString()} chars)</small>
+                </div>
+                <div class="file-actions">
+                    <button onclick="selectKey('${k}')" style="background:var(--accent);">Load</button>
+                    <button onclick="quickDelete('${k}')" class="btn-delete">Del</button>
+                </div>
+            `;
+            listEl.appendChild(div);
+        });
+    }
+    status('✅ Explorer refreshed.');
+}
+
+function filterStoredKeys() {
+    let q = document.getElementById('fileSearch').value.toLowerCase().trim();
+    document.querySelectorAll('.file-item').forEach(item => {
+        let k = item.getAttribute('data-key');
+        item.style.display = k.includes(q) ? 'flex' : 'none';
+    });
+}
+
+function selectKey(k) {
+    document.getElementById('key').value = k;
+    loadData();
+}
+
+function quickDelete(k) {
+    if(!confirm(`Delete key "${k}"?`)) return;
+    localStorage.removeItem(k);
+    refreshStoredKeys();
+    status('🗑️ Deleted key: ' + k);
+}
+
+function loadData() {
+    const key = document.getElementById('key').value.trim();
+    if(!key) return alert('Enter a key name.');
+    const val = localStorage.getItem(key);
+    if(val !== null) {
+        document.getElementById('data').value = val;
+        updateSize();
+        status('✅ Loaded key: ' + key);
+    } else {
+        document.getElementById('data').value = '';
+        updateSize();
+        status('⚠️ Key "' + key + '" not found.');
+    }
+}
+
+function saveData() {
+    const key = document.getElementById('key').value.trim();
+    const val = document.getElementById('data').value;
+    if(!key || !val) return alert('Key and Data cannot be empty.');
+    
+    localStorage.setItem(key, val);
+    status('✅ Saved key "' + key + '" successfully!');
+    refreshStoredKeys();
+}
+
+function exportData() {
+    let val = document.getElementById('data').value;
+    let key = document.getElementById('key').value.trim() || 'data';
+    if(!val) return alert('No data to export.');
+    let blob = new Blob([val], {type: 'text/plain;charset=utf-8'});
+    let url = URL.createObjectURL(blob);
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = `${key}-export.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function clearData() {
+    const key = document.getElementById('key').value.trim();
+    if(!key) return;
+    if(!confirm(`Delete key "${key}"?`)) return;
+    localStorage.removeItem(key);
+    document.getElementById('data').value = '';
+    updateSize();
+    refreshStoredKeys();
+    status('🗑️ Deleted key: ' + key);
+}
+
+function status(m) {
+    document.getElementById('status').textContent = m;
+}
+</script>
+</body>
+</html>
