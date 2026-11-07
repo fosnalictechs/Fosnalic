@@ -3,39 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathX Pro / Fosnalic Techs Portal - Auth</title>
+    <title>MathX Pro &mdash; Authentication Portal</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #121212; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .auth-container { background-color: #1e1e1e; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        h2 { text-align: center; margin-bottom: 20px; color: #bb86fc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0A0E1A; color: #F3F4F6; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .auth-container { background-color: #111827; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid #374151; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { text-align: center; margin-bottom: 20px; color: #FF6B35; font-size: 1.5rem; }
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; color: #b0b0b0; }
-        input { width: 100%; padding: 12px; background-color: #2d2d2d; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 16px; }
-        input:focus { outline: none; border-color: #bb86fc; }
-        button { width: 100%; padding: 12px; background-color: #bb86fc; border: none; border-radius: 6px; color: #121212; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #9965f4; }
-        .switch-text { text-align: center; margin-top: 15px; font-size: 14px; color: #b0b0b0; }
-        .switch-text span { color: #bb86fc; cursor: pointer; font-weight: bold; }
+        label { display: block; margin-bottom: 6px; font-size: 0.85rem; color: #9CA3AF; }
+        input { width: 100%; padding: 12px; background-color: #1F2937; border: 1px solid #374151; border-radius: 8px; color: #fff; font-size: 1rem; outline: none; }
+        input:focus { border-color: #FF6B35; }
+        button { width: 100%; padding: 12px; background-color: #2563EB; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        button:hover { opacity: 0.9; }
+        .switch-text { text-align: center; margin-top: 15px; font-size: 0.85rem; color: #9CA3AF; }
+        .switch-text span { color: #FF6B35; cursor: pointer; font-weight: bold; }
         .hidden { display: none; }
-        .message { text-align: center; margin-top: 10px; font-size: 14px; }
-        .error { color: #cf6679; }
-        .success { color: #03dac6; }
+        .message { text-align: center; margin-top: 12px; font-size: 0.85rem; }
+        .error { color: #EF4444; }
+        .success { color: #10B981; }
     </style>
 </head>
 <body>
 
     <div class="auth-container">
-        <!-- REGISTRATION FORM -->
+        <!-- REGISTRATION SECTION -->
         <div id="register-section">
             <h2>Create Account</h2>
             <div class="form-group">
-                <label>Username or Email</label>
-                <input type="text" id="reg-user" placeholder="Enter username/email">
+                <label>Username</label>
+                <input type="text" id="reg-user" placeholder="Enter your username">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="reg-pass" placeholder="Enter password">
+                <input type="password" id="reg-pass" placeholder="Enter your password">
             </div>
             <button onclick="handleRegister()">Register</button>
             <p id="reg-msg" class="message"></p>
@@ -44,16 +44,16 @@
             </div>
         </div>
 
-        <!-- LOGIN FORM -->
+        <!-- LOGIN SECTION -->
         <div id="login-section" class="hidden">
-            <h2>Welcome Back</h2>
+            <h2>Portal Login</h2>
             <div class="form-group">
-                <label>Username or Email</label>
-                <input type="text" id="login-user" placeholder="Enter username/email">
+                <label>Username</label>
+                <input type="text" id="login-user" placeholder="Enter your username">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="login-pass" placeholder="Enter password">
+                <input type="password" id="login-pass" placeholder="Enter your password">
             </div>
             <button onclick="handleLogin()">Login</button>
             <p id="login-msg" class="message"></p>
@@ -87,22 +87,22 @@
                 return;
             }
 
-            // Check if user already exists
-            if (localStorage.getItem('user_' + user)) {
+            if (localStorage.getItem('fos_user_' + user)) {
                 msg.className = 'message error';
                 msg.textContent = 'User already exists. Please login.';
                 return;
             }
 
-            // Save user data securely in localStorage
-            localStorage.setItem('user_' + user, pass);
+            // Save user credentials
+            localStorage.setItem('fos_user_' + user, pass);
             msg.className = 'message success';
-            msg.textContent = 'Registration successful! You can now login.';
+            msg.textContent = 'Registration successful! Switching to login...';
             
             setTimeout(() => {
                 toggleView('login');
+                document.getElementById('login-user').value = user;
                 msg.textContent = '';
-            }, 1500);
+            }, 1200);
         }
 
         function handleLogin() {
@@ -116,19 +116,17 @@
                 return;
             }
 
-            const storedPass = localStorage.getItem('user_' + user);
+            const storedPass = localStorage.getItem('fos_user_' + user);
 
             if (storedPass && storedPass === pass) {
                 msg.className = 'message success';
                 msg.textContent = 'Login successful! Redirecting...';
                 
-                // Save active session
+                // Set active session
                 localStorage.setItem('activeUser', user);
 
                 setTimeout(() => {
-                    // Redirect to your app dashboard or portal page
-                    alert('Welcome to MathX Pro Dashboard, ' + user + '!');
-                    // window.location.href = "dashboard.html"; 
+                    window.location.href = 'dashboard.html';
                 }, 1000);
             } else {
                 msg.className = 'message error';
