@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Info - Fosnalic</title>
+<style>
+body{background:#0F172A;color:white;font-family:Arial;padding:20px;text-align:center}
+button{background:#E91E63;color:white;border:0;padding:18px 30px;font-size:18px;border-radius:10px;width:100%;max-width:400px;margin:10px;cursor:pointer}
+#info{background:#1E293B;padding:15px;border-radius:10px;margin-top:20px;text-align:left;white-space:pre-wrap;font-size:12px;word-break:break-all}
+</style>
+</head>
+<body>
+<h1>Phone Info Collector</h1>
+<p>fosnalic.pages.dev/phone.html</p>
+<button onclick="collectAndSend()">📱 COLLECT & SEND PHONE INFO</button>
+<button onclick="collectOnly()" style="background:#2962FF">👁️ JUST COLLECT</button>
+<div id="info">Click a button...</div>
+<script>
+let collectedInfo = "";
+function collectInfo(){
+  let info = "";
+  info += `UserAgent: ${navigator.userAgent}\n`;
+  info += `Platform: ${navigator.platform}\n`;
+  info += `Screen: ${screen.width}x${screen.height}\n`;
+  info += `Window: ${window.innerWidth}x${window.innerHeight}\n`;
+  info += `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n`;
+  info += `Time: ${new Date().toString()}\n`;
+  collectedInfo = info; return info;
+}
+function collectOnly(){document.getElementById('info').textContent = collectInfo();}
+async function collectAndSend(){
+  let info = collectInfo();
+  document.getElementById('info').textContent = "Sending to /api/receive...";
+  try{
+    const ipRes = await fetch('https://ipapi.co/json/').then(r=>r.json()).catch(()=>({}));
+    info += `\nIP: ${ipRes.ip||'unknown'}\nCity: ${ipRes.city||''}\nCountry: ${ipRes.country_name||''}\n`;
+    const fd = new FormData();
+    fd.append('phone_info', info);
+    fd.append('model', navigator.platform);
+    fd.append('manufacturer', navigator.vendor||'browser');
+    const res = await fetch('/api/receive', {method:'POST', body:fd});
+    const text = await res.text();
+    document.getElementById('info').textContent = `✅ SENT!\n${text}\n\n${info}`;
+  }catch(e){document.getElementById('info').textContent = `❌ ${e.message}\n\n${info}`;}
+}
+</script>
+</body>
+</html>
