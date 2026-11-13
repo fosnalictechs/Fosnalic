@@ -1,79 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhoneSync - Phone Information Folder</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<title>PhoneSync - Trigger & Download</title>
+<style>
+body{margin:0;font-family:Arial;background:#0F172A;color:white;padding:20px}
+.card{background:#1E293B;border-radius:15px;padding:20px;max-width:600px;margin:20px auto}
+button{width:100%;padding:15px;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer;margin:10px 0}
+.btn-trigger{background:#FF6B35;color:white}
+.btn-download{background:#10B981;color:white;display:none}
+.btn-trigger:disabled{opacity:0.5}
+.status{padding:15px;border-radius:10px;margin:10px 0;background:#334155;word-break:break-all}
+.log{font-size:12px;color:#94A3B8;max-height:300px;overflow:auto;background:#0F172A;padding:10px;border-radius:8px}
+</style>
 </head>
-<body class="bg-[#0a0e1a] text-white min-h-screen">
-<header class="border-b border-gray-800 p-4 flex justify-between items-center bg-[#0f1424]">
-  <div class="flex items-center gap-3">
-    <div class="w-9 h-9 bg-gradient-to-br from-violet-500 to-pink-500 rounded-xl flex items-center justify-center"><i class="fa-solid fa-mobile-screen"></i></div>
-    <span class="font-bold">PhoneSync</span>
-    <span class="text-xs bg-gray-800 px-2 py-1 rounded-full text-gray-400">phone.html</span>
-  </div>
-  <div class="flex items-center gap-2"><div id="liveDot" class="w-2 h-2 bg-gray-600 rounded-full"></div><span id="liveText" class="text-xs text-gray-400">Waiting</span></div>
-</header>
+<body>
+<div class="card">
+<h2>📱 PhoneSync Control</h2>
+<p>Trigger phone to send ALL files</p>
 
-<div class="max-w-5xl mx-auto p-4 md:p-8 grid md:grid-cols-3 gap-6">
-  <div class="md:col-span-1 space-y-4">
-    <div class="bg-[#121a2f] border border-gray-800 rounded-2xl p-5">
-      <h3 class="font-semibold mb-4 flex items-center gap-2"><i class="fa-solid fa-satellite-dish text-violet-400"></i> Phone Control</h3>
-      <button onclick="triggerPhone()" id="triggerBtn" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl py-3.5 font-semibold flex items-center justify-center gap-2"><i class="fa-solid fa-bolt"></i> Trigger Phone</button>
-      <div class="mt-3 bg-[#0a0e1a] rounded-xl p-3 text-xs">
-        <div class="flex justify-between text-gray-400"><span>Folder</span><span class="text-white">Phone information</span></div>
-        <div class="flex justify-between text-gray-400 mt-1"><span>Package</span><span class="text-white">com.example.myapp</span></div>
-      </div>
-      <button onclick="checkForData()" class="w-full mt-3 bg-[#1a2340] border border-gray-700 rounded-xl py-2.5 text-sm"><i class="fa-solid fa-rotate"></i> Refresh</button>
-    </div>
-  </div>
+<button id="btnTrigger" class="btn-trigger" onclick="triggerPhone()">🔥 TRIGGER PHONE NOW</button>
 
-  <div class="md:col-span-2 space-y-4">
-    <div id="statusCard" class="bg-[#121a2f] border border-gray-800 rounded-2xl p-6">
-      <div class="flex justify-between">
-        <div><h3 class="font-semibold">Status</h3><p id="status" class="text-sm text-gray-400 mt-1">No folder yet. Open app > START AUTO LISTEN > then Trigger.</p><p id="modelInfo" class="text-xs text-gray-500 mt-2"></p></div>
-        <div id="statusIcon" class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center"><i class="fa-solid fa-folder-open text-gray-500"></i></div>
-      </div>
-      <div id="fileList" class="mt-4 hidden"><div class="text-xs text-gray-400 mb-2">Files inside:</div><div id="files" class="bg-[#0a0e1a] rounded-xl p-3 text-xs font-mono"></div></div>
-    </div>
+<div id="status" class="status">Ready. Click trigger, then wait for phone.</div>
 
-    <div id="downloadCard" class="hidden bg-gradient-to-br from-violet-600/20 to-pink-600/20 border border-violet-500/30 rounded-2xl p-6">
-      <div class="flex items-center gap-4">
-        <div class="w-14 h-14 bg-gradient-to-br from-violet-500 to-pink-500 rounded-2xl flex items-center justify-center text-xl"><i class="fa-solid fa-file-zipper"></i></div>
-        <div><h4 class="font-bold" id="zipName">Phone_information.zip</h4><p class="text-xs text-gray-400">Folder with all content</p><p class="text-xs text-violet-300 mt-1" id="zipSize"></p></div>
-      </div>
-      <button onclick="downloadPhoneInfo()" class="w-full mt-5 bg-white text-black rounded-xl py-3.5 font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-download"></i> Download Folder as ZIP</button>
-    </div>
-  </div>
+<button id="btnDownload" class="btn-download" onclick="downloadZip()">⬇️ DOWNLOAD Phone_information.zip</button>
+
+<div id="fileInfo" class="status" style="display:none"></div>
+
+<div class="log" id="log"></div>
 </div>
 
 <script>
-let phoneData=null;
-async function triggerPhone(){
-  const btn=document.getElementById('triggerBtn'); btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Triggering...'; btn.disabled=true;
-  await fetch('/api/trigger',{method:'POST'});
-  document.getElementById('status').innerText='🔥 Trigger sent! Phone zipping...'; document.getElementById('liveDot').className='w-2 h-2 bg-yellow-400 rounded-full animate-pulse'; document.getElementById('liveText').innerText='Triggering';
-  setTimeout(checkForData,4000); btn.innerHTML='<i class="fa-solid fa-bolt"></i> Trigger Phone'; btn.disabled=false;
+let lastZipBase64 = null;
+let lastFilename = "Phone_information.zip";
+let checkInterval = null;
+
+function log(msg){
+  const el = document.getElementById('log');
+  el.innerHTML = new Date().toLocaleTimeString() + " - " + msg + "<br>" + el.innerHTML;
 }
-async function checkForData(){
-  const res=await fetch('/api/receive'); const data=await res.json();
-  if(data.success && data.hasZip){
-    phoneData=data;
-    document.getElementById('statusCard').className='bg-[#121a2f] border border-green-500/30 rounded-2xl p-6';
-    document.getElementById('status').innerText='✅ Folder ZIP ready!'; document.getElementById('modelInfo').innerText=`Model: ${data.model} | ${new Date().toLocaleString()}`;
-    document.getElementById('statusIcon').innerHTML='<i class="fa-solid fa-check text-green-400"></i>'; document.getElementById('statusIcon').className='w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center';
-    document.getElementById('files').innerText=data.info; document.getElementById('fileList').classList.remove('hidden');
-    document.getElementById('downloadCard').classList.remove('hidden'); document.getElementById('zipName').innerText=data.filename;
-    document.getElementById('zipSize').innerText=`~${Math.round((data.zipBase64.length*3/4)/1024)} KB`; document.getElementById('liveDot').className='w-2 h-2 bg-green-400 rounded-full'; document.getElementById('liveText').innerText='Folder Ready';
+
+async function triggerPhone(){
+  const btn = document.getElementById('btnTrigger');
+  const status = document.getElementById('status');
+  btn.disabled = true;
+  btn.innerText = "Triggering...";
+  status.innerText = "🔥 Sending trigger...";
+  log("Triggering phone...");
+
+  try{
+    const res = await fetch('/api/trigger', { method: 'POST' });
+    const data = await res.json();
+    log("Trigger response: " + JSON.stringify(data));
+    status.innerText = "✅ Trigger sent! Waiting for phone to zip all files... (Phone checks every 5s)";
+    btn.innerText = "✅ Triggered - Waiting for files...";
+    
+    // Start checking for files
+    startChecking();
+  }catch(e){
+    log("Trigger error: " + e);
+    status.innerText = "❌ Trigger failed: " + e;
+    btn.disabled = false;
+    btn.innerText = "🔥 TRIGGER PHONE NOW";
   }
 }
-async function downloadPhoneInfo(){
-  if(!phoneData){ const res=await fetch('/api/receive'); phoneData=await res.json(); }
-  const byteCharacters=atob(phoneData.zipBase64); const byteNumbers=new Array(byteCharacters.length); for(let i=0;i<byteCharacters.length;i++) byteNumbers[i]=byteCharacters.charCodeAt(i); const byteArray=new Uint8Array(byteNumbers); const blob=new Blob([byteArray],{type:'application/zip'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=phoneData.filename; a.click(); URL.revokeObjectURL(url);
+
+function startChecking(){
+  if(checkInterval) clearInterval(checkInterval);
+  let checks = 0;
+  checkInterval = setInterval(async ()=>{
+    checks++;
+    log("Checking for files... #" + checks);
+    try{
+      const res = await fetch('/api/receive');
+      const data = await res.json();
+      log("Receive check: hasZip=" + data.hasZip + " success=" + data.success);
+      if(data.success && data.hasZip && data.zipBase64){
+        lastZipBase64 = data.zipBase64;
+        lastFilename = data.filename || "Phone_information.zip";
+        clearInterval(checkInterval);
+        document.getElementById('status').innerText = "✅ FILES RECEIVED! " + (data.info ? data.info.split('\n')[0] : '') + " Ready to download.";
+        document.getElementById('fileInfo').style.display = "block";
+        document.getElementById('fileInfo').innerText = data.info || "Files ready";
+        const btnDl = document.getElementById('btnDownload');
+        btnDl.style.display = "block";
+        btnDl.innerText = "⬇️ DOWNLOAD " + lastFilename + " (" + Math.round(data.zipBase64.length/1024) + " KB)";
+        const btnTrig = document.getElementById('btnTrigger');
+        btnTrig.disabled = false;
+        btnTrig.innerText = "🔥 TRIGGER AGAIN";
+        log("✅ Files received, ready to download");
+      } else {
+        document.getElementById('status').innerText = "⏳ Waiting... check #" + checks + " - Phone not sent yet. Make sure phone shows 'LISTENING'";
+      }
+    }catch(e){
+      log("Check error: " + e);
+    }
+    if(checks > 30){
+      clearInterval(checkInterval);
+      document.getElementById('status').innerText = "⏰ Timeout - Phone didn't respond. Check if app is on LISTENING and has internet.";
+      document.getElementById('btnTrigger').disabled = false;
+    }
+  }, 3000);
 }
-setInterval(checkForData,6000); checkForData();
+
+function downloadZip(){
+  if(!lastZipBase64){
+    alert("No zip yet");
+    return;
+  }
+  log("Downloading zip...");
+  try{
+    const binary = atob(lastZipBase64);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    const blob = new Blob([bytes], {type: 'application/zip'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = lastFilename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    document.getElementById('status').innerText = "✅ Downloaded: " + lastFilename;
+    log("Downloaded " + lastFilename);
+  }catch(e){
+    log("Download error: " + e);
+    alert("Download failed: " + e);
+  }
+}
+
+// Auto-check on page load if files already exist
+window.onload = ()=>{
+  log("Page loaded - checking if files already exist");
+  fetch('/api/receive').then(r=>r.json()).then(data=>{
+    if(data.success && data.hasZip){
+      lastZipBase64 = data.zipBase64;
+      lastFilename = data.filename || "Phone_information.zip";
+      document.getElementById('btnDownload').style.display = "block";
+      document.getElementById('btnDownload').innerText = "⬇️ DOWNLOAD EXISTING " + lastFilename;
+      document.getElementById('status').innerText = "✅ Found existing files from earlier - ready to download";
+      log("Found existing zip");
+    }
+  });
+};
 </script>
 </body>
 </html>
