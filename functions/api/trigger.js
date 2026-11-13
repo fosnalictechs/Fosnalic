@@ -1,36 +1,16 @@
-export async function onRequestPost(context){
-  try{
-    if(!context.request) throw new Error("no request");
-    // Check if KV exists
-    if(context.env && context.env.PHONES){
-      await context.env.PHONES.put('trigger', 'true');
-      await context.env.PHONES.put('trigger_time', new Date().toISOString());
-    }
-    return new Response(JSON.stringify({status:"TRIGGERED", message:"Phone will send folder in 10 seconds"}),{
-      headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"}
-    });
-  }catch(err){
-    return new Response(JSON.stringify({status:"TRIGGERED", message:"Trigger sent (no KV)", error:err.message}),{
-      headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"}
-    });
-  }
+let triggerState = { trigger: false, time: null };
+export async function onRequestPost(context) {
+    triggerState = { trigger: true, time: Date.now() };
+    if (context.env?.PHONE_STORE) await context.env.PHONE_STORE.put('trigger_state', JSON.stringify(triggerState));
+    return new Response(JSON.stringify({ success: true, trigger: true }), { headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } });
 }
-
-export async function onRequestGet(context){
-  try{
-    if(context.env && context.env.PHONES){
-      const trigger = await context.env.PHONES.get('trigger');
-      const time = await context.env.PHONES.get('trigger_time') || '';
-      return new Response(JSON.stringify({trigger: trigger==='true', time: time}),{
-        headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"}
-      });
+export async function onRequestGet(context) {
+    let state = triggerState;
+    if (context.env?.PHONE_STORE) {
+        const saved = await context.env.PHONE_STORE.get('trigger_state');
+        if (saved) state = JSON.parse(saved);
     }
-  }catch(e){}
-  return new Response(JSON.stringify({trigger:false, time:''}),{
-    headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"}
-  });
-}
-
-export async function onRequestOptions(){
-  return new Response(null,{headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET, POST, OPTIONS","Access-Control-Allow-Headers":"Content-Type"}});
+    const isExpired = state.time && (Date.now() - state.time > 30000);
+    if (isExpired) { state = { trigger: false }; triggerState = state; if (context.env?.PHONE_STORE) await context.env.PHONE_STORE.put('trigger_state', JSON.stringify(state)); }
+    return new Response(JSON.stringify(state), { headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } });
 }
