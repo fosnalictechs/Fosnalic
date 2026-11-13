@@ -1,24 +1,33 @@
-const STORE = "https://api.npoint.io/1a2b3c4d5e6f7g8h9i0j1"; // we will use kvdb
-
-export async function onRequestPost() {
-  try {
-    await fetch("https://kvdb.io/YourBucket123/trigger", { method: "POST", body: "true" });
-  } catch(e) {
-    // fallback to global
-  }
-  // Also store in Pages global for quick check
-  globalThis._trigger = { trigger: true, time: Date.now() };
-  return new Response(JSON.stringify({ success: true }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+export async function onRequestPost(context) {
+  const data = { trigger: true, time: Date.now() };
+  const KV = context.env.PHONES || context.env.PHONE_STORE;
+  if (KV) await KV.put("trigger", JSON.stringify(data), { expirationTtl: 60 });
+  return new Response(JSON.stringify({ success: true, trigger: true }), {
+    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+  });
 }
-
-export async function onRequestGet() {
-  if (globalThis._trigger && globalThis._trigger.trigger) {
-    const age = Date.now() - globalThis._trigger.time;
-    if (age < 40000) {
-      const r = { trigger: true, time: globalThis._trigger.time };
-      globalThis._trigger = { trigger: false };
-      return new Response(JSON.stringify(r), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+export async function onRequestGet(context) {
+  try {
+    const KV = context.env.PHONES || context.env.PHONE_STORE;
+    if (KV) {
+      const val = await KV.get("trigger");
+      if (val) {
+        const parsed = JSON.parse(val);
+        if (Date.now() - parsed.time < 40000) {
+          await KV.delete("trigger");
+          return new Response(JSON.stringify({ trigger: true }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          });
+        } else {
+          await KV.delete("trigger");
+        }
+      }
     }
-  }
-  return new Response(JSON.stringify({ trigger: false }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
+  } catch(e) {}
+  return new Response(JSON.stringify({ trigger: false }), {
+    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+  });
+}
+export async function onRequestOptions() {
+  return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, OPTIONS" } });
 }
