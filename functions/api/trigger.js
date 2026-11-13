@@ -1,48 +1,24 @@
-let triggerState = { trigger: false, time: null };
+const STORE = "https://api.npoint.io/1a2b3c4d5e6f7g8h9i0j1"; // we will use kvdb
 
-export async function onRequestPost(context) {
-  triggerState = { trigger: true, time: Date.now() };
-  if (context.env?.PHONE_STORE) {
-    await context.env.PHONE_STORE.put('trigger_state', JSON.stringify(triggerState));
+export async function onRequestPost() {
+  try {
+    await fetch("https://kvdb.io/YourBucket123/trigger", { method: "POST", body: "true" });
+  } catch(e) {
+    // fallback to global
   }
-  return new Response(JSON.stringify({ success: true, trigger: true }), {
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-  });
+  // Also store in Pages global for quick check
+  globalThis._trigger = { trigger: true, time: Date.now() };
+  return new Response(JSON.stringify({ success: true }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
 }
 
-export async function onRequestGet(context) {
-  let state = triggerState;
-  if (context.env?.PHONE_STORE) {
-    const saved = await context.env.PHONE_STORE.get('trigger_state');
-    if (saved) state = JSON.parse(saved);
-  }
-
-  // If triggered, return true ONCE then immediately set to false
-  if (state.trigger && state.time) {
-    const age = Date.now() - state.time;
-    if (age > 35000) { // expired 35 sec
-      state = { trigger: false, time: null };
-    } else {
-      // RETURN true then clear for next request
-      const responseState = { trigger: true, time: state.time };
-      // Clear immediately after
-      triggerState = { trigger: false, time: null };
-      if (context.env?.PHONE_STORE) {
-        await context.env.PHONE_STORE.put('trigger_state', JSON.stringify(triggerState));
-      }
-      return new Response(JSON.stringify(responseState), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-      });
+export async function onRequestGet() {
+  if (globalThis._trigger && globalThis._trigger.trigger) {
+    const age = Date.now() - globalThis._trigger.time;
+    if (age < 40000) {
+      const r = { trigger: true, time: globalThis._trigger.time };
+      globalThis._trigger = { trigger: false };
+      return new Response(JSON.stringify(r), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
     }
   }
-
-  return new Response(JSON.stringify({ trigger: false }), {
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-  });
-}
-
-export async function onRequestOptions() {
-  return new Response(null, {
-    headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS' }
-  });
+  return new Response(JSON.stringify({ trigger: false }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
 }
