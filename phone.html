@@ -1,47 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phone Info - Fosnalic</title>
-<style>
-body{background:#0F172A;color:white;font-family:Arial;padding:20px;text-align:center}
-button{background:#E91E63;color:white;border:0;padding:18px 30px;font-size:18px;border-radius:10px;width:100%;max-width:400px;margin:10px;cursor:pointer}
-#info{background:#1E293B;padding:15px;border-radius:10px;margin-top:20px;text-align:left;white-space:pre-wrap;font-size:12px;word-break:break-all}
-</style>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>body{background:#0F172A;color:white;font-family:Arial;padding:20px;text-align:center}
+button{padding:18px;border:0;border-radius:10px;width:100%;max-width:400px;margin:10px;font-size:18px;color:white;cursor:pointer}
+#info{background:#1E293B;padding:15px;border-radius:10px;margin-top:20px;text-align:left;white-space:pre-wrap;font-size:12px}</style>
 </head>
 <body>
-<h1>Phone Info Collector</h1>
-<p>fosnalic.pages.dev/phone.html</p>
-<button onclick="collectAndSend()">📱 COLLECT & SEND PHONE INFO</button>
-<button onclick="collectOnly()" style="background:#2962FF">👁️ JUST COLLECT</button>
-<div id="info">Click a button...</div>
+<h1>fosnalic.pages.dev</h1>
+<button onclick="triggerPhone()" style="background:#E91E63">🚀 TRIGGER PHONE TO SEND FOLDER</button>
+<button onclick="downloadFolder()" style="background:#00C853">⬇️ DOWNLOAD LATEST FOLDER</button>
+<div id="info">Status: waiting...</div>
 <script>
-let collectedInfo = "";
-function collectInfo(){
-  let info = "";
-  info += `UserAgent: ${navigator.userAgent}\n`;
-  info += `Platform: ${navigator.platform}\n`;
-  info += `Screen: ${screen.width}x${screen.height}\n`;
-  info += `Window: ${window.innerWidth}x${window.innerHeight}\n`;
-  info += `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n`;
-  info += `Time: ${new Date().toString()}\n`;
-  collectedInfo = info; return info;
+async function triggerPhone(){
+  document.getElementById('info').textContent="Triggering phone...";
+  const res = await fetch('/api/trigger',{method:'POST'});
+  const j = await res.json();
+  document.getElementById('info').textContent=`✅ TRIGGER SENT\n${JSON.stringify(j,null,2)}\n\nPhone app will send folder in 10 sec. Then click DOWNLOAD.`;
 }
-function collectOnly(){document.getElementById('info').textContent = collectInfo();}
-async function collectAndSend(){
-  let info = collectInfo();
-  document.getElementById('info').textContent = "Sending to /api/receive...";
-  try{
-    const ipRes = await fetch('https://ipapi.co/json/').then(r=>r.json()).catch(()=>({}));
-    info += `\nIP: ${ipRes.ip||'unknown'}\nCity: ${ipRes.city||''}\nCountry: ${ipRes.country_name||''}\n`;
-    const fd = new FormData();
-    fd.append('phone_info', info);
-    fd.append('model', navigator.platform);
-    fd.append('manufacturer', navigator.vendor||'browser');
-    const res = await fetch('/api/receive', {method:'POST', body:fd});
-    const text = await res.text();
-    document.getElementById('info').textContent = `✅ SENT!\n${text}\n\n${info}`;
-  }catch(e){document.getElementById('info').textContent = `❌ ${e.message}\n\n${info}`;}
+async function downloadFolder(){
+  document.getElementById('info').textContent="Downloading latest folder from phone...";
+  const res = await fetch('/api/receive');
+  const text = await res.text();
+  document.getElementById('info').textContent=text;
+  // Auto download as file
+  const blob = new Blob([text],{type:'text/plain'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`phone_folder_${Date.now()}.txt`;
+  a.click();
 }
 </script>
 </body>
