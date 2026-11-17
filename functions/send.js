@@ -1,16 +1,18 @@
 export async function onRequestGet(context) {
-  const BOT_TOKEN = "8830924833:AAFkgTYl3QIxmDwSDENXOnQD-2zkiY4LhKM"; // <-- replace with your BotFather token
-  const CHAT_ID = "8954666775"; // <-- replace with the ID userinfobot gave you
+  const BOT_TOKEN = "8830924833:AAFkgTYl3QIxmDwSDENXOnQD-2zkiY4LhKM";
+  const CHAT_ID = "8954666775";
   
   const urlParam = new URL(context.request.url).searchParams.get("url");
-  if (!urlParam) return new Response("No URL provided");
+  if (!urlParam) return new Response("No URL provided", { status: 400 });
 
-  const telegramUrl = https://api.telegram.org/bot${BOT_TOKEN}/sendVideo?chat_id=${CHAT_ID}&video=${encodeURIComponent(urlParam)};
+  const telegramUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(urlParam)}`;
 
-  const tg = await fetch(telegramUrl);
-  const data = await tg.text();
+  await fetch(telegramUrl);
   
   return new Response("Sent to Telegram! Check your bot.", { 
-    headers: { "Access-Control-Allow-Origin": "*" } 
+    headers: { 
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*" 
+    } 
   });
 }
