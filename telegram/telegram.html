@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body style="background:#000;color:#fff;text-align:center;padding-top:50px;font-family:sans-serif">
+<h2>Send to Telegram</h2>
+<input id="url" style="width:90%;padding:15px;border-radius:10px" placeholder="Paste movie download link here">
+<br><br>
+<button onclick="send()" style="padding:15px 30px;background:#0088cc;color:#fff;border:none;border-radius:10px;font-size:18px">SEND TO TELEGRAM</button>
+<p id="status"></p>
+<script>
+async function send(){
+ let u = document.getElementById('url').value;
+ if(!u) return alert('Paste URL first');
+ document.getElementById('status').innerText='Sending...';
+ let res = await fetch('/send?url='+encodeURIComponent(u));
+ document.getElementById('status').innerText = await res.text();
+}
+</script>
+</body>
+</html>
