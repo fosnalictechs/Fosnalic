@@ -1,17 +1,8 @@
-// Inject shared auth UI and bootstrap into public HTML without editing every page.
-const PRIVATE_OR_UTILITY_PATHS = new Set([
-  "/admin.html",
-  "/dashboard.html",
-  "/depot.html",
-  "/my-files.html",
-  "/phone.html",
-  "/phone_sync.html",
-  "/storage.html",
-  "/tracker.html",
-]);
+// Inject shared authentication into HTML responses. The auth client is loaded in <head>
+// so page scripts (notably live-chat.html) can use it without constructing another client.
 const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-
-const AUTH_AREA = `<div id="authArea" style="display:flex;gap:8px;align-items:center;margin-left:12px;font:600 13px Segoe UI,sans-serif;color:#075E54">
+const AUTH_LOADER = '<script src="/auth-global.js"></script>';
+const AUTH_AREA = `<div id="authArea" style="display:flex;gap:8px;align-items:center;position:fixed;top:10px;right:10px;z-index:10000;background:#fff;padding:6px;border-radius:22px;box-shadow:0 2px 10px #0002;font:600 13px Segoe UI,sans-serif;color:#075E54">
   <button id="loginBtn" type="button" onclick="openAuth()" style="background:#075E54;color:white;border:none;padding:8px 14px;border-radius:20px;font-weight:700;cursor:pointer">Log In</button>
   <div id="userArea" style="display:none;align-items:center;gap:8px">
     <span id="userName" style="font-weight:700;font-size:13px"></span>
@@ -32,48 +23,62 @@ const AUTH_MODAL = `<div id="authModal" style="display:none;position:fixed;inset
 </div>`;
 
 export async function onRequest(context) {
-  const url = new URL(context.request.url);
-  const pathname = url.pathname.toLowerCase();
-  if (PRIVATE_OR_UTILITY_PATHS.has(pathname)) return context.next();
-
   const response = await context.next();
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("text/html")) return response;
 
+  const pathname = new URL(context.request.url).pathname.toLowerCase();
   const isLiveChat = pathname === "/live-chat.html";
-  const transform = new HTMLRewriter()
-    // Remove any per-page SDK include, then inject exactly one SDK and the singleton auth client.
-    .on(`script[src="${SUPABASE_CDN}"]`, { element(element) { element.remove(); } })
+  // Read a clone only to avoid injecting duplicate UI or bootstrap tags already in source HTML.
+  const source = await response.clone().text();
+  const needsAuthArea = !/\bid=["']authArea["']/i.test(source);
+  const needsAuthModal = !/\bid=["']authModal["']/i.test(source);
+  const needsSdk = !source.includes(SUPABASE_CDN);
+  const needsAuthLoader = !source.includes("auth-global.js");
+
+  const rewriter = new HTMLRewriter()
+    // Normalize the SDK include to a single copy. Auth script follows it in the head.
+    .on('script[src*="cdn.jsdelivr.net/npm/@supabase/supabase-js"]', {
+      element(element) { element.remove(); },
+    })
     .on("head", {
       element(element) {
-        element.append(`<script src="${SUPABASE_CDN}"></script><script src="/auth-global.js"></script>`, { html: true });
+        const scripts = `${needsSdk ? `<script src="${SUPABASE_CDN}"></script>` : `<script src="${SUPABASE_CDN}"></script>`}${needsAuthLoader ? AUTH_LOADER : ""}`;
+        // Prepend so the SDK/client is ready before any inline page code runs.
+        element.prepend(scripts, { html: true });
         element.append('<script src="/fosnalic-remove-test-ad.js" defer></script>', { html: true });
         element.append('<script src="/fosnalic-announcements.js" defer></script>', { html: true });
       },
     })
     .on("header, .wa-top", {
       element(element) {
-        element.append(AUTH_AREA, { html: true });
+        if (needsAuthArea) element.append(AUTH_AREA, { html: true });
       },
     })
     .on("body", {
       element(element) {
-        element.append(AUTH_MODAL, { html: true });
+        // Pages without a standard header still get a reachable login button.
+        if (needsAuthArea && !source.includes("<header") && !source.includes("class=\"wa-top\"")) {
+          element.prepend(AUTH_AREA, { html: true });
+        }
+        if (needsAuthModal) element.append(AUTH_MODAL, { html: true });
       },
     });
 
   if (isLiveChat) {
-    // Keep chat behavior intact while replacing its old client construction with the shared singleton.
-    transform.on("script:not([src])", {
+    // auth-global.js declares these shared bindings. Remove the legacy duplicate client
+    // (and same-name config bindings) while leaving all chat behavior untouched.
+    rewriter.on("script:not([src])", {
       text(text) {
         const patched = text.text
           .replace(/^\s*const\s+SUPABASE_URL\s*=\s*["'][^"']+["'];\s*/gm, "")
           .replace(/^\s*const\s+SUPABASE_KEY\s*=\s*["'][^"']+["'];\s*/gm, "")
-          .replace(/^\s*const\s+supabaseClient\s*=\s*supabase\.createClient\(SUPABASE_URL\s*,\s*SUPABASE_KEY\s*\)\s*;\s*/gm, "const supabaseClient = window.supabaseClient;\n");
+          .replace(/^\s*const\s+ADMIN_EMAIL\s*=\s*["'][^"']+["'];\s*/gm, "")
+          .replace(/^\s*const\s+supabaseClient\s*=\s*supabase\.createClient\([^;]+;\s*/gm, "");
         if (patched !== text.text) text.replace(patched);
       },
     });
   }
 
-  return transform.transform(response);
+  return rewriter.transform(response);
 }
