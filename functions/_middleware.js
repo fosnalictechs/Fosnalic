@@ -40,14 +40,11 @@ export async function onRequest(context) {
   const hasAuthModal = /\bid=["']authModal["']/i.test(source);
 
   let rewriter = new HTMLRewriter()
-    // Normalize any existing SDK/auth loader so there is one ordered pair.
     .on('script[src*="cdn.jsdelivr.net/npm/@supabase/supabase-js"]', { element(element) { element.remove(); } })
     .on('script[src*="auth-global.js"]', { element(element) { element.remove(); } })
     .on("head", {
       element(element) {
-        if (!isPrivateUtility) {
-          element.append(`<script src="${SUPABASE_CDN}"></script>${AUTH_LOADER}`, { html: true });
-        }
+        if (!isPrivateUtility) element.append(`<script src="${SUPABASE_CDN}"></script>${AUTH_LOADER}`, { html: true });
         element.append('<script src="/fosnalic-remove-test-ad.js" defer></script>', { html: true });
         element.append('<script src="/fosnalic-announcements.js" defer></script>', { html: true });
       },
@@ -73,7 +70,6 @@ export async function onRequest(context) {
       },
     });
 
-  // Put the shared auth area at the end of the actual header/navigation, never fixed.
   if (!isPrivateUtility && !hasAuthArea) {
     if (hasHeader) {
       rewriter = rewriter.on("header, .wa-top", { element(element) { element.append(AUTH_AREA, { html: true }); } });
@@ -81,7 +77,7 @@ export async function onRequest(context) {
       rewriter = rewriter.on("nav", { element(element) { element.append(AUTH_AREA, { html: true }); } });
     } else {
       rewriter = rewriter.on("body", { element(element) {
-        element.prepend(`<div style="display:flex;justify-content:flex-end;padding:8px">${AUTH_AREA}</div>`, { html: true });
+        element.prepend(`<div style="display:flex;justify-content:flex-end;padding:8px;position:static">${AUTH_AREA}</div>`, { html: true });
       } });
     }
   }
