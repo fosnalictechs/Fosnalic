@@ -186,4 +186,13 @@ async function loadAll(){
     document.getElementById('ticker').innerHTML=`<span class="ticker-item">${txt}</span><span class="ticker-item">${txt}</span>`;
     renderUpdates(d);
     // ADS FROM ADMIN / GIST, fallback to localStorage
-    function renderAd(ad,el,lsKey){let c=document.getElementById(el);if(!c) return;let dat
+    function renderAd(ad,el,lsKey){let c=document.getElementById(el);if(!c) return;let data=ad;if(!data){try{data=JSON.parse(localStorage.getItem(lsKey)||'null');}catch(e){}}if(!data) return;let txt=cleanText(data.text||"");if(data.text&&String(data.text).trim().startsWith('<')&&!String(data.text).includes('Test popup')){c.innerHTML=data.text;return;}let h='';if(data.image) h+=`<a href="${data.link||'#'}" target="_blank"><img src="${data.image}" style="max-width:100%;border-radius:8px"></a>`;if(txt) h+=`<div style="padding:8px">${txt}</div>`;if(h) c.innerHTML=h;}
+    renderAd(d.adHeader,'adHeaderContent','adHeader');renderAd(d.adMiddle,'adMiddleContent','adMiddle');renderAd(d.adFooter,'adFooterContent','adFooter');
+    if(d.ads&&Array.isArray(d.ads)){renderAd(d.ads[0],'adHeaderContent','adHeader');renderAd(d.ads[1],'adMiddleContent','adMiddle');renderAd(d.ads[2],'adFooterContent','adFooter');}
+  }catch(e){console.log(e);}
+}
+loadAll();setInterval(loadAll,60000);
+const backBtn=document.getElementById('backToTop');addEventListener('scroll',()=>{if(scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});backBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>
