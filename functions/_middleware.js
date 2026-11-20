@@ -26,7 +26,6 @@ const TRACKING_SCRIPT = `<script>
 (() => {
   const client = window.supabaseClient;
   if (!client) return;
-  const todayKey = new Date().toISOString().slice(0, 10);
   function fosDeviceId() {
     let id = localStorage.getItem('fos_device_id');
     if (!id) {
@@ -38,34 +37,31 @@ const TRACKING_SCRIPT = `<script>
   }
   async function trackVisit() {
     const deviceId = fosDeviceId();
-    const marker = 'fos_visit_recorded';
     try {
-      const { data, error } = await client.from('site_stats').select('id').eq('type', 'visit').eq('device_id', deviceId).limit(1);
-      if (!error && data && data.length) { localStorage.setItem(marker, '1'); return; }
-      // The supplied RLS permits public inserts but admin-only selects. Fall back to a
-      // per-device local marker when visitor-side SELECT is denied; never broaden RLS.
-      if (error && localStorage.getItem(marker)) return;
-      if (error && error.code !== '42501' && error.code !== 'PGRST301') console.warn('Visit lookup failed:', error.message);
-      if (error && localStorage.getItem(marker)) return;
-      const result = await client.from('site_stats').insert({type:'visit',page:location.pathname,device_id:deviceId,user_agent:navigator.userAgent});
-      if (!result.error) localStorage.setItem(marker, '1');
-      else console.warn('Visit tracking insert failed:', result.error.message);
+      const { error } = await client.rpc('track_stat', {
+        p_type: 'visit',
+        p_page: location.pathname,
+        p_email: null,
+        p_name: null,
+        p_device_id: deviceId,
+        p_agent: navigator.userAgent
+      });
+      if (error) console.warn('Visit tracking failed:', error.message);
     } catch (error) { console.warn('Visit tracking failed:', error); }
   }
   async function trackLogin(email, name) {
     const normalizedEmail = String(email || '').trim().toLowerCase();
     if (!normalizedEmail) return;
-    const marker = 'fos_login_' + normalizedEmail + '_' + todayKey;
     try {
-      const since = new Date(); since.setHours(0, 0, 0, 0);
-      const { data, error } = await client.from('site_stats').select('id').eq('type','login').eq('user_email',normalizedEmail).gte('created_at',since.toISOString()).limit(1);
-      if (!error && data && data.length) { localStorage.setItem(marker, '1'); return; }
-      // Public users cannot SELECT under the stated RLS, so use a local daily guard.
-      if (localStorage.getItem(marker)) return;
-      if (error && error.code !== '42501' && error.code !== 'PGRST301') console.warn('Login lookup failed:', error.message);
-      const result = await client.from('site_stats').insert({type:'login',page:location.pathname,user_email:normalizedEmail,user_name:name || '',device_id:fosDeviceId(),user_agent:navigator.userAgent});
-      if (!result.error) localStorage.setItem(marker, '1');
-      else console.warn('Login tracking insert failed:', result.error.message);
+      const { error } = await client.rpc('track_stat', {
+        p_type: 'login',
+        p_page: location.pathname,
+        p_email: normalizedEmail,
+        p_name: name || '',
+        p_device_id: fosDeviceId(),
+        p_agent: navigator.userAgent
+      });
+      if (error) console.warn('Login tracking failed:', error.message);
     } catch (error) { console.warn('Login tracking failed:', error); }
   }
   window.fosDeviceId = fosDeviceId;
