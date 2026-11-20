@@ -54,42 +54,10 @@
     })[char]);
   }
 
-  function renderUpdates(news) {
-    if (!Array.isArray(news) || !news.length) return;
-    let track = document.getElementById("newsTrack");
-    if (!track) {
-      const section = document.createElement("section");
-      section.setAttribute("data-fos-shared-updates", "true");
-      section.style.cssText = "padding:36px 0;background:#F5F7FA;color:#111;overflow:hidden";
-      section.innerHTML = '<div style="width:90%;max-width:1100px;margin:auto"><h2 style="margin-bottom:18px">Latest Updates</h2><div data-fos-update-track style="display:flex;gap:16px;overflow-x:auto;padding-bottom:12px"></div></div>';
-      const footer = document.querySelector("footer");
-      document.body.insertBefore(section, footer || null);
-      track = section.querySelector("[data-fos-update-track]");
-    }
-
-    track.replaceChildren(...news.map((item) => {
-      const card = document.createElement("article");
-      card.style.cssText = "box-sizing:border-box;flex:0 0 280px;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08);overflow:hidden;color:#111";
-      if (item && item.img) {
-        const image = document.createElement("img");
-        image.src = item.img;
-        image.alt = item.title || "FOSNALIC Techs update";
-        image.loading = "lazy";
-        image.style.cssText = "width:100%;height:150px;object-fit:cover;display:block";
-        card.appendChild(image);
-      }
-      const body = document.createElement("div");
-      body.style.cssText = "padding:14px";
-      const title = document.createElement("h3");
-      title.textContent = item?.title || "Update";
-      title.style.cssText = "font-size:1rem;margin:0 0 8px";
-      const description = document.createElement("p");
-      description.textContent = item?.desc || "";
-      description.style.cssText = "font-size:.9rem;color:#4a5568;margin:0";
-      body.append(title, description);
-      card.appendChild(body);
-      return card;
-    }));
+  // Keep the page's native swipe/auto-scroll updates section as the sole updates UI.
+  // Remove only the duplicate section previously injected by this shared script.
+  function renderUpdates() {
+    document.querySelectorAll("[data-fos-shared-updates]").forEach((section) => section.remove());
   }
 
   function renderAds(data) {
@@ -113,7 +81,7 @@
 
     const makeAd = (html) => {
       const card = document.createElement("aside");
-      card.style.cssText = "position:relative;box-sizing:border-box;padding:14px 18px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#222;box-shadow:0 4px 16px rgba(0,0,0,.08);overflow-wrap:anywhere";
+      card.style.cssText = "position:relative;box-sizing:border-box;padding:14px 18px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#222;box-shadow:0 4px 16px rgba(0,0,.08);overflow-wrap:anywhere";
       // Ad markup is authored in the site's admin. Text-only entries are escaped.
       card.innerHTML = html;
       return card;
@@ -135,7 +103,7 @@
       if (!response.ok) return;
       const data = await response.json();
       renderTicker(data.ticker);
-      renderUpdates(data.news);
+      renderUpdates();
       renderAds(data);
     } catch (error) {
       // Announcements are optional; leave the page intact if the feed is unavailable.
