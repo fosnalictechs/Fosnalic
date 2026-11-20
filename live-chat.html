@@ -50,8 +50,9 @@ a{text-decoration:none}
 .bubble img.chat-media{width:100%;max-height:320px;object-fit:cover;border-radius:8px;margin:6px 0;display:block;cursor:pointer;background:#ddd}
 .bubble video.chat-media{width:100%;max-height:320px;border-radius:8px;background:#000}
 .bubble audio{width:100%;margin-top:6px}
-.bubble .actions{display:flex;gap:14px;margin-top:6px;border-top:1px solid rgba(0,0,0,.06);padding-top:6px}
+.bubble .actions{display:flex;gap:14px;margin-top:6px;border-top:1px solid rgba(0,0,0,.06);padding-top:6px;flex-wrap:wrap}
 .bubble .actions button{border:none;background:none;color:#075E54;font-size:12px;font-weight:600;cursor:pointer}
+.bubble .actions button.danger{color:#DC2626}
 .replyQuote{background:rgba(0,0,0,.05);border-left:3px solid #075E54;padding:6px 8px;border-radius:4px;font-size:12px;margin-bottom:6px;color:#667781}
 .replyThread{margin-left:16px;border-left:2px solid #D9FDD3;padding-left:8px}
 .updates-view{display:none}.updates-view.active{display:block}
@@ -71,7 +72,12 @@ a{text-decoration:none}
 .typing{font-size:12px;color:#075E54;font-style:italic;padding:4px 10px}
 .scrollBtns{position:fixed;right:12px;bottom:120px;z-index:150;display:flex;flex-direction:column;gap:8px}
 .scrollBtns button{width:44px;height:44px;border-radius:50%;border:none;background:#075E54;color:white;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);display:grid;place-items:center}
-.scrollBtns button:active{transform:scale(.95)}
+.admin-panel{background:#FFF7ED;border:2px solid #F97316;border-radius:12px;padding:12px;margin:8px 0;display:none}
+.admin-panel h3{margin:0 0 8px;color:#EA580C;font-size:15px}
+.admin-panel input,.admin-panel textarea{width:100%;padding:10px;border:1px solid #E5E5E5;border-radius:8px;margin-bottom:8px;font-size:13px}
+.admin-btn{background:#EA580C;color:white;border:none;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;margin:2px}
+.admin-btn.red{background:#DC2626}.admin-btn.green{background:#075E54}.admin-btn.gray{background:#667781}
+.banned-box{background:#FEE2E2;border-radius:8px;padding:10px;margin-top:8px;font-size:13px}
 </style>
 </head><body>
 <div id="authScreen" class="auth-wrap">
@@ -85,13 +91,41 @@ a{text-decoration:none}
 </div>
 <div id="appScreen" style="display:none">
 <div class="wa-top"><a href="index.html" class="back">←</a><img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=F&background=25D366&color=fff'"><div class="group"><b>FOSNALIC Depot 💬</b><small id="groupMembers">Connecting...</small></div><button class="logout" onclick="doLogout()">Log Out</button></div>
-<div class="tabs-bar"><button id="tabChat" class="active" onclick="showView('chat')">💬 Chat</button><button id="tabUpdates" onclick="showView('updates')">📣 Updates &amp; Ads</button></div>
+<div class="tabs-bar"><button id="tabChat" class="active" onclick="showView('chat')">💬 Chat</button><button id="tabUpdates" onclick="showView('updates')">📣 Updates &amp; Ads</button><button id="tabAdmin" onclick="showView('admin')" style="display:none">🛡️ Admin</button></div>
 <div class="wrap">
 <div id="viewChat">
+<div id="adminMini" class="admin-panel" style="display:none"><h3>🛡️ Admin Quick Actions</h3><button class="admin-btn red" onclick="clearAllChat()">🗑️ Clear All Chat</button><button class="admin-btn" onclick="showView('admin')">⚙️ Open Admin Panel</button><button class="admin-btn gray" onclick="exportChat()">⬇️ Export Chat</button><div id="bannedMini" style="margin-top:8px;font-size:12px"></div></div>
+<div id="bannedNotice" style="display:none;background:#FEE2E2;color:#991B1B;padding:12px;border-radius:10px;margin:6px 0;font-weight:700;text-align:center">⛔ You are banned. You can read but cannot post.</div>
 <div class="people-card"><b>👥 People Chatting</b><div class="online-bar" id="onlineCount">Loading people...</div><div class="people-list" id="peopleList"></div><div id="typingBar" class="typing" style="display:none"></div></div>
 <div class="search"><input id="q" placeholder="Search messages..." oninput="debounceLoad()"></div>
 <div class="filters"><div class="filter active" onclick="setType('all',this)">All <span id="c-all"></span></div><div class="filter" onclick="setType('text',this)">Text <span id="c-text"></span></div><div class="filter" onclick="setType('image',this)">Media <span id="c-image"></span></div><div class="filter" onclick="setType('pinned',this)">Pinned</div><select id="sort" onchange="load()" style="border:1px solid #E5E5E5;border-radius:20px;padding:7px 10px;font-size:12px"><option value="old" selected>Oldest first • Latest down ↓</option><option value="new">Newest first • Latest up ↑</option></select></div>
 <div class="chat"><div class="date-sep"><span>🔒 Verified community • FOSNALIC Depot</span></div><div id="feed">Loading chat...</div></div>
+</div>
+<div id="viewAdmin" style="display:none">
+<div class="admin-panel" style="display:block"><h3>🛡️ Admin Panel — possyshad@gmail.com only</h3>
+<p style="font-size:12px;color:#667781;margin:0 0 10px">Only you see this. Normal users see only names, no emails.</p>
+<label style="font-size:12px;font-weight:700">📣 Ticker Text</label><input id="adminTicker" placeholder="e.g. Welcome to FOSNALIC Depot • New stock...">
+<button class="admin-btn green" onclick="saveTicker()">Save Ticker</button>
+<hr style="margin:12px 0">
+<label style="font-size:12px;font-weight:700">📣 New Update — Title</label><input id="adminUpdTitle" placeholder="Update title">
+<label style="font-size:12px;font-weight:700">Update Description</label><textarea id="adminUpdDesc" rows="2" placeholder="Update description"></textarea>
+<button class="admin-btn green" onclick="addUpdate()">+ Add Update</button>
+<button class="admin-btn gray" onclick="clearUpdates()">Clear All Updates</button>
+<div id="adminUpdatesList" style="margin-top:8px"></div>
+<hr style="margin:12px 0">
+<label style="font-size:12px;font-weight:700">📢 Ad — Image URL + Text</label><input id="adminAdImg" placeholder="Ad image URL (https://...)">
+<input id="adminAdText" placeholder="Ad text">
+<input id="adminAdLink" placeholder="Ad link (https://...)">
+<button class="admin-btn green" onclick="saveAd('header')">Save Header Ad</button>
+<button class="admin-btn" onclick="saveAd('middle')">Save Middle Ad</button>
+<button class="admin-btn" onclick="saveAd('footer')">Save Footer Ad</button>
+<button class="admin-btn gray" onclick="clearAds()">Clear All Ads</button>
+<hr style="margin:12px 0">
+<h3 style="color:#DC2626">⛔ Banned Users</h3><div id="bannedList"></div>
+<hr style="margin:12px 0">
+<button class="admin-btn red" onclick="clearAllChat()">🗑️ Clear All Chat (All Messages)</button>
+<button class="admin-btn gray" onclick="exportChat()">⬇️ Export Chat</button>
+</div>
 </div>
 <div id="viewUpdates" class="updates-view">
 <div class="ticker-box"><div class="ticker" id="ticker"><span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span></div></div>
@@ -109,8 +143,10 @@ a{text-decoration:none}
 <script>
 const SUPABASE_URL="https://lqqbvzttjstchkjfajwj.supabase.co";
 const SUPABASE_KEY="sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
+const ADMIN_EMAIL="possyshad@gmail.com";
 const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null,currentName="",currentEmail="",replyTo=null,replyName="",mediaUrl=null,mediaType=null,mediaFile=null,curType="all",allData=[],typingTimer=null;
+let currentUser=null,currentName="",currentEmail="",isAdmin=false,replyTo=null,replyName="",mediaUrl=null,mediaType=null,mediaFile=null,curType="all",allData=[],typingTimer=null,bannedIds=new Set(),adminSettings=null;
+function isAdminUser(){ return currentEmail && currentEmail.toLowerCase()===ADMIN_EMAIL; }
 function toast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
 function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 function scrollToBottom(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});}
@@ -124,21 +160,18 @@ async function doSignup(){
   let pass=document.getElementById('suPass').value;
   if(!name||!email||!pass) return showErr("Fill name, email and password.");
   if(pass.length<6) return showErr("Password must be at least 6 characters.");
-  let btn=document.getElementById('suBtn');
-  btn.disabled=true; btn.innerText="Creating...";
+  let btn=document.getElementById('suBtn'); btn.disabled=true; btn.innerText="Creating...";
   let result=await supabaseClient.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});
   btn.disabled=false; btn.innerText="Sign Up • Create Account";
   if(result.error) return showErr(result.error.message);
   showOk("Account created! Check your email and click verification link, then Log In.");
-  showLogin();
-  document.getElementById('liEmail').value=email;
+  showLogin(); document.getElementById('liEmail').value=email;
 }
 async function doLogin(){
   let email=document.getElementById('liEmail').value.trim();
   let pass=document.getElementById('liPass').value;
   if(!email||!pass) return showErr("Enter email and password.");
-  let btn=document.getElementById('liBtn');
-  btn.disabled=true; btn.innerText="Logging in...";
+  let btn=document.getElementById('liBtn'); btn.disabled=true; btn.innerText="Logging in...";
   let result=await supabaseClient.auth.signInWithPassword({email:email,password:pass});
   btn.disabled=false; btn.innerText="Log In";
   if(result.error) return showErr(result.error.message);
@@ -152,56 +185,119 @@ async function doReset(){
 }
 async function doLogout(){
   if(currentUser) await supabaseClient.from('presence').delete().eq('user_id',currentUser.id);
-  await supabaseClient.auth.signOut();
-  location.reload();
+  await supabaseClient.auth.signOut(); location.reload();
+}
+async function loadBanned(){
+  try{ let r=await supabaseClient.from('banned_users').select('*'); if(r.data){ bannedIds=new Set(r.data.map(function(x){return x.user_id})); renderBannedList(r.data); } }catch(e){}
+}
+function renderBannedList(list){
+  let el=document.getElementById('bannedList'); if(!el) return;
+  if(!list||!list.length){ el.innerHTML="<p style='font-size:12px;color:#667781'>No banned users.</p>"; return; }
+  el.innerHTML=list.map(function(b){ return '<div class="banned-box"><b>'+esc(b.name||'')+'</b> — '+(isAdmin?esc(b.email||''):'')+' <button class="admin-btn gray" onclick="unbanUser(\''+b.user_id+'\')">Unban</button></div>'; }).join('');
+  let mini=document.getElementById('bannedMini'); if(mini) mini.innerHTML="Banned: "+list.length+" user(s)";
 }
 async function afterLogin(){
-  let res=await supabaseClient.auth.getUser();
-  let user=res.data.user;
-  if(!user) return;
-  currentUser=user;
-  currentEmail=user.email;
+  let res=await supabaseClient.auth.getUser(); let user=res.data.user; if(!user) return;
+  currentUser=user; currentEmail=user.email||"";
+  isAdmin=isAdminUser();
   currentName=(user.user_metadata && user.user_metadata.full_name) ? user.user_metadata.full_name : "User";
   document.getElementById('authScreen').style.display='none';
   document.getElementById('appScreen').style.display='block';
-  document.getElementById('groupMembers').innerText=currentName+" • Verified ✓";
-  startPresence();
-  load(true);
-  subscribeRealtime();
-  loadAdmin();
+  document.getElementById('groupMembers').innerText=currentName+(isAdmin?" • 🛡️ ADMIN":" • Verified ✓");
+  if(isAdmin){ document.getElementById('tabAdmin').style.display='block'; document.getElementById('adminMini').style.display='block'; }
+  await loadBanned();
+  if(bannedIds.has(currentUser.id)){ document.getElementById('bannedNotice').style.display='block'; document.getElementById('t').disabled=true; }
+  await loadAdminSettings();
+  startPresence(); load(true); subscribeRealtime(); loadAdmin();
 }
 supabaseClient.auth.onAuthStateChange(async function(e,s){ if(e==='SIGNED_IN' && s && s.user) await afterLogin(); });
-(async function(){
-  let res=await supabaseClient.auth.getSession();
-  if(res.data.session && res.data.session.user) await afterLogin();
-})();
+(async function(){ let res=await supabaseClient.auth.getSession(); if(res.data.session && res.data.session.user) await afterLogin(); })();
+async function loadAdminSettings(){
+  try{ let r=await supabaseClient.from('admin_settings').select('*').eq('id',1).single(); if(r.data) adminSettings=r.data; }catch(e){}
+  if(adminSettings){
+    let t=document.getElementById('adminTicker'); if(t) t.value=adminSettings.ticker||"";
+    let ul=document.getElementById('adminUpdatesList');
+    if(ul){ let ups=adminSettings.updates||[]; ul.innerHTML=ups.map(function(u,i){ return '<div style="background:#fff;padding:8px;border-radius:8px;margin:4px 0;font-size:12px"><b>'+esc(u.title||'')+'</b><br>'+esc(u.desc||'')+' <button class="admin-btn gray" onclick="deleteUpdate('+i+')">Delete</button></div>'; }).join('')||"<p style='font-size:12px'>No updates yet</p>"; }
+  }
+}
+async function saveAdminSettings(patch){
+  let next=Object.assign({},adminSettings||{id:1},patch);
+  let r=await supabaseClient.from('admin_settings').upsert({id:1,ticker:next.ticker||"",updates:next.updates||[],ad_header:next.ad_header||null,ad_middle:next.ad_middle||null,ad_footer:next.ad_footer||null},{onConflict:'id'});
+  if(r.error){ toast("Failed: "+r.error.message); return false; }
+  adminSettings=next; return true;
+}
+async function saveTicker(){ if(!isAdmin) return; let v=document.getElementById('adminTicker').value.trim(); if(await saveAdminSettings({ticker:v})) toast("Ticker saved ✅"); loadAdmin(); }
+async function addUpdate(){
+  if(!isAdmin) return;
+  let title=document.getElementById('adminUpdTitle').value.trim(); let desc=document.getElementById('adminUpdDesc').value.trim();
+  if(!title && !desc) return toast("Add title or description");
+  let ups=(adminSettings&&adminSettings.updates)||[]; ups.push({title:title,desc:desc});
+  if(await saveAdminSettings({updates:ups})){ document.getElementById('adminUpdTitle').value=""; document.getElementById('adminUpdDesc').value=""; toast("Update added ✅"); loadAdminSettings(); loadAdmin(); }
+}
+async function deleteUpdate(i){ if(!isAdmin) return; let ups=(adminSettings&&adminSettings.updates)||[]; ups.splice(i,1); if(await saveAdminSettings({updates:ups})) loadAdminSettings(); loadAdmin(); }
+async function clearUpdates(){ if(!isAdmin||!confirm("Clear all updates?")) return; if(await saveAdminSettings({updates:[]})) loadAdminSettings(); loadAdmin(); }
+async function saveAd(slot){
+  if(!isAdmin) return;
+  let img=document.getElementById('adminAdImg').value.trim(); let txt=document.getElementById('adminAdText').value.trim(); let link=document.getElementById('adminAdLink').value.trim();
+  if(!img && !txt) return toast("Add ad image or text");
+  let key=slot==='header'?'ad_header':slot==='middle'?'ad_middle':'ad_footer';
+  let patch={}; patch[key]={image:img,text:txt,link:link||"#"};
+  if(await saveAdminSettings(patch)) toast("Ad saved ✅"); loadAdmin();
+}
+async function clearAds(){ if(!isAdmin||!confirm("Clear all ads?")) return; if(await saveAdminSettings({ad_header:null,ad_middle:null,ad_footer:null})) toast("Ads cleared"); loadAdmin(); }
+async function banUser(userId,name,email){
+  if(!isAdmin) return;
+  if(!confirm("Ban "+name+"? They will not be able to post.")) return;
+  let r=await supabaseClient.from('banned_users').insert({user_id:userId,email:email||"",name:name||""});
+  if(r.error) return toast("Ban failed: "+r.error.message);
+  toast("Banned "+name+" ⛔"); loadBanned(); load();
+}
+async function unbanUser(userId){
+  if(!isAdmin) return;
+  await supabaseClient.from('banned_users').delete().eq('user_id',userId);
+  toast("Unbanned ✅"); loadBanned(); load();
+}
+async function deleteMessage(id){
+  if(!isAdmin) return;
+  if(!confirm("Delete this message for everyone?")) return;
+  await supabaseClient.from('messages').delete().eq('id',id);
+  toast("Deleted ✅"); load();
+}
+async function clearAllChat(){
+  if(!isAdmin) return;
+  if(!confirm("DELETE ALL MESSAGES for everyone? This cannot be undone.")) return;
+  if(!confirm("Are you REALLY sure?")) return;
+  let r=await supabaseClient.from('messages').delete().neq('id',0);
+  if(r.error) return toast("Failed: "+r.error.message);
+  toast("Chat cleared ✅"); load();
+}
+function exportChat(){
+  if(!isAdmin) return;
+  let txt=(allData||[]).map(function(m){ return new Date(m.created_at).toLocaleString()+" | "+m.name+" | "+(isAdmin?m.email:"")+" | "+(m.text||"")+(m.media_url?" [MEDIA: "+m.media_url+"]":""); }).join("\n");
+  let blob=new Blob([txt],{type:"text/plain"}); let a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="fosnalic-chat-export.txt"; a.click();
+}
 async function startPresence(){
   async function ping(isTyping){
     if(!currentUser) return;
     await supabaseClient.from('presence').upsert({user_id:currentUser.id,name:currentName,email:currentEmail,last_seen:new Date().toISOString(),is_typing:isTyping||false},{onConflict:'user_id'});
   }
-  await ping(false);
-  setInterval(function(){ping(false)},10000);
-  document.getElementById('t').addEventListener('input',async function(){
-    await ping(true);
-    clearTimeout(typingTimer);
-    typingTimer=setTimeout(function(){ping(false)},2000);
-  });
+  await ping(false); setInterval(function(){ping(false)},10000);
+  document.getElementById('t').addEventListener('input',async function(){ await ping(true); clearTimeout(typingTimer); typingTimer=setTimeout(function(){ping(false)},2000); });
   async function loadPresence(){
     let res=await supabaseClient.from('presence').select('*').gt('last_seen',new Date(Date.now()-30000).toISOString());
     let data=res.data; if(!data) return;
     let namesMap=new Map();
-    data.forEach(function(p){ namesMap.set(p.user_id,{name:p.name,online:true}); });
-    (allData||[]).forEach(function(m){ if(!namesMap.has(m.user_id)) namesMap.set(m.user_id,{name:m.name,online:false}); });
-    let people=[];
-    namesMap.forEach(function(v){ people.push(v); });
+    data.forEach(function(p){ namesMap.set(p.user_id,{name:p.name,email:p.email,online:true}); });
+    (allData||[]).forEach(function(m){ if(!namesMap.has(m.user_id)) namesMap.set(m.user_id,{name:m.name,email:m.email,online:false}); });
+    let people=[]; namesMap.forEach(function(v){ people.push(v); });
     document.getElementById('onlineCount').innerText=data.length+" online • "+people.length+" people have chatted";
-    document.getElementById('groupMembers').innerText=currentName+" • "+data.length+" online • "+people.length+" people";
+    document.getElementById('groupMembers').innerText=currentName+(isAdmin?" • 🛡️ ADMIN":"")+" • "+data.length+" online • "+people.length+" people";
     let html="";
     people.forEach(function(p){
       let isYou=p.name===currentName;
       let first=(p.name||"?").charAt(0).toUpperCase();
-      html+='<div class="person '+(isYou?'you':'')+'"><div class="av">'+first+'</div><span>'+esc(p.name)+(isYou?' (You)':'')+'</span><span class="dot" style="background:'+(p.online?'#25D366':'#8696A0')+'"></span><span style="color:#8696A0;font-weight:400">'+(p.online?'Online':'Offline')+'</span></div>';
+      let emailHtml=isAdmin&&p.email?'<span style="color:#DC2626;font-weight:400;font-size:10px">'+esc(p.email)+'</span>':"";
+      html+='<div class="person '+(isYou?'you':'')+'"><div class="av">'+first+'</div><span>'+esc(p.name)+(isYou?' (You)':'')+'</span>'+emailHtml+'<span class="dot" style="background:'+(p.online?'#25D366':'#8696A0')+'"></span><span style="color:#8696A0;font-weight:400">'+(p.online?'Online':'Offline')+'</span></div>';
     });
     document.getElementById('peopleList').innerHTML=html||"<span style='color:#667781;font-size:13px'>No one yet</span>";
     let others=data.filter(function(p){return p.user_id!==currentUser.id});
@@ -209,17 +305,19 @@ async function startPresence(){
     let tb=document.getElementById('typingBar');
     if(typers.length){ tb.style.display='block'; tb.innerText=typers.map(function(t){return t.name}).join(", ")+" is typing..."; } else tb.style.display='none';
   }
-  loadPresence();
-  setInterval(loadPresence,5000);
+  loadPresence(); setInterval(loadPresence,5000);
   window.addEventListener('beforeunload',function(){ supabaseClient.from('presence').delete().eq('user_id',currentUser.id); });
 }
 function showView(v){
   document.getElementById('viewChat').style.display=v==='chat'?'block':'none';
   document.getElementById('viewUpdates').classList.toggle('active',v==='updates');
+  document.getElementById('viewAdmin').style.display=v==='admin'?'block':'none';
   document.getElementById('tabChat').classList.toggle('active',v==='chat');
   document.getElementById('tabUpdates').classList.toggle('active',v==='updates');
+  document.getElementById('tabAdmin').classList.toggle('active',v==='admin');
   document.getElementById('inputBar').style.display=v==='chat'?'block':'none';
   if(v==='chat') setTimeout(scrollToBottom,200);
+  if(v==='admin' && isAdmin) loadAdminSettings();
 }
 function setType(t,el){curType=t;document.querySelectorAll('.filter').forEach(function(x){x.classList.remove('active')});el.classList.add('active');load()}
 function setReply(id,name){replyTo=id;replyName=name;let b=document.getElementById('replyInfo');b.style.display='block';b.innerHTML='Replying to <b>'+esc(name)+'</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>';document.getElementById('t').focus()}
@@ -227,11 +325,9 @@ function cancelReply(){replyTo=null;replyName="";document.getElementById('replyI
 async function uploadFile(input){
   let file=input.files[0]; if(!file) return;
   if(file.size>10*1024*1024){ toast("File too large, keep <10MB"); return; }
-  mediaFile=file;
-  mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio';
+  mediaFile=file; mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio';
   document.getElementById('s').innerText="Selected: "+file.name;
-  let p=document.getElementById('mediaPreview'); p.style.display='block';
-  let url=URL.createObjectURL(file);
+  let p=document.getElementById('mediaPreview'); p.style.display='block'; let url=URL.createObjectURL(file);
   if(mediaType==='image') p.innerHTML='<img src="'+url+'"><br><a href="#" onclick="clearMedia()">Remove</a>';
   else if(mediaType==='video') p.innerHTML='<video src="'+url+'" controls style="width:100%"></video><br><a href="#" onclick="clearMedia()">Remove</a>';
   else p.innerHTML='<audio src="'+url+'" controls style="width:100%"></audio><br><a href="#" onclick="clearMedia()">Remove</a>';
@@ -247,20 +343,14 @@ async function uploadToStorage(file){
   return pub.data.publicUrl;
 }
 function esc(s){return (s||"").replace(/</g,'&lt;')}
-function highlight(text,q){
-  if(!q) return esc(text);
-  try{return esc(text).replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>')}catch(e){return esc(text)}
-}
-let debounce=null;
-function debounceLoad(){clearTimeout(debounce);debounce=setTimeout(load,300)}
+function highlight(text,q){ if(!q) return esc(text); try{return esc(text).replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>')}catch(e){return esc(text)} }
+let debounce=null; function debounceLoad(){clearTimeout(debounce);debounce=setTimeout(load,300)}
 async function load(first){
   let res=await supabaseClient.from('messages').select('*').order('created_at',{ascending:true}).limit(300);
   if(res.error){ document.getElementById('feed').innerHTML="<p style='color:#667781'>"+res.error.message+"</p>"; return; }
   allData=res.data||[];
-  let q=document.getElementById('q').value.toLowerCase();
-  let sort=document.getElementById('sort').value;
-  let filtered=[];
-  allData.forEach(function(m){ filtered.push(m); });
+  let q=document.getElementById('q').value.toLowerCase(); let sort=document.getElementById('sort').value;
+  let filtered=[]; allData.forEach(function(m){filtered.push(m)});
   if(curType==='text') filtered=filtered.filter(function(m){return !m.media_type});
   if(curType==='image') filtered=filtered.filter(function(m){return m.media_type});
   if(curType==='pinned') filtered=filtered.filter(function(m){return m.pinned});
@@ -276,8 +366,7 @@ async function load(first){
     if(reps.length){ html+='<div class="replyThread">'; reps.forEach(function(r){html+=renderBubble(r,q)}); html+='</div>'; }
   });
   document.getElementById('feed').innerHTML=html||'<div style="text-align:center;color:#667781;padding:30px">No messages yet. Be the first! 🚀</div>';
-  loadAdmin();
-  if(sort==='old'||first){ setTimeout(scrollToBottom,100); }
+  loadAdmin(); if(sort==='old'||first){ setTimeout(scrollToBottom,100); }
 }
 function renderBubble(m,q){
   let mine=m.user_id===(currentUser && currentUser.id);
@@ -289,88 +378,61 @@ function renderBubble(m,q){
   }
   let time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   let displayName=mine?"You ("+esc(m.name)+")":esc(m.name);
+  if(isAdmin) displayName+= ' <span style="font-size:10px;color:#DC2626;font-weight:400">'+esc(m.email||'')+'</span>';
   let pinTxt=m.pinned?'📌 ':'';
   let replyHtml=m.reply_to?'<div class="replyQuote">↩ Replying</div>':"";
   let tick=mine?'<span class="tick">✓✓</span>':"";
-  return '<div class="bubble '+(mine?'mine':'other')+' '+(m.pinned?'pinned':'')+'"><div class="name">'+displayName+'</div>'+replyHtml+'<div class="text">'+pinTxt+highlight(m.text,q)+'</div>'+media+'<div class="time">'+time+' '+tick+'</div><div class="actions"><button onclick="setReply('+m.id+',\''+esc(m.name)+'\')">Reply</button><button onclick="togglePin('+m.id+','+(!m.pinned)+')">Pin</button><button onclick="navigator.clipboard.writeText(\''+esc(m.text).slice(0,80)+'\');toast(\'Copied!\')">Copy</button></div></div>';
+  let adminBtns=isAdmin?'<button class="danger" onclick="deleteMessage('+m.id+')">Delete</button><button class="danger" onclick="banUser(\''+m.user_id+'\',\''+esc(m.name)+'\',\''+esc(m.email||'')+'\')">Ban</button>':"";
+  return '<div class="bubble '+(mine?'mine':'other')+' '+(m.pinned?'pinned':'')+'"><div class="name">'+displayName+'</div>'+replyHtml+'<div class="text">'+pinTxt+highlight(m.text,q)+'</div>'+media+'<div class="time">'+time+' '+tick+'</div><div class="actions"><button onclick="setReply('+m.id+',\''+esc(m.name)+'\')">Reply</button><button onclick="togglePin('+m.id+','+(!m.pinned)+')">Pin</button><button onclick="navigator.clipboard.writeText(\''+esc(m.text).slice(0,80)+'\');toast(\'Copied!\')">Copy</button>'+adminBtns+'</div></div>';
 }
 async function togglePin(id,val){ await supabaseClient.from('messages').update({pinned:val}).eq('id',id); load(); }
 async function post(){
+  if(bannedIds.has(currentUser.id)){ toast("You are banned ⛔"); return; }
   let text=document.getElementById('t').value.trim();
   if(!text && !mediaFile){ toast("Add text or attach media"); return; }
-  let btn=document.getElementById('postBtn'); btn.disabled=true;
-  document.getElementById('s').innerText="Sending...";
+  let btn=document.getElementById('postBtn'); btn.disabled=true; document.getElementById('s').innerText="Sending...";
   try{
-    let finalMediaUrl=null;
-    if(mediaFile) finalMediaUrl=await uploadToStorage(mediaFile);
+    let finalMediaUrl=null; if(mediaFile) finalMediaUrl=await uploadToStorage(mediaFile);
     let res=await supabaseClient.from('messages').insert({user_id:currentUser.id,name:currentName,email:currentEmail,text:text,reply_to:replyTo,media_url:finalMediaUrl,media_type:mediaType,pinned:false});
     if(res.error) throw res.error;
-    document.getElementById('t').value="";
-    clearMedia(); cancelReply(); toast("Sent ✅"); load();
+    document.getElementById('t').value=""; clearMedia(); cancelReply(); toast("Sent ✅"); load();
   }catch(e){ toast("Failed: "+e.message); }
   btn.disabled=false; document.getElementById('s').innerText="";
 }
 document.getElementById('t').addEventListener('keydown',function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); post(); } });
 document.getElementById('t').addEventListener('input',function(){ this.style.height='auto'; this.style.height=this.scrollHeight+'px'; });
-function subscribeRealtime(){
-  supabaseClient.channel('messages-ch').on('postgres_changes',{event:'*',schema:'public',table:'messages'},function(){ load(); }).subscribe();
-}
+function subscribeRealtime(){ supabaseClient.channel('messages-ch').on('postgres_changes',{event:'*',schema:'public',table:'messages'},function(){ load(); }).subscribe(); }
 function isTestAd(t){ if(!t) return false; let s=String(t).toLowerCase(); return s.indexOf("test popup")>-1 || s.indexOf("your ads system is working")>-1 || s.indexOf("ads system is working")>-1; }
 function cleanText(t){ if(!t) return ""; let s=String(t); if(isTestAd(s)) return ""; return s.replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim(); }
 function findNews(d){ let keys=['news','updates','announcements','fosnalic_news','fosnalic_updates','fosnalic_announcements','latestUpdates','posts']; for(let i=0;i<keys.length;i++){ let k=keys[i]; if(Array.isArray(d[k]) && d[k].length) return d[k]; } return []; }
-function dedupeUpdates(list){
-  let seen={}; let out=[];
-  list.forEach(function(n){
-    let key=typeof n==='string'?cleanText(n).toLowerCase():cleanText(n.title||"").toLowerCase();
-    if(!key || seen[key]) return; seen[key]=true; out.push(n);
-  });
-  return out;
-}
+function dedupeUpdates(list){ let seen={}; let out=[]; list.forEach(function(n){ let key=typeof n==='string'?cleanText(n).toLowerCase():cleanText(n.title||"").toLowerCase(); if(!key || seen[key]) return; seen[key]=true; out.push(n); }); return out; }
 function renderUpdates(d){
-  let allRaw=[];
-  ['news','updates','announcements','fosnalic_news'].forEach(function(k){ if(Array.isArray(d[k])) allRaw=allRaw.concat(d[k]); });
+  let allRaw=[]; ['news','updates','announcements','fosnalic_news'].forEach(function(k){ if(Array.isArray(d[k])) allRaw=allRaw.concat(d[k]); });
   if(!allRaw.length) allRaw=findNews(d);
-  let list=dedupeUpdates(allRaw);
-  let el=document.getElementById('updatesList');
+  if(adminSettings && adminSettings.updates && adminSettings.updates.length) allRaw=adminSettings.updates.concat(allRaw);
+  let list=dedupeUpdates(allRaw); let el=document.getElementById('updatesList');
   if(!list.length){ el.innerHTML="<p style='color:#667781;font-size:13px'>No updates yet.</p>"; return; }
-  let html="";
-  list.forEach(function(n){
+  let html=""; list.forEach(function(n){
     if(typeof n==='string'){ html+='<div class="update-item"><b>'+cleanText(n)+'</b></div>'; return; }
-    let title=cleanText(n.title||"");
-    let desc=cleanText(n.desc||n.description||n.text||"");
-    let img=n.img||n.image||"";
+    let title=cleanText(n.title||""); let desc=cleanText(n.desc||n.description||n.text||""); let img=n.img||n.image||"";
     if(!title && !desc) return;
     html+='<div class="update-item">'+(img?'<img src="'+img+'" onerror="this.style.display=\'none\'">':"")+'<b>'+title+'</b>'+(desc?'<p>'+desc+'</p>':"")+'</div>';
-  });
-  el.innerHTML=html;
+  }); el.innerHTML=html;
 }
 let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
 async function loadAdmin(){
   try{
     let d={};
-    try{
-      let r=await fetch('/api/storage?key=fosnalic-data?t='+Date.now(),{cache:"no-store"});
-      if(r.ok){ let dd=await r.json(); if(dd) d=dd; }
-    }catch(e){}
+    try{ let r=await fetch('/api/storage?key=fosnalic-data?t='+Date.now(),{cache:"no-store"}); if(r.ok){ let dd=await r.json(); if(dd) d=dd; } }catch(e){}
     if(!d.ticker || !d.ticker.length){
-      try{
-        let r2=await fetch('https://gist.githubusercontent.com/fosnalictechs/'+GIST_ID+'/raw/fosnalic-data.json?t='+Date.now(),{cache:"no-store"});
-        if(r2.ok){ let gd=await r2.json(); d=Object.assign({},d,gd); }
-      }catch(e){}
+      try{ let r2=await fetch('https://gist.githubusercontent.com/fosnalictechs/'+GIST_ID+'/raw/fosnalic-data.json?t='+Date.now(),{cache:"no-store"}); if(r2.ok){ let gd=await r2.json(); d=Object.assign({},d,gd); } }catch(e){}
     }
+    if(adminSettings && adminSettings.ticker){ d.ticker=[adminSettings.ticker]; }
     if(d.ticker && d.ticker.length){
-      let uniq=[];
-      d.ticker.forEach(function(x){
-        let txt=cleanText(typeof x==='string'?x:(x.title||x.text||""));
-        if(txt && uniq.indexOf(txt)===-1) uniq.push(txt);
-      });
+      let uniq=[]; d.ticker.forEach(function(x){ let txt=cleanText(typeof x==='string'?x:(x.title||x.text||"")); if(txt && uniq.indexOf(txt)===-1) uniq.push(txt); });
       uniq=uniq.filter(function(t){return !isTestAd(t)});
-      if(uniq.length){
-        let txt=uniq.join(' ••• ')+' ••• ';
-        document.getElementById('ticker').innerHTML='<span>'+txt+' '+txt+'</span>';
-      } else {
-        document.getElementById('ticker').innerHTML='<span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span>';
-      }
+      if(uniq.length){ let txt=uniq.join(' ••• ')+' ••• '; document.getElementById('ticker').innerHTML='<span>'+txt+' '+txt+'</span>'; }
+      else document.getElementById('ticker').innerHTML='<span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span>';
     }
     renderUpdates(d);
     function renderAd(ad,contentId,boxId){
@@ -378,35 +440,27 @@ async function loadAdmin(){
       if(!c || !box) return; c.innerHTML=""; box.style.display="none"; if(!ad) return;
       if(isTestAd(ad.text) && !ad.image) return;
       if(ad.text && String(ad.text).trim().indexOf('<')===0 && !isTestAd(ad.text)){ c.innerHTML=ad.text; box.style.display="block"; return; }
-      let txt=cleanText(ad.text||"");
-      let h='';
+      let txt=cleanText(ad.text||""); let h='';
       if(ad.image && !isTestAd(ad.image)) h+='<a href="'+(ad.link||'#')+'" target="_blank"><img src="'+ad.image+'" style="max-width:100%;border-radius:8px"></a>';
       if(txt) h+='<div style="padding:8px">'+txt+'</div>';
       if(h){ c.innerHTML=h; box.style.display="block"; }
     }
-    renderAd(d.adHeader,'adHeaderContent','adBoxHeader');
-    renderAd(d.adMiddle,'adMiddleContent','adBoxMiddle');
-    renderAd(d.adFooter,'adFooterContent','adBoxFooter');
-    if(d.ads && Array.isArray(d.ads)){
-      if(d.ads[0] && !isTestAd(d.ads[0].text)) renderAd(d.ads[0],'adHeaderContent','adBoxHeader');
-      if(d.ads[1] && !isTestAd(d.ads[1].text)) renderAd(d.ads[1],'adMiddleContent','adBoxMiddle');
-      if(d.ads[2] && !isTestAd(d.ads[2].text)) renderAd(d.ads[2],'adFooterContent','adBoxFooter');
-    }
+    let adH=(adminSettings&&adminSettings.ad_header)||d.adHeader;
+    let adM=(adminSettings&&adminSettings.ad_middle)||d.adMiddle;
+    let adF=(adminSettings&&adminSettings.ad_footer)||d.adFooter;
+    renderAd(adH,'adHeaderContent','adBoxHeader'); renderAd(adM,'adMiddleContent','adBoxMiddle'); renderAd(adF,'adFooterContent','adBoxFooter');
+    if(d.ads && Array.isArray(d.ads) && !adminSettings?.ad_header){ if(d.ads[0] && !isTestAd(d.ads[0].text)) renderAd(d.ads[0],'adHeaderContent','adBoxHeader'); if(d.ads[1] && !isTestAd(d.ads[1].text)) renderAd(d.ads[1],'adMiddleContent','adBoxMiddle'); if(d.ads[2] && !isTestAd(d.ads[2].text)) renderAd(d.ads[2],'adFooterContent','adBoxFooter'); }
     let mediaMsgs=(allData||[]).filter(function(m){return m.media_url && m.media_type});
-    let galCard=document.getElementById('mediaGalleryCard');
-    let gal=document.getElementById('mediaGallery');
+    let galCard=document.getElementById('mediaGalleryCard'); let gal=document.getElementById('mediaGallery');
     if(galCard && gal){
       if(mediaMsgs.length){
-        galCard.style.display="block";
-        let last9=mediaMsgs.slice(-9).reverse();
-        let ghtml="";
+        galCard.style.display="block"; let last9=mediaMsgs.slice(-9).reverse(); let ghtml="";
         last9.forEach(function(m){
-          if(m.media_type==='image') ghtml+='<div><img src="'+m.media_url+'" style="width:100%;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="window.open(\''+m.media_url+'\')"><div style="font-size:11px;color:#667781;margin-top:2px">'+esc(m.name)+'</div></div>';
+          if(m.media_type==='image') ghtml+='<div><img src="'+m.media_url+'" style="width:100%;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="window.open(\''+m.media_url+'\')"><div style="font-size:11px;color:#667781;margin-top:2px">'+esc(m.name)+(isAdmin?'<br><span style="color:red">'+esc(m.email||'')+'</span>':"")+'</div></div>';
           else if(m.media_type==='video') ghtml+='<div><video src="'+m.media_url+'" controls style="width:100%;height:100px;border-radius:8px;background:#000"></video><div style="font-size:11px;color:#667781">'+esc(m.name)+'</div></div>';
           else ghtml+='<div style="background:#F0F2F5;border-radius:8px;padding:10px;text-align:center"><audio src="'+m.media_url+'" controls style="width:100%"></audio><div style="font-size:11px">'+esc(m.name)+'</div></div>';
-        });
-        gal.innerHTML=ghtml;
-      } else { galCard.style.display="none"; }
+        }); gal.innerHTML=ghtml;
+      } else galCard.style.display="none";
     }
   }catch(e){ console.log(e); }
 }
