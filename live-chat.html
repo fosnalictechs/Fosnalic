@@ -24,16 +24,15 @@ a{text-decoration:none}
 .tabs-bar button{flex:1;padding:12px;border:none;background:white;font-weight:700;font-size:14px;cursor:pointer;color:#667781}
 .tabs-bar button.active{color:#075E54;border-bottom:3px solid #075E54}
 .wrap{max-width:800px;margin:105px auto 0;padding:0 6px 110px}
-/* PEOPLE CHATTING - NAMES VISIBLE */
 .people-card{background:white;border-radius:10px;padding:12px;margin:6px 0}
 .people-card b{font-size:14px;color:#075E54}
 .people-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.person{ display:flex;align-items:center;gap:6px;background:#F0F2F5;border-radius:20px;padding:5px 10px 5px 5px;font-size:12px;font-weight:600}
+.person{display:flex;align-items:center;gap:6px;background:#F0F2F5;border-radius:20px;padding:5px 10px 5px 5px;font-size:12px;font-weight:600}
 .person .av{width:28px;height:28px;border-radius:50%;background:#075E54;color:white;display:grid;place-items:center;font-size:12px;font-weight:800}
 .person .dot{width:8px;height:8px;border-radius:50%;background:#25D366}
 .person.you{background:#DCF8C6}
 .online-bar{font-size:13px;color:#075E54;margin-top:6px}
-.chat{background:#ECE5DD;background-image:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');border-radius:10px;padding:12px 8px;min-height:420px}
+.chat{background:#ECE5DD;border-radius:10px;padding:12px 8px;min-height:420px}
 .date-sep{text-align:center;margin:14px 0}.date-sep span{background:white;padding:6px 12px;border-radius:8px;font-size:11px;color:#667781;box-shadow:0 1px 1px rgba(0,0,0,.1)}
 .filters{display:flex;gap:6px;overflow:auto;padding:8px 2px}
 .filter{padding:7px 14px;border-radius:20px;background:white;border:1px solid #E5E5E5;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
@@ -44,9 +43,8 @@ a{text-decoration:none}
 .bubble.mine{background:#DCF8C6;margin-left:auto;border-top-right-radius:0}
 .bubble.other{background:white;margin-right:auto;border-top-left-radius:0}
 .bubble.pinned{border-left:4px solid #FFC107}
-/* NAME ALWAYS VISIBLE - EVEN YOURS */
 .bubble .name{font-size:13px;font-weight:800;color:#075E54;margin-bottom:2px;display:block}
-.bubble.mine .name{color:#075E54;text-align:right}
+.bubble.mine .name{text-align:right}
 .bubble .email{font-size:10px;color:#8696A0;margin-bottom:2px;display:block}
 .bubble.mine .email{text-align:right}
 .bubble .text{font-size:14.5px;line-height:1.45;white-space:pre-wrap}
@@ -60,8 +58,8 @@ a{text-decoration:none}
 .replyThread{margin-left:16px;border-left:2px solid #D9FDD3;padding-left:8px}
 .updates-view{display:none}.updates-view.active{display:block}
 .updates-card{background:white;border-radius:10px;padding:14px;margin:8px 0}.updates-card h3{margin:0 0 10px;color:#075E54;font-size:15px}
-.updates-scroll{display:flex;gap:10px;overflow-x:auto;padding:6px 2px}.update-item{flex:0 0 240px;background:#F0F2F5;border-radius:10px;padding:10px}.update-item img{width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:6px}.update-item b{font-size:13px;display:block}.update-item p{color:#667781;font-size:12px;margin:4px 0 0}.update-item small{color:#8696A0;font-size:11px}
-.ad-box{background:#FFF8E1;border-radius:10px;padding:12px;text-align:center;margin:8px 0;font-size:12px;color:#667781}.ad-box img{max-width:100%;border-radius:8px}
+.updates-scroll{display:flex;gap:10px;overflow-x:auto;padding:6px 2px}.update-item{flex:0 0 240px;background:#F0F2F5;border-radius:10px;padding:10px}.update-item img{width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:6px}.update-item b{font-size:13px;display:block}.update-item p{color:#667781;font-size:12px;margin:4px 0 0}
+.ad-box{background:#FFF8E1;border-radius:10px;padding:12px;text-align:center;margin:8px 0;font-size:12px;color:#667781;display:none}.ad-box img{max-width:100%;border-radius:8px}
 .ticker-box{background:#25D366;color:#075E54;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;overflow:hidden;white-space:nowrap}.ticker{display:inline-block;white-space:nowrap;animation:tick 30s linear infinite}@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .wa-input{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#F0F2F5;padding:8px}
 .wa-input-inner{max-width:800px;margin:0 auto;display:flex;gap:6px;align-items:flex-end}
@@ -75,262 +73,77 @@ a{text-decoration:none}
 .typing{font-size:12px;color:#075E54;font-style:italic;padding:4px 10px}
 </style>
 </head><body>
-
 <div id="authScreen" class="auth-wrap">
-  <div style="text-align:center;margin-bottom:16px"><div style="width:64px;height:64px;border-radius:50%;background:#075E54;color:white;display:grid;place-items:center;font-size:28px;margin:0 auto">🇺🇬</div><h2 style="color:#075E54;margin:10px 0 4px">FOSNALIC Depot</h2><p style="color:#667781;font-size:13px;margin:0">Real community • Verified email • Connected people</p></div>
-  <div class="auth-card">
-    <div id="authError" class="auth-error"></div><div id="authSuccess" class="auth-success"></div>
-    <div id="signupForm">
-      <h2>Create Account</h2><p>Sign up with your real email to join the community.</p>
-      <input id="suName" placeholder="Full name (e.g. Possible Armstrong)">
-      <input id="suEmail" type="email" placeholder="Email address">
-      <input id="suPass" type="password" placeholder="Password (min 6 characters)">
-      <button class="auth-btn" id="suBtn" onclick="doSignup()">Sign Up • Create Account</button>
-      <div class="auth-link">Already have an account? <b onclick="showLogin()">Log In</b></div>
-    </div>
-    <div id="loginForm" style="display:none">
-      <h2>Welcome Back</h2><p>Log in with your verified email.</p>
-      <input id="liEmail" type="email" placeholder="Email address">
-      <input id="liPass" type="password" placeholder="Password">
-      <button class="auth-btn" id="liBtn" onclick="doLogin()">Log In</button>
-      <div class="auth-link">No account? <b onclick="showSignup()">Create Account</b></div>
-      <div class="auth-link"><b onclick="doReset()">Forgot password? Send reset email</b></div>
-    </div>
-  </div>
-  <p style="text-align:center;color:#8696A0;font-size:11px;margin-top:12px"><a href="index.html" style="color:#075E54">← Back to Home</a></p>
+<div style="text-align:center;margin-bottom:16px"><div style="width:64px;height:64px;border-radius:50%;background:#075E54;color:white;display:grid;place-items:center;font-size:28px;margin:0 auto">🇺🇬</div><h2 style="color:#075E54;margin:10px 0 4px">FOSNALIC Depot</h2><p style="color:#667781;font-size:13px;margin:0">Real community • Verified email • Connected people</p></div>
+<div class="auth-card">
+<div id="authError" class="auth-error"></div><div id="authSuccess" class="auth-success"></div>
+<div id="signupForm"><h2>Create Account</h2><p>Sign up with your real email to join the community.</p><input id="suName" placeholder="Full name (e.g. Possible Armstrong)"><input id="suEmail" type="email" placeholder="Email address"><input id="suPass" type="password" placeholder="Password (min 6 characters)"><button class="auth-btn" id="suBtn" onclick="doSignup()">Sign Up • Create Account</button><div class="auth-link">Already have an account? <b onclick="showLogin()">Log In</b></div></div>
+<div id="loginForm" style="display:none"><h2>Welcome Back</h2><p>Log in with your verified email.</p><input id="liEmail" type="email" placeholder="Email address"><input id="liPass" type="password" placeholder="Password"><button class="auth-btn" id="liBtn" onclick="doLogin()">Log In</button><div class="auth-link">No account? <b onclick="showSignup()">Create Account</b></div><div class="auth-link"><b onclick="doReset()">Forgot password? Send reset email</b></div></div>
 </div>
-
+<p style="text-align:center;color:#8696A0;font-size:11px;margin-top:12px"><a href="index.html" style="color:#075E54">← Back to Home</a></p>
+</div>
 <div id="appScreen" style="display:none">
-<div class="wa-top">
-  <a href="index.html" class="back"><i class="fas fa-arrow-left"></i></a>
-  <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=F&background=25D366&color=fff'">
-  <div class="group"><b>FOSNALIC Depot 💬</b><small id="groupMembers">Connecting...</small></div>
-  <button class="logout" onclick="doLogout()">Log Out</button>
-</div>
+<div class="wa-top"><a href="index.html" class="back">←</a><img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=F&background=25D366&color=fff'"><div class="group"><b>FOSNALIC Depot 💬</b><small id="groupMembers">Connecting...</small></div><button class="logout" onclick="doLogout()">Log Out</button></div>
 <div class="tabs-bar"><button id="tabChat" class="active" onclick="showView('chat')">💬 Chat</button><button id="tabUpdates" onclick="showView('updates')">📣 Updates &amp; Ads</button></div>
 <div class="wrap">
-  <div id="viewChat">
-    <!-- PEOPLE CHATTING - NAMES -->
-    <div class="people-card">
-      <b>👥 People Chatting</b>
-      <div class="online-bar" id="onlineCount">Loading people...</div>
-      <div class="people-list" id="peopleList"></div>
-      <div id="typingBar" class="typing" style="display:none"></div>
-    </div>
-    <div class="search"><i class="fas fa-search" style="color:#8696A0"></i><input id="q" placeholder="Search messages..." oninput="debounceLoad()"></div>
-    <div class="filters"><div class="filter active" onclick="setType('all',this)">All <span id="c-all"></span></div><div class="filter" onclick="setType('text',this)">Text <span id="c-text"></span></div><div class="filter" onclick="setType('image',this)">Media <span id="c-image"></span></div><div class="filter" onclick="setType('pinned',this)">Pinned</div><select id="sort" onchange="load()" style="border:1px solid #E5E5E5;border-radius:20px;padding:7px 10px;font-size:12px"><option value="new">Newest</option><option value="old">Oldest</option></select></div>
-    <div class="chat"><div class="date-sep"><span>🔒 Verified community • FOSNALIC Depot</span></div><div id="feed">Loading chat...</div></div>
-  </div>
-  <div id="viewUpdates" class="updates-view">
-    <div class="ticker-box"><div class="ticker" id="ticker"><span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span></div></div>
-    <div class="updates-card"><h3>📣 Latest Updates</h3><div style="display:flex;gap:6px;margin-bottom:8px"><button onclick="scrollUpdates(-1)" style="width:28px;height:28px;border-radius:50%;border:1px solid #E5E5E5;background:white;cursor:pointer">‹</button><button onclick="scrollUpdates(1)" style="width:28px;height:28px;border-radius:50%;border:1px solid #E5E5E5;background:white;cursor:pointer">›</button><span style="font-size:12px;color:#8696A0;align-self:center">Swipe →</span></div><div class="updates-scroll" id="updatesList"><p style="color:#667781;font-size:13px">Loading updates...</p></div></div>
-    <div class="ad-box"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adHeaderContent"></div></div>
-    <div class="ad-box"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adMiddleContent"></div></div>
-    <div class="ad-box"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adFooterContent"></div></div>
-  </div>
+<div id="viewChat">
+<div class="people-card"><b>👥 People Chatting</b><div class="online-bar" id="onlineCount">Loading people...</div><div class="people-list" id="peopleList"></div><div id="typingBar" class="typing" style="display:none"></div></div>
+<div class="search"><input id="q" placeholder="Search messages..." oninput="debounceLoad()"></div>
+<div class="filters"><div class="filter active" onclick="setType('all',this)">All <span id="c-all"></span></div><div class="filter" onclick="setType('text',this)">Text <span id="c-text"></span></div><div class="filter" onclick="setType('image',this)">Media <span id="c-image"></span></div><div class="filter" onclick="setType('pinned',this)">Pinned</div><select id="sort" onchange="load()" style="border:1px solid #E5E5E5;border-radius:20px;padding:7px 10px;font-size:12px"><option value="new">Newest</option><option value="old">Oldest</option></select></div>
+<div class="chat"><div class="date-sep"><span>🔒 Verified community • FOSNALIC Depot</span></div><div id="feed">Loading chat...</div></div>
 </div>
-<div class="wa-input" id="inputBar">
-  <div id="replyInfo" class="replyInfo"></div><div id="mediaPreview" class="mediaPreview"></div>
-  <div class="wa-input-inner"><div class="field"><label class="attach" title="Attach"><i class="fas fa-paperclip"></i><input type="file" id="fileInput" hidden accept="image/*,video/*,audio/*" onchange="uploadFile(this)"></label><textarea id="t" rows="1" placeholder="Message"></textarea></div><button class="send" onclick="post()" id="postBtn"><i class="fas fa-paper-plane"></i></button></div>
-  <div id="s" style="font-size:11px;color:#667781;margin-top:4px;text-align:center"></div>
+<div id="viewUpdates" class="updates-view">
+<div class="ticker-box"><div class="ticker" id="ticker"><span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span></div></div>
+<div class="updates-card"><h3>📣 Latest Updates</h3><div class="updates-scroll" id="updatesList"><p style="color:#667781;font-size:13px">Loading updates...</p></div></div>
+<div id="mediaGalleryCard" class="updates-card" style="display:none"><h3>🖼️ Media from Chat</h3><div id="mediaGallery" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"></div><p style="font-size:12px;color:#8696A0;margin:8px 0 0">Photos &amp; videos sent in Chat appear here.</p></div>
+<div class="ad-box" id="adBoxHeader"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adHeaderContent"></div></div>
+<div class="ad-box" id="adBoxMiddle"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adMiddleContent"></div></div>
+<div class="ad-box" id="adBoxFooter"><div style="letter-spacing:1px;font-size:11px">ADVERTISEMENT</div><div id="adFooterContent"></div></div>
 </div>
+</div>
+<div class="wa-input" id="inputBar"><div id="replyInfo" class="replyInfo"></div><div id="mediaPreview" class="mediaPreview"></div><div class="wa-input-inner"><div class="field"><label class="attach">📎<input type="file" id="fileInput" hidden accept="image/*,video/*,audio/*" onchange="uploadFile(this)"></label><textarea id="t" rows="1" placeholder="Message"></textarea></div><button class="send" onclick="post()" id="postBtn">➤</button></div><div id="s" style="font-size:11px;color:#667781;margin-top:4px;text-align:center"></div></div>
 </div>
 <div id="toast"></div>
-
 <script>
-const SUPABASE_URL = "https://lqqbvzttjstchkjfajwj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let currentUser=null, currentName="", currentEmail="", replyTo=null, replyName="", mediaUrl=null, mediaType=null, mediaFile=null, curType="all", allData=[], typingTimer=null;
+const SUPABASE_URL="https://lqqbvzttjstchkjfajwj.supabase.co";
+const SUPABASE_KEY="sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null,currentName="",currentEmail="",replyTo=null,replyName="",mediaUrl=null,mediaType=null,mediaFile=null,curType="all",allData=[],typingTimer=null;
 function toast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
 function showErr(m){let e=document.getElementById('authError');e.style.display='block';e.innerText=m;document.getElementById('authSuccess').style.display='none'}
 function showOk(m){let e=document.getElementById('authSuccess');e.style.display='block';e.innerText=m;document.getElementById('authError').style.display='none'}
 function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block'}
 function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block'}
-async function doSignup(){
-  let name=document.getElementById('suName').value.trim(), email=document.getElementById('suEmail').value.trim(), pass=document.getElementById('suPass').value;
-  if(!name||!email||!pass) return showErr("Fill name, email and password.");
-  if(pass.length<6) return showErr("Password must be at least 6 characters.");
-  let btn=document.getElementById('suBtn'); btn.disabled=true; btn.innerText="Creating...";
-  let {error}=await supabaseClient.auth.signUp({email, password:pass, options:{data:{full_name:name}, emailRedirectTo: window.location.href}});
-  btn.disabled=false; btn.innerText="Sign Up • Create Account";
-  if(error) return showErr(error.message);
-  showOk("Account created! Check your email ("+email+") and click the verification link, then Log In.");
-  showLogin(); document.getElementById('liEmail').value=email;
-}
-async function doLogin(){
-  let email=document.getElementById('liEmail').value.trim(), pass=document.getElementById('liPass').value;
-  if(!email||!pass) return showErr("Enter email and password.");
-  let btn=document.getElementById('liBtn'); btn.disabled=true; btn.innerText="Logging in...";
-  let {error}=await supabaseClient.auth.signInWithPassword({email, password:pass});
-  btn.disabled=false; btn.innerText="Log In";
-  if(error) return showErr(error.message);
-  await afterLogin();
-}
-async function doReset(){
-  let email=document.getElementById('liEmail').value.trim() || prompt("Enter your email for password reset:");
-  if(!email) return;
-  let {error}=await supabaseClient.auth.resetPasswordForEmail(email, {redirectTo: window.location.href});
-  if(error) showErr(error.message); else showOk("Password reset email sent to "+email+". Check your inbox.");
-}
-async function doLogout(){
-  if(currentUser) await supabaseClient.from('presence').delete().eq('user_id', currentUser.id);
-  await supabaseClient.auth.signOut();
-  location.reload();
-}
-async function afterLogin(){
-  let {data:{user}}=await supabaseClient.auth.getUser();
-  if(!user) return;
-  currentUser=user; currentEmail=user.email; currentName=user.user_metadata?.full_name || user.email.split('@')[0];
-  document.getElementById('authScreen').style.display='none';
-  document.getElementById('appScreen').style.display='block';
-  document.getElementById('groupMembers').innerText = currentName + " • " + currentEmail + " • Verified ✓";
-  startPresence(); load(true); subscribeRealtime(); loadAdmin();
-}
-supabaseClient.auth.onAuthStateChange(async (event, session)=>{ if(event==='SIGNED_IN' && session?.user) await afterLogin(); });
-(async ()=>{ let {data:{session}}=await supabaseClient.auth.getSession(); if(session?.user) await afterLogin(); })();
-async function startPresence(){
-  async function ping(isTyping=false){
-    if(!currentUser) return;
-    await supabaseClient.from('presence').upsert({user_id: currentUser.id, name: currentName, email: currentEmail, last_seen: new Date().toISOString(), is_typing: isTyping}, {onConflict:'user_id'});
-  }
-  await ping(false);
-  setInterval(()=>ping(false), 10000);
-  document.getElementById('t').addEventListener('input', async function(){
-    await ping(true);
-    clearTimeout(typingTimer); typingTimer=setTimeout(()=>ping(false), 2000);
-  });
-  async function loadPresence(){
-    let {data}=await supabaseClient.from('presence').select('*').gt('last_seen', new Date(Date.now()-30000).toISOString());
-    if(!data) return;
-    // PEOPLE CHATTING - ALSO INCLUDE PEOPLE WHO HAVE SENT MESSAGES
-    let namesMap = new Map();
-    data.forEach(p=> namesMap.set(p.email, {name:p.name, email:p.email, online:true}));
-    (allData||[]).forEach(m=>{ if(!namesMap.has(m.email)) namesMap.set(m.email, {name:m.name, email:m.email, online:false}); });
-    let people=[...namesMap.values()];
-    document.getElementById('onlineCount').innerText = data.length + " online • " + people.length + " people have chatted";
-    document.getElementById('groupMembers').innerText = currentName + " • " + data.length + " online • " + people.length + " people";
-    document.getElementById('peopleList').innerHTML = people.map(p=>{
-      let isYou = p.email===currentEmail;
-      return `<div class="person ${isYou?'you':''}"><div class="av">${(p.name||"?").charAt(0).toUpperCase()}</div><span>${esc(p.name)}${isYou?' (You)':''}</span><span class="dot" style="background:${p.online?'#25D366':'#8696A0'}"></span><span style="color:#8696A0;font-weight:400">${p.online?'Online':'Offline'}</span></div>`;
-    }).join('') || "<span style='color:#667781;font-size:13px'>No one yet</span>";
-    let others=data.filter(p=>p.user_id!==currentUser.id);
-    let typers=others.filter(o=>o.is_typing);
-    let tb=document.getElementById('typingBar'); if(typers.length){tb.style.display='block'; tb.innerText=typers.map(t=>t.name).join(", ")+" is typing..."} else tb.style.display='none';
-  }
-  loadPresence(); setInterval(loadPresence, 5000);
-  window.addEventListener('beforeunload', ()=>{ supabaseClient.from('presence').delete().eq('user_id', currentUser.id); });
-}
+async function doSignup(){let name=document.getElementById('suName').value.trim(),email=document.getElementById('suEmail').value.trim(),pass=document.getElementById('suPass').value;if(!name||!email||!pass)return showErr("Fill name, email and password.");if(pass.length<6)return showErr("Password must be at least 6 characters.");let btn=document.getElementById('suBtn');btn.disabled=true;btn.innerText="Creating...";let {error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name},emailRedirectTo:window.location.href}});btn.disabled=false;btn.innerText="Sign Up • Create Account";if(error)return showErr(error.message);showOk("Account created! Check your email ("+email+") and click verification link, then Log In.");showLogin();document.getElementById('liEmail').value=email;}
+async function doLogin(){let email=document.getElementById('liEmail').value.trim(),pass=document.getElementById('liPass').value;if(!email||!pass)return showErr("Enter email and password.");let btn=document.getElementById('liBtn');btn.disabled=true;btn.innerText="Logging in...";let {error}=await supabaseClient.auth.signInWithPassword({email,password:pass});btn.disabled=false;btn.innerText="Log In";if(error)return showErr(error.message);await afterLogin();}
+async function doReset(){let email=document.getElementById('liEmail').value.trim()||prompt("Enter your email for password reset:");if(!email)return;let {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});if(error)showErr(error.message);else showOk("Password reset email sent to "+email+". Check inbox.");}
+async function doLogout(){if(currentUser)await supabaseClient.from('presence').delete().eq('user_id',currentUser.id);await supabaseClient.auth.signOut();location.reload();}
+async function afterLogin(){let {data:{user}}=await supabaseClient.auth.getUser();if(!user)return;currentUser=user;currentEmail=user.email;currentName=user.user_metadata?.full_name||user.email.split('@')[0];document.getElementById('authScreen').style.display='none';document.getElementById('appScreen').style.display='block';document.getElementById('groupMembers').innerText=currentName+" • "+currentEmail+" • Verified ✓";startPresence();load(true);subscribeRealtime();loadAdmin();}
+supabaseClient.auth.onAuthStateChange(async(e,s)=>{if(e==='SIGNED_IN'&&s?.user)await afterLogin();});
+(async()=>{let {data:{session}}=await supabaseClient.auth.getSession();if(session?.user)await afterLogin();})();
+async function startPresence(){async function ping(isTyping=false){if(!currentUser)return;await supabaseClient.from('presence').upsert({user_id:currentUser.id,name:currentName,email:currentEmail,last_seen:new Date().toISOString(),is_typing:isTyping},{onConflict:'user_id'});}await ping(false);setInterval(()=>ping(false),10000);document.getElementById('t').addEventListener('input',async function(){await ping(true);clearTimeout(typingTimer);typingTimer=setTimeout(()=>ping(false),2000);});async function loadPresence(){let {data}=await supabaseClient.from('presence').select('*').gt('last_seen',new Date(Date.now()-30000).toISOString());if(!data)return;let namesMap=new Map();data.forEach(p=>namesMap.set(p.email,{name:p.name,email:p.email,online:true}));(allData||[]).forEach(m=>{if(!namesMap.has(m.email))namesMap.set(m.email,{name:m.name,email:m.email,online:false});});let people=[...namesMap.values()];document.getElementById('onlineCount').innerText=data.length+" online • "+people.length+" people have chatted";document.getElementById('groupMembers').innerText=currentName+" • "+data.length+" online • "+people.length+" people";document.getElementById('peopleList').innerHTML=people.map(p=>{let isYou=p.email===currentEmail;return `<div class="person ${isYou?'you':''}"><div class="av">${(p.name||"?").charAt(0).toUpperCase()}</div><span>${esc(p.name)}${isYou?' (You)':''}</span><span class="dot" style="background:${p.online?'#25D366':'#8696A0'}"></span><span style="color:#8696A0;font-weight:400">${p.online?'Online':'Offline'}</span></div>`;}).join('')||"<span style='color:#667781;font-size:13px'>No one yet</span>";let others=data.filter(p=>p.user_id!==currentUser.id);let typers=others.filter(o=>o.is_typing);let tb=document.getElementById('typingBar');if(typers.length){tb.style.display='block';tb.innerText=typers.map(t=>t.name).join(", ")+" is typing..."}else tb.style.display='none';}loadPresence();setInterval(loadPresence,5000);window.addEventListener('beforeunload',()=>{supabaseClient.from('presence').delete().eq('user_id',currentUser.id);});}
 function showView(v){document.getElementById('viewChat').style.display=v==='chat'?'block':'none';document.getElementById('viewUpdates').classList.toggle('active',v==='updates');document.getElementById('tabChat').classList.toggle('active',v==='chat');document.getElementById('tabUpdates').classList.toggle('active',v==='updates');document.getElementById('inputBar').style.display=v==='chat'?'block':'none';}
 function setType(t,el){curType=t;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));el.classList.add('active');load()}
 function setReply(id,name){replyTo=id;replyName=name;let b=document.getElementById('replyInfo');b.style.display='block';b.innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>`;document.getElementById('t').focus()}
 function cancelReply(){replyTo=null;replyName="";document.getElementById('replyInfo').style.display='none'}
-
-// MEDIA - UPLOAD TO SUPABASE STORAGE SO IT REALLY APPEARS
-async function uploadFile(input){
-  let file=input.files[0]; if(!file) return;
-  if(file.size>10*1024*1024){toast("File too large, keep <10MB");return}
-  mediaFile=file; mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio';
-  document.getElementById('s').innerText="Selected: "+file.name;
-  let p=document.getElementById('mediaPreview'); p.style.display='block';
-  let url=URL.createObjectURL(file);
-  if(mediaType==='image') p.innerHTML=`<img src="${url}"><br><a href="#" onclick="clearMedia()">Remove</a>`;
-  else if(mediaType==='video') p.innerHTML=`<video src="${url}" controls style="width:100%"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;
-  else p.innerHTML=`<audio src="${url}" controls style="width:100%"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;
-  // Preview URL for immediate display, real upload happens on Send
-  mediaUrl=url;
-}
+async function uploadFile(input){let file=input.files[0];if(!file)return;if(file.size>10*1024*1024){toast("File too large, keep <10MB");return}mediaFile=file;mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio';document.getElementById('s').innerText="Selected: "+file.name;let p=document.getElementById('mediaPreview');p.style.display='block';let url=URL.createObjectURL(file);if(mediaType==='image')p.innerHTML=`<img src="${url}"><br><a href="#" onclick="clearMedia()">Remove</a>`;else if(mediaType==='video')p.innerHTML=`<video src="${url}" controls style="width:100%"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;else p.innerHTML=`<audio src="${url}" controls style="width:100%"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;mediaUrl=url;}
 function clearMedia(){mediaUrl=null;mediaType=null;mediaFile=null;document.getElementById('mediaPreview').style.display='none';document.getElementById('mediaPreview').innerHTML="";document.getElementById('fileInput').value="";document.getElementById('s').innerText="";}
-async function uploadToStorage(file){
-  let ext=file.name.split('.').pop();
-  let path = currentUser.id + "/" + Date.now() + "." + ext;
-  let {error}=await supabaseClient.storage.from('chat-media').upload(path, file, {upsert:true});
-  if(error) throw error;
-  let {data}=supabaseClient.storage.from('chat-media').getPublicUrl(path);
-  return data.publicUrl;
-}
+async function uploadToStorage(file){let ext=file.name.split('.').pop();let path=currentUser.id+"/"+Date.now()+"."+ext;let {error}=await supabaseClient.storage.from('chat-media').upload(path,file,{upsert:true});if(error)throw error;let {data}=supabaseClient.storage.from('chat-media').getPublicUrl(path);return data.publicUrl;}
 function esc(s){return (s||"").replace(/</g,'&lt;')}
-function highlight(text,q){if(!q) return esc(text);try{return esc(text).replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>')}catch{return esc(text)}}
+function highlight(text,q){if(!q)return esc(text);try{return esc(text).replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>')}catch{return esc(text)}}
 let debounce=null;function debounceLoad(){clearTimeout(debounce);debounce=setTimeout(load,300)}
-async function load(first=false){
-  let {data, error}=await supabaseClient.from('messages').select('*').order('created_at',{ascending:true}).limit(300);
-  if(error){document.getElementById('feed').innerHTML="<p style='color:#667781'>"+error.message+"</p>";return;}
-  allData=data||[];
-  let q=document.getElementById('q').value.toLowerCase(); let sort=document.getElementById('sort').value;
-  let filtered=[...allData]; if(curType==='text') filtered=filtered.filter(m=>!m.media_type); if(curType==='image') filtered=filtered.filter(m=>m.media_type); if(curType==='pinned') filtered=filtered.filter(m=>m.pinned); if(q) filtered=filtered.filter(m=>((m.text||"")+(m.name||"")).toLowerCase().includes(q));
-  if(sort==='new') filtered.reverse();
-  document.getElementById('c-all').innerText=allData.length; document.getElementById('c-text').innerText=allData.filter(m=>!m.media_type).length; document.getElementById('c-image').innerText=allData.filter(m=>m.media_type).length;
-  let html=""; filtered.filter(m=>!m.reply_to).forEach(m=>{html+=renderBubble(m,q); let reps=filtered.filter(x=>x.reply_to===m.id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)); if(reps.length){html+=`<div class="replyThread">`; reps.forEach(r=> html+=renderBubble(r,q)); html+=`</div>`}});
-  document.getElementById('feed').innerHTML=html||`<div style="text-align:center;color:#667781;padding:30px">No messages yet. Be the first! 🚀</div>`;
-}
-function renderBubble(m,q){
-  let mine=m.user_id===currentUser?.id;
-  let media=""; if(m.media_url){ if(m.media_type==="image") media=`<img src="${m.media_url}" class="chat-media" loading="lazy" onclick="window.open(this.src)" onerror="this.style.display='none'">`; if(m.media_type==="video") media=`<video src="${m.media_url}" controls class="chat-media" preload="metadata"></video>`; if(m.media_type==="audio") media=`<audio src="${m.media_url}" controls></audio>`; }
-  let time=new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  // NAME ALWAYS SHOWS - YOURS = "You (Name)", OTHERS = "Name"
-  let displayName = mine ? "You ("+esc(m.name)+")" : esc(m.name);
-  return `<div class="bubble ${mine?'mine':'other'} ${m.pinned?'pinned':''}"><div class="name">${displayName}</div><div class="email">${esc(m.email)} • Verified ✓</div>${m.reply_to?`<div class="replyQuote">↩ Replying to ${esc(replyName||"message")}</div>`:""}<div class="text">${m.pinned?'📌 ':''}${highlight(m.text,q)}</div>${media}<div class="time">${time} ${mine?'<span class="tick">✓✓</span>':''}</div><div class="actions"><button onclick="setReply(${m.id},'${esc(m.name)}')">Reply</button><button onclick="togglePin(${m.id},${!m.pinned})">Pin</button><button onclick="navigator.clipboard.writeText('${esc(m.text).slice(0,80)}');toast('Copied!')">Copy</button></div></div>`;
-}
-async function togglePin(id, val){ await supabaseClient.from('messages').update({pinned:val}).eq('id', id); load(); }
-async function post(){
-  let text=document.getElementById('t').value.trim();
-  if(!text && !mediaFile){toast("Add text or attach media");return}
-  let btn=document.getElementById('postBtn'); btn.disabled=true; document.getElementById('s').innerText="Sending...";
-  try{
-    let finalMediaUrl=null;
-    if(mediaFile){ finalMediaUrl=await uploadToStorage(mediaFile); }
-    let {error}=await supabaseClient.from('messages').insert({user_id: currentUser.id, name: currentName, email: currentEmail, text, reply_to: replyTo, media_url: finalMediaUrl, media_type: mediaType, pinned:false});
-    if(error) throw error;
-    document.getElementById('t').value=""; clearMedia(); cancelReply(); toast("Sent ✅"); load();
-  }catch(e){ toast("Failed: "+e.message); }
-  btn.disabled=false; document.getElementById('s').innerText="";
-}
-document.getElementById('t').addEventListener('keydown',e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); post(); }});
-document.getElementById('t').addEventListener('input',function(){ this.style.height='auto'; this.style.height=this.scrollHeight+'px'; });
-function subscribeRealtime(){
-  supabaseClient.channel('messages-ch').on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>load()).subscribe();
-}
-
-// --- CLEAN TEXT - REMOVE TEST POPUP COMPLETELY ---
-function isTestAd(t){
-  if(!t) return true;
-  let s=String(t).toLowerCase();
-  return s.includes("test popup") || s.includes("your ads system is working") || s.includes("ads system is working");
-}
-function cleanText(t){
-  if(!t) return "";
-  let s=String(t);
-  if(isTestAd(s)) return "";
-  return s.replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim();
-}
-function findNews(d){let keys=['news','updates','announcements','fosnalic_news','fosnalic_updates','fosnalic_announcements','latestUpdates','posts'];for(let k of keys){if(Array.isArray(d[k])&&d[k].length) return d[k];}return [];}
-function scrollUpdates(dir){document.getElementById('updatesList').scrollBy({left:dir*254,behavior:'smooth'});}
-function dedupeUpdates(list){let seen=new Set(); return list.filter(n=>{let key=typeof n==='string'?cleanText(n).toLowerCase():cleanText(n.title||"").toLowerCase(); if(!key||seen.has(key)) return false; seen.add(key); return true;});}
-function renderUpdates(d){let allRaw=[];['news','updates','announcements','fosnalic_news'].forEach(k=>{if(Array.isArray(d[k])) allRaw.push(...d[k]);});if(!allRaw.length) allRaw=findNews(d);let list=dedupeUpdates(allRaw);let el=document.getElementById('updatesList');if(!list.length){el.innerHTML="<p style='color:#667781;font-size:13px'>No updates yet.</p>";return;}el.innerHTML=list.map(n=>{if(typeof n==='string') return `<div class="update-item"><b>${cleanText(n)}</b></div>`;let title=cleanText(n.title||"");let desc=cleanText(n.desc||n.description||n.text||"");let img=n.img||n.image||"";if(!title&&!desc) return "";return `<div class="update-item">${img?`<img src="${img}" onerror="this.style.display='none'">`:""}<b>${title}</b>${desc?`<p>${desc}</p>`:""}</div>`;}).join('');}
+async function load(first=false){let {data,error}=await supabaseClient.from('messages').select('*').order('created_at',{ascending:true}).limit(300);if(error){document.getElementById('feed').innerHTML="<p style='color:#667781'>"+error.message+"</p>";return;}allData=data||[];let q=document.getElementById('q').value.toLowerCase();let sort=document.getElementById('sort').value;let filtered=[...allData];if(curType==='text')filtered=filtered.filter(m=>!m.media_type);if(curType==='image')filtered=filtered.filter(m=>m.media_type);if(curType==='pinned')filtered=filtered.filter(m=>m.pinned);if(q)filtered=filtered.filter(m=>((m.text||"")+(m.name||"")).toLowerCase().includes(q));if(sort==='new')filtered.reverse();document.getElementById('c-all').innerText=allData.length;document.getElementById('c-text').innerText=allData.filter(m=>!m.media_type).length;document.getElementById('c-image').innerText=allData.filter(m=>m.media_type).length;let html="";filtered.filter(m=>!m.reply_to).forEach(m=>{html+=renderBubble(m,q);let reps=filtered.filter(x=>x.reply_to===m.id).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));if(reps.length){html+=`<div class="replyThread">`;reps.forEach(r=>html+=renderBubble(r,q));html+=`</div>`}});document.getElementById('feed').innerHTML=html||`<div style="text-align:center;color:#667781;padding:30px">No messages yet. Be the first! 🚀</div>`;loadAdmin();}
+function renderBubble(m,q){let mine=m.user_id===currentUser?.id;let media="";if(m.media_url){if(m.media_type==="image")media=`<img src="${m.media_url}" class="chat-media" loading="lazy" onclick="window.open(this.src)" onerror="this.style.display='none'">`;if(m.media_type==="video")media=`<video src="${m.media_url}" controls class="chat-media" preload="metadata"></video>`;if(m.media_type==="audio")media=`<audio src="${m.media_url}" controls></audio>`;}let time=new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});let displayName=mine?"You ("+esc(m.name)+")":esc(m.name);return `<div class="bubble ${mine?'mine':'other'} ${m.pinned?'pinned':''}"><div class="name">${displayName}</div><div class="email">${esc(m.email)} • Verified ✓</div>${m.reply_to?`<div class="replyQuote">↩ Replying</div>`:""}<div class="text">${m.pinned?'📌 ':''}${highlight(m.text,q)}</div>${media}<div class="time">${time} ${mine?'<span class="tick">✓✓</span>':''}</div><div class="actions"><button onclick="setReply(${m.id},'${esc(m.name)}')">Reply</button><button onclick="togglePin(${m.id},${!m.pinned})">Pin</button><button onclick="navigator.clipboard.writeText('${esc(m.text).slice(0,80)}');toast('Copied!')">Copy</button></div></div>`;}
+async function togglePin(id,val){await supabaseClient.from('messages').update({pinned:val}).eq('id',id);load();}
+async function post(){let text=document.getElementById('t').value.trim();if(!text&&!mediaFile){toast("Add text or attach media");return}let btn=document.getElementById('postBtn');btn.disabled=true;document.getElementById('s').innerText="Sending...";try{let finalMediaUrl=null;if(mediaFile){finalMediaUrl=await uploadToStorage(mediaFile);}let {error}=await supabaseClient.from('messages').insert({user_id:currentUser.id,name:currentName,email:currentEmail,text,reply_to:replyTo,media_url:finalMediaUrl,media_type:mediaType,pinned:false});if(error)throw error;document.getElementById('t').value="";clearMedia();cancelReply();toast("Sent ✅");load();}catch(e){toast("Failed: "+e.message);}btn.disabled=false;document.getElementById('s').innerText="";}
+document.getElementById('t').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();post();}});
+document.getElementById('t').addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';});
+function subscribeRealtime(){supabaseClient.channel('messages-ch').on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>load()).subscribe();}
+function isTestAd(t){if(!t)return false;let s=String(t).toLowerCase();return s.includes("test popup")||s.includes("your ads system is working")||s.includes("ads system is working");}
+function cleanText(t){if(!t)return "";let s=String(t);if(isTestAd(s))return "";return s.replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim();}
+function findNews(d){let keys=['news','updates','announcements','fosnalic_news','fosnalic_updates','fosnalic_announcements','latestUpdates','posts'];for(let k of keys){if(Array.isArray(d[k])&&d[k].length)return d[k];}return [];}
+function dedupeUpdates(list){let seen=new Set();return list.filter(n=>{let key=typeof n==='string'?cleanText(n).toLowerCase():cleanText(n.title||"").toLowerCase();if(!key||seen.has(key))return false;seen.add(key);return true;});}
+function renderUpdates(d){let allRaw=[];['news','updates','announcements','fosnalic_news'].forEach(k=>{if(Array.isArray(d[k]))allRaw.push(...d[k]);});if(!allRaw.length)allRaw=findNews(d);let list=dedupeUpdates(allRaw);let el=document.getElementById('updatesList');if(!list.length){el.innerHTML="<p style='color:#667781;font-size:13px'>No updates yet.</p>";return;}el.innerHTML=list.map(n=>{if(typeof n==='string')return `<div class="update-item"><b>${cleanText(n)}</b></div>`;let title=cleanText(n.title||"");let desc=cleanText(n.desc||n.description||n.text||"");let img=n.img||n.image||"";if(!title&&!desc)return "";return `<div class="update-item">${img?`<img src="${img}" onerror="this.style.display='none'">`:""}<b>${title}</b>${desc?`<p>${desc}</p>`:""}</div>`;}).join('');}
 let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
-async function loadAdmin(){
-  try{
-    let d={}; try{let r=await fetch(`/api/storage?key=fosnalic-data?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let dd=await r.json();if(dd&&(dd.ticker?.length||findNews(dd).length)) d=dd;}}catch(e){}
-    if(!d.ticker?.length && !findNews(d).length){let r=await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let gd=await r.json();d={...d,...gd};}}
-    if(d.ticker?.length){
-      let uniq=[...new Set(d.ticker.map(x=>cleanText(typeof x==='string'?x:(x.title||x.text||""))).filter(Boolean))];
-      if(uniq.length){let txt=uniq.join(' ••• ')+' ••• ';document.getElementById('ticker').innerHTML=`<span>${txt} ${txt}</span>`;} else {document.getElementById('ticker').innerHTML=`<span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span>`;}
-    }
-    renderUpdates(d);
-    // ADS - IF TEST TEXT, SHOW NOTHING
-    function renderAd(ad,el){
-      let c=document.getElementById(el); if(!c) return; c.innerHTML="";
-      if(!ad) return;
-      if(isTestAd(ad.text) && !ad.image) return;
-      if(ad.text && String(ad.text).trim().startsWith('<') && !isTestAd(ad.text)){c.innerHTML=ad.text;return;}
-      let txt=cleanText(ad.text||"");
-      let h=''; if(ad.image && !isTestAd(ad.image)) h+=`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.image}" style="max-width:100%;border-radius:8px"></a>`;
-      if(txt) h+=`<div style="padding:8px">${txt}</div>`;
-      if(h) c.innerHTML=h;
-    }
-    renderAd(d.adHeader,'adHeaderContent');renderAd(d.adMiddle,'adMiddleContent');renderAd(d.adFooter,'adFooterContent');
-    if(d.ads&&Array.isArray(d.ads)){renderAd(d.ads[0],'adHeaderContent');renderAd(d.ads[1],'adMiddleContent');renderAd(d.ads[2],'adFooterContent');}
-  }catch(e){console.log(e);}
-}
+async function loadAdmin(){try{let d={};try{let r=await fetch(`/api/storage?key=fosnalic-data?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let dd=await r.json();if(dd)d=dd;}}catch(e){}if(!d.ticker?.length&&!findNews(d).length){try{let r=await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let gd=await r.json();d={...d,...gd};}}catch(e){}}if(d.ticker?.length){let uniq=[...new Set(d.ticker.map(x=>cleanText(typeof x==='string'?x:(x.title||x.text||""))).filter(Boolean))];uniq=uniq.filter(t=>!isTestAd(t));if(uniq.length){let txt=uniq.join(' ••• ')+' ••• ';document.getElementById('ticker').innerHTML=`<span>${txt} ${txt}</span>`;}else{document.getElementById('ticker').innerHTML=`<span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span>`;}}renderUpdates(d);function renderAd(ad,contentId,boxId){let c=document.getElementById(contentId);let box=document.getElementById(boxId);if(!c||!box)return;c.innerHTML="";box.style.display="none";if(!ad)return;if(isTestAd(ad.text)&&!ad.image)return;if(ad.text&&String(ad.text).trim().startsWith('<')&&!isTestAd(ad.text)){c.innerHTML=ad.text;box.style.display="block";return;}let txt=cleanText(ad.text||"");let h='';if(ad.image&&!isTestAd(ad.image))h+=`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.image}" style="max-width:100%;border-radius:8px"></a>`;if(txt)h+=`<div style="padding:8px">${txt}</div>`;if(h){c.innerHTML=h;box.style.display="block";}}renderAd(d.adHeader,'adHeaderContent','adBoxHeader');renderAd(d.adMiddle,'adMiddleContent','adBoxMiddle');renderAd(d.adFooter,'adFooterContent','adBoxFooter');if(d.ads&&Array.isArray(d.ads)){if(d.ads[0]&&!isTestAd(d.ads[0].text))renderAd(d.ads[0],'adHeaderContent','adBoxHeader');if(d.ads[1]&&!isTestAd(d.ads[1].text))renderAd(d.ads[1],'adMiddleContent','adBoxMiddle');if(d.ads[2]&&!isTestAd(d.ads[2].text))renderAd(d.ads[2],'adFooterContent','adBoxFooter');}let mediaMsgs=(allData||[]).filter(m=>m.media_url&&m.media_type);let galCard=document.getElementById('mediaGalleryCard');let gal=document.getElementById('mediaGallery');if(galCard&&gal){if(mediaMsgs.length){galCard.style.display="block";gal.innerHTML=mediaMsgs.slice(-9).reverse().map(m=>{if(m.media_type==='image')return `<div><img src="${m.media_url}" style="width:100%;height:100px;object-fit:cover;border-radius:8px;cursor:pointer" onclick="window.open('${m.media_url}')"><div style="font-size:11px;color:#667781;margin-top:2px">${esc(m.name)}</div></div>`;if(m.media_type==='video')return `<div><video src="${m.media_url}" controls style="width:100%;height:100px;border-radius:8px;background:#000"></video><div style="font-size:11px;color:#667781">${esc(m.name)}</div></div>`;return `<div style="background:#F0F2F5;border-radius:8px;padding:10px;text-align:center"><audio src="${m.media_url}" controls style="width:100%"></audio><div style="font-size:11px">${esc(m.name)}</div></div>`;}).join('');}else{galCard.style.display="none";}}}catch(e){console.log(e);}}
 </script></body></html>
