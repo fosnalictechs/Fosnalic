@@ -1,4 +1,4 @@
-// Add the shared announcements loader to public HTML responses without editing page markup.
+// Add shared content and the test-ad cleanup to public HTML responses.
 const PRIVATE_OR_UTILITY_PATHS = new Set([
   "/admin.html",
   "/auth.html",
@@ -28,6 +28,9 @@ export async function onRequest(context) {
   return new HTMLRewriter()
     .on("head", {
       element(element) {
+        element.append('<script src="/fosnalic-remove-test-ad.js" defer></script>', {
+          html: true,
+        });
         element.append('<script src="/fosnalic-announcements.js" defer></script>', {
           html: true,
         });
