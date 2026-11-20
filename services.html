@@ -3,92 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <title>Services — FOSNALIC Techs</title>
-<script>!function(){try{if(top!==self){top.location=self.location;document.documentElement.innerHTML='<h1 style="text-align:center;margin-top:100px">⛔ Iframe Blocked</h1>';}}catch(e){} setInterval(function(){try{if(top!==self)top.location=self.location;}catch(e){}},300);}();</script>
-<style>html{display:none}</style>
-<script>if(self==top){document.documentElement.style.display='block'}else{top.location=self.location}</script>
-<meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FOSNALIC Techs services: Web Design, Custom Software, Coding Academy, eLearning, Graphic Design, ICT Support & Extra Help in Kampala.">
+<link rel="canonical" href="https://fosnalic.pages.dev/services.html">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--primary:#2A4B7C;--secondary:#FF6B35;--dark:#121212;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08);--transition:all 0.3s ease}
+:root{--primary:#2A4B7C;--primary2:#1a365d;--secondary:#FF6B35;--dark:#121212;--light:#fff;--gray:#F5F7FA;--text:#2D3748;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,.08)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--gray);color:var(--text)}
-.container{width:90%;max-width:1200px;margin:0 auto;padding:0 20px}
-section{padding:90px 0}
-.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:600;display:inline-block;border:none;cursor:pointer}
+body{background:var(--gray);color:var(--text);padding-top:104px}
+.container{width:90%;max-width:1100px;margin:0 auto}
+.btn{padding:12px 26px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;font-weight:700;display:inline-block;border:none;cursor:pointer;font-size:14px}
 .btn-dark{background:#111!important}
-header{position:fixed;top:0;width:100%;background:rgba(255,255,255,0.97);z-index:1000;padding:12px 0;box-shadow:0 2px 20px rgba(0,0,0,0.05)}
+.btn-white{background:white!important;color:#1a365d!important}
+/* HEADER */
+header{position:fixed;top:42px;width:100%;background:rgba(255,255,255,.98);z-index:1000;padding:12px 0;box-shadow:0 2px 20px rgba(0,0,0,.05)}
 .navbar{display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:1.5rem;font-weight:800;color:var(--primary);text-decoration:none}
-.nav-links{display:flex;list-style:none;align-items:center}
-.nav-links li{margin-left:18px}
-.nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:0.9rem}
-.menu-toggle{display:none}
-.ticker-wrap{position:fixed;top:64px;width:100%;z-index:999;background:var(--dark);color:white;overflow:hidden;white-space:nowrap;border-bottom:2px solid var(--secondary)}
-.ticker{display:inline-block;padding:10px 0;animation:ticker 60s linear infinite}
-.ticker-item{display:inline-block;margin-right:60px;font-size:0.85rem}
+.logo{font-size:1.25rem;font-weight:800;color:var(--primary);text-decoration:none}
+.logo span{color:var(--secondary)}
+.nav-links{display:flex;list-style:none;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.nav-links li{margin-left:16px}
+.nav-links a{text-decoration:none;color:var(--text);font-weight:600;font-size:.88rem}
+.nav-links a.active{color:var(--primary)}
+.menu-toggle{display:none;font-size:1.3rem;cursor:pointer}
+/* TICKER */
+.ticker-wrap{position:fixed;top:0;width:100%;height:42px;z-index:1001;background:var(--secondary);color:white;overflow:hidden;white-space:nowrap;display:flex;align-items:center;font-weight:600;font-size:13px}
+.ticker{display:inline-block;white-space:nowrap;animation:ticker 30s linear infinite}
+.ticker-item{display:inline-block;margin-right:60px}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.ad-slot{display:none}.ad-slot.has-content{display:block;background:white;border-radius:12px;margin:20px 0;box-shadow:var(--shadow);overflow:hidden}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px}
-.card{background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition)}
-.card:hover{transform:translateY(-6px)}
-.card-img{height:200px;background-size:cover;background-position:center}
-.card-body{padding:22px}
-.icon-box{width:55px;height:55px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;margin-bottom:12px}
-.tag{display:inline-block;background:var(--gray);padding:4px 10px;border-radius:20px;font-size:0.75rem;margin-top:10px;border:1px solid var(--border)}
-footer{background:var(--dark);color:white;padding:60px 0 20px}
-.footer-bottom{text-align:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;margin-top:20px;color:rgba(255,255,255,0.4)}
-.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;transition:var(--transition);border:none;z-index:999}
+/* HERO - EYE CATCHING */
+.hero{margin-top:0;background:linear-gradient(135deg,#0a0e1a,#1a365d 55%,#FF6B35);color:white;text-align:center;padding:64px 20px 56px}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700}
+.hero h1{font-size:2.4rem;line-height:1.15;margin:14px 0 10px}
+.hero h1 span{color:var(--secondary)}
+.hero p{color:#CBD5E0;max-width:600px;margin:0 auto}
+.hero-stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);padding:10px 16px;border-radius:12px}
+.stat b{display:block}
+.stat small{color:#CBD5E0;font-size:11px}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+/* ADS */
+.ad-box{background:white;border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;margin:20px auto}
+.ad-label{font-size:11px;color:#A0AEC0;letter-spacing:1px;margin-bottom:6px}
+/* ===== UPDATES - EXACT SAME AS PRODUCTS / HOME ===== */
+.updates{background:white;border:1px solid var(--border);border-radius:16px;padding:18px 18px 12px;overflow:hidden;margin-top:28px}
+.updates-head{display:flex;justify-content:space-between;align-items:center}
+.updates-head h2{font-size:1.25rem;color:#1A365D}
+.updates-head h2 i{color:var(--secondary)}
+.scroll-btns{display:flex;gap:6px}
+.scroll-btns button{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:white;cursor:pointer;font-weight:800}
+.updates-scroll{display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;padding:14px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.updates-scroll::-webkit-scrollbar{height:6px}
+.updates-scroll::-webkit-scrollbar-thumb{background:#CBD5E0;border-radius:10px}
+.update-item{flex:0 0 280px;scroll-snap-align:start;background:#F8FAFC;border:1px solid var(--border);border-radius:12px;padding:12px;color:#111}
+.update-item img{width:100%;height:110px;object-fit:cover;border-radius:8px;margin-bottom:8px}
+.update-item b{font-size:.95rem;line-height:1.4;display:block}
+.update-item p{color:#718096;font-size:.85rem;margin-top:4px;line-height:1.5}
+.update-item small{color:#A0AEC0}
+@media(max-width:480px){.update-item{flex:0 0 240px}}
+/* SERVICES - ORGANIZED */
+.section{padding:56px 0 20px}
+.section-head{margin-bottom:22px}
+.kicker{color:var(--secondary);font-size:11px;letter-spacing:2px;font-weight:800;text-transform:uppercase}
+.section-head h2{font-size:1.8rem;color:#1A365D;margin-top:6px}
+.section-head p{color:#718096;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.card{background:white;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.12)}
+.card-img{height:180px;background-size:cover;background-position:center}
+.card-body{padding:20px}
+.icon-box{width:50px;height:50px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;margin-bottom:12px;font-size:18px}
+.icon-box.orange{background:var(--secondary)}
+.tag{display:inline-block;background:var(--gray);padding:4px 10px;border-radius:20px;font-size:.75rem;margin-top:10px;border:1px solid var(--border);font-weight:700}
+.card-extra{border:2px solid #FFE0CC}
+.cta{background:white;text-align:center;padding:50px 20px;border-radius:16px;margin:40px 0;border:1px solid var(--border)}
+.powered-badge{position:fixed;bottom:12px;right:12px;background:white;border:1px solid var(--border);padding:7px 12px;border-radius:20px;font-size:11px;box-shadow:var(--shadow);z-index:999}
+footer{background:var(--dark);color:white;padding:40px 0 60px;text-align:center}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;margin-top:20px;color:rgba(255,255,255,.4);font-size:13px}
+.back-to-top{position:fixed;bottom:20px;right:20px;width:44px;height:44px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;visibility:hidden;border:none;z-index:999}
 .back-to-top.visible{opacity:1;visibility:visible}
-@media(max-width:768px){.menu-toggle{display:block}.nav-links{position:fixed;top:64px;left:-100%;width:100%;background:white;flex-direction:column;padding:20px 0;transition:var(--transition)}.nav-links.active{left:0}.grid{grid-template-columns:1fr}}
+@media(max-width:768px){.menu-toggle{display:block}.nav-links{position:fixed;top:104px;left:-100%;width:100%;background:white;flex-direction:column;padding:20px 0;transition:.3s}.nav-links.active{left:0}.nav-links li{margin:8px 0}.grid{grid-template-columns:1fr}.hero h1{font-size:1.9rem}}
 </style>
 </head>
 <body>
-<div class="ticker-wrap"><div class="ticker" id="ticker"></div></div>
-<header style="top:40px"><div class="container navbar">
-<a href="index.html" class="logo">FOSNALIC Techs</a>
+
+<div class="ticker-wrap"><div class="ticker" id="ticker"><span>Welcome to FOSNALIC Techs — We Build Technology That Works ••• </span></div></div>
+
+<header><div class="container navbar">
+<a href="index.html" class="logo">FOSNALIC <span>Techs</span></a>
 <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
 <ul class="nav-links" id="navLinks">
 <li><a href="index.html">Home</a></li>
-<li><a href="services.html" style="color:var(--primary)">Services</a></li>
+<li><a href="services.html" class="active">Services</a></li>
 <li><a href="portfolio.html">Portfolio</a></li>
+<li><a href="products.html">Products</a></li>
 <li><a href="academy.html">Academy</a></li>
 <li><a href="pricing.html">Pricing</a></li>
 <li><a href="about.html">About</a></li>
 <li><a href="contact.html">Contact</a></li>
 </ul></div></header>
-<section style="margin-top:100px;background:linear-gradient(135deg,rgba(10,10,10,0.9),rgba(42,75,124,0.88)),url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=2000') center/cover;color:white;text-align:center;padding:80px 0">
-<div class="container"><h2 style="color:white">Our Services</h2></div>
-</section>
-<div class="container"><div class="ad-slot" id="adHeader"><div id="adHeaderContent"></div></div></div>
-<section><div class="container">
-<div class="grid">
-<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-globe"></i></div><h3>1. Web Design & Development</h3><p style="color:#718096;font-size:0.9rem">Business websites, eCommerce, SEO, MoMo MTN, hosting. From 500k UGX.</p><span class="tag">From 500k</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:0.8rem">Get Quote</a></div></div></div>
-<div class="card"><div class="card-img" style="background-image:url('download.webp')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-code"></i></div><h3>2. Custom Software / POS System</h3><p style="color:#718096;font-size:0.9rem">School management, inventory, POS, clinic, restaurant — offline + online.</p><span class="tag">Custom Built</span></div></div>
-<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-laptop-code"></i></div><h3>3. Coding Training Academy</h3><p style="color:#718096;font-size:0.9rem">Full Stack Web Dev, 3 months job-ready, internship, certificate — Possible Shadrach.</p><span class="tag">Academy</span></div></div>
-<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-book-open"></i></div><h3>4. eLearning / School LMS</h3><p style="color:#718096;font-size:0.9rem">Online classes, exams, results portal, fees tracking, parent SMS.</p><span class="tag">School System</span></div></div>
-<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-palette"></i></div><h3>5. Graphic Design & Branding</h3><p style="color:#718096;font-size:0.9rem">Logos, flyers, business cards, social media, banners.</p><span class="tag">Design</span></div></div>
-<div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-tools"></i></div><h3>6. ICT Support & Solutions</h3><p style="color:#718096;font-size:0.9rem">Computer repair, networks, CCTV, printers, Windows install — Kampala.</p><span class="tag">Support</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1535303311164-664fc9ec6532?w=600')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-user-plus"></i></div><h3>7. Create Account Help</h3><p style="color:#718096;font-size:0.9rem">Google, email, social media, business accounts.</p><span class="tag">Extra Help</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('download2.webp')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-sim-card"></i></div><h3>8. SIM Swap & Registration</h3><p style="color:#718096;font-size:0.9rem">SIM registration, swap, replacement — legit process only.</p><span class="tag">Extra Help</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-mobile-alt"></i></div><h3>9. Lost Device Tracking</h3><p style="color:#718096;font-size:0.9rem">Track lost phone using Google Find My Device, IMEI guidance.</p><span class="tag">Extra Help</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-bolt"></i></div><h3>10. Phone Flashing & Unlock</h3><p style="color:#718096;font-size:0.9rem">Flashing, pattern unlock with proof of ownership.</p><span class="tag">Extra Help</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=600')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-envelope"></i></div><h3>11. Email Recovery</h3><p style="color:#718096;font-size:0.9rem">Recover Gmail, Yahoo — official recovery process.</p><span class="tag">Extra Help</span></div></div>
-<div class="card" style="border:2px solid var(--secondary)"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600')"></div><div class="card-body"><div class="icon-box" style="background:var(--secondary)"><i class="fas fa-question"></i></div><h3>12. General Tech Support</h3><p style="color:#718096;font-size:0.9rem">Any tech problem — contact possyshad@gmail.com</p><span class="tag">Extra Help</span></div></div>
-</div>
+
+<!-- HERO -->
+<section class="hero"><div class="container">
+  <span class="hero-badge">✦ 12 PROFESSIONAL SERVICES</span>
+  <h1>Our Services<br><span>Built to Work For You.</span></h1>
+  <p>From websites to software, academy to support — everything you need to grow, in one place.</p>
+  <div class="hero-stats"><div class="stat"><b>12</b><small>Services</small></div><div class="stat"><b>6 + 6</b><small>Main + Extra Help</small></div><div class="stat"><b>Fast</b><small>Response</small></div></div>
+  <div class="hero-btns"><a href="contact.html" class="btn btn-white">Get a Quote →</a><a href="pricing.html" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,.4)">See Pricing</a></div>
 </div></section>
-<div class="container"><div class="ad-slot" id="adMiddle"><div id="adMiddleContent"></div></div></div>
-<section style="background:white;text-align:center"><div class="container"><h2>Need Any Service?</h2><p style="color:#718096;margin-top:8px">Email: possyshad@gmail.com</p><div style="margin-top:20px"><a href="contact.html" class="btn">Contact</a> <a href="pricing.html" class="btn btn-dark">See Pricing</a></div></div></section>
-<div class="container"><div class="ad-slot" id="adFooter"><div id="adFooterContent"></div></div></div>
-<footer><div class="container"><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs</div></div></footer>
+
+<div class="container"><div id="adHeader" class="ad-box"><p class="ad-label">ADVERTISEMENT</p><div id="adHeaderContent"></div></div></div>
+
+<!-- UPDATES - SAME AS PRODUCTS -->
+<div class="container"><div class="updates">
+  <div class="updates-head"><h2><i class="fas fa-bullhorn"></i> Latest Updates</h2><div class="scroll-btns"><button onclick="scrollUpdates(-1)">‹</button><button onclick="scrollUpdates(1)">›</button></div></div>
+  <div class="updates-scroll" id="updatesList"><p style="color:#718096;padding:12px 0">Loading updates...</p></div>
+  <p style="font-size:11px;color:#A0AEC0;text-align:center;margin-top:2px">Swipe to see more →</p>
+</div></div>
+
+<!-- MAIN SERVICES -->
+<section class="section"><div class="container">
+  <div class="section-head"><div class="kicker">Main Services</div><h2>What we do best</h2><p>Professional, reliable, built for your business.</p></div>
+  <div class="grid">
+    <div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-globe"></i></div><h3>1. Web Design &amp; Development</h3><p style="color:#718096;font-size:.9rem">Business websites, eCommerce, SEO, MoMo MTN, hosting. From 500k UGX.</p><span class="tag">From 500k</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:.8rem">Get Quote</a></div></div></div>
+    <div class="card"><div class="card-img" style="background-image:url('download.webp')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-code"></i></div><h3>2. Custom Software / POS System</h3><p style="color:#718096;font-size:.9rem">School management, inventory, POS, clinic, restaurant — offline + online.</p><span class="tag">Custom Built</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:.8rem">Get Quote</a></div></div></div>
+    <div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-laptop-code"></i></div><h3>3. Coding Training Academy</h3><p style="color:#718096;font-size:.9rem">Full Stack Web Dev, 3 months job-ready, internship, certificate — Possible Shadrach.</p><span class="tag">Academy</span><div style="margin-top:12px"><a href="academy.html" class="btn" style="padding:8px 14px;font-size:.8rem">Join Academy</a></div></div></div>
+    <div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-book-open"></i></div><h3>4. eLearning / School LMS</h3><p style="color:#718096;font-size:.9rem">Online classes, exams, results portal, fees tracking, parent SMS.</p><span class="tag">School System</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:.8rem">Get Quote</a></div></div></div>
+    <div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-palette"></i></div><h3>5. Graphic Design &amp; Branding</h3><p style="color:#718096;font-size:.9rem">Logos, flyers, business cards, social media, banners.</p><span class="tag">Design</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:.8rem">Get Quote</a></div></div></div>
+    <div class="card"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600')"></div><div class="card-body"><div class="icon-box"><i class="fas fa-tools"></i></div><h3>6. ICT Support &amp; Solutions</h3><p style="color:#718096;font-size:.9rem">Computer repair, networks, CCTV, printers, Windows install — Kampala.</p><span class="tag">Support</span><div style="margin-top:12px"><a href="contact.html" class="btn" style="padding:8px 14px;font-size:.8rem">Get Help</a></div></div></div>
+  </div>
+</div></section>
+
+<div class="container"><div id="adMiddle" class="ad-box"><p class="ad-label">ADVERTISEMENT</p><div id="adMiddleContent"></div></div></div>
+
+<!-- EXTRA HELP -->
+<section class="section" style="padding-top:20px"><div class="container">
+  <div class="section-head"><div class="kicker" style="color:#FF6B35">Extra Help</div><h2>Quick help, when you need it</h2><p>Everyday tech problems — solved fast, legit process only.</p></div>
+  <div class="grid">
+    <div class="card card-extra"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1535303311164-664fc9ec6532?w=600')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-user-plus"></i></div><h3>7. Create Account Help</h3><p style="color:#718096;font-size:.9rem">Google, email, social media, business accounts.</p><span class="tag">Extra Help</span></div></div>
+    <div class="card card-extra"><div class="card-img" style="background-image:url('download2.webp')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-sim-card"></i></div><h3>8. SIM Swap &amp; Registration</h3><p style="color:#718096;font-size:.9rem">SIM registration, swap, replacement — legit process only.</p><span class="tag">Extra Help</span></div></div>
+    <div class="card card-extra"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-mobile-alt"></i></div><h3>9. Lost Device Tracking</h3><p style="color:#718096;font-size:.9rem">Track lost phone using Google Find My Device, IMEI guidance.</p><span class="tag">Extra Help</span></div></div>
+    <div class="card card-extra"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1563203369-26f2e4a5ccf7?w=600')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-bolt"></i></div><h3>10. Phone Flashing &amp; Unlock</h3><p style="color:#718096;font-size:.9rem">Flashing, pattern unlock with proof of ownership.</p><span class="tag">Extra Help</span></div></div>
+    <div class="card card-extra"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=600')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-envelope"></i></div><h3>11. Email Recovery</h3><p style="color:#718096;font-size:.9rem">Recover Gmail, Yahoo — official recovery process.</p><span class="tag">Extra Help</span></div></div>
+    <div class="card card-extra"><div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600')"></div><div class="card-body"><div class="icon-box orange"><i class="fas fa-question"></i></div><h3>12. General Tech Support</h3><p style="color:#718096;font-size:.9rem">Any tech problem — contact possyshad@gmail.com</p><span class="tag">Extra Help</span></div></div>
+  </div>
+</div></section>
+
+<div class="container"><div class="cta"><h2>Need Any Service?</h2><p style="color:#718096;margin-top:8px">Email: possyshad@gmail.com</p><div style="margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a href="contact.html" class="btn">Contact</a><a href="pricing.html" class="btn btn-dark">See Pricing</a></div></div></div>
+
+<div class="container"><div id="adFooter" class="ad-box"><p class="ad-label">ADVERTISEMENT</p><div id="adFooterContent"></div></div></div>
+
+<div class="powered-badge">Powered by <a href="index.html" style="color:#2A4B7C;font-weight:800;text-decoration:none">FOSNALIC Techs</a></div>
+
+<footer><div class="container"><strong style="color:white">FOSNALIC Techs</strong><p style="margin-top:8px;color:#94A3B8">Professional ICT Solutions — Kampala</p><div class="footer-bottom">© <span id="year"></span> FOSNALIC Techs</div></div></footer>
 <button class="back-to-top" id="backToTop">🔝</button>
+
 <script>
 document.getElementById('menuToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('active');
 document.getElementById('year').textContent=new Date().getFullYear();
-function loadTicker(){let t=JSON.parse(localStorage.getItem('fosnalic_ticker')||'null');if(!t){t=["Welcome to FOSNALIC Techs — We Build Technology That Works","12 Services Now Available","Academy Intake Open"]}document.getElementById('ticker').innerHTML=t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('')+t.map(tx=>`<span class="ticker-item"><i class="fas fa-bolt"></i> ${tx}</span>`).join('');}
-function loadAds(){['adHeader','adMiddle','adFooter'].forEach(id=>{const data=JSON.parse(localStorage.getItem(id)||'null');if(data&&(data.image||data.text)){const slot=document.getElementById(id);const content=document.getElementById(id+'Content');slot.classList.add('has-content');let html='';if(data.image) html+=`<a href="${data.link||'#'}" target="_blank"><img src="${data.image}"></a>`;if(data.text) html+=`<div style="padding:15px">${data.text}</div>`;content.innerHTML=html;}});}
-loadTicker();loadAds();
-const backBtn=document.getElementById('backToTop');addEventListener('scroll',()=>{if(scrollY>400) backBtn.classList.add('visible');else backBtn.classList.remove('visible')});backBtn.onclick=()=>scrollTo({top:0,behavior:'smooth'});
-</script>
-</body>
-</html>
+function cleanText(t){if(!t) return "";return String(t).replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim();}
+function findNews(d){let keys=['news','updates','announcements','fosnalic_news','fosnalic_updates','fosnalic_announcements','latestUpdates','posts'];for(let k of keys){if(Array.isArray(d[k])&&d[k].length) return d[k];}return [];}
+function scrollUpdates(dir){document.getElementById('updatesList').scrollBy({left:dir*294,behavior:'smooth'});}
+let updatesPaused=false;let updatesEl=document.getElementById('updatesList');
+updatesEl.addEventListener('mouseenter',()=>updatesPaused=true);updatesEl.addEventListener('mouseleave',()=>updatesPaused=false);
+updatesEl.addEventListener('touchstart',()=>updatesPaused=true,{passive:true});updatesEl.addEventListener('touchend',()=>setTimeout(()=>updatesPaused=false,3000),{passive:true});
+setInterval(()=>{if(updatesPaused) return;let el=document.getElementById('updatesList');if(!el||el.children.length<2) return;if(el.scrollLeft+el.clientWidth>=el.scrollWidth-10){el.scrollTo({left:0,behavior:'smooth'});}else{el.scrollBy({left:294,behavior:'smooth'});}},3500);
+function renderUpdates(d){let list=findNews(d);let el=document.getElementById('updatesList');if(!list.length){el.innerHTML="<p style='color:#718096;padding:12px 0'>No updates yet.</p>";return;}el.innerHTML=list.map(n=>{if(typeof n==='string') return `<div class="update-item"><b>${cleanText(n)}</b></div>`;let title=cleanText(n.title||"");let desc=cleanText(n.desc||n.description||n.text||"");let img=n.img||n.image||"";let tag=n.tag||n.category||n.date||"";if(!title&&!desc) return "";return `<div class="update-item">${img?`<img src="${img}" onerror="this.style.display='none'">`:""}<b>${title}</b>${desc?`<p>${desc}</p>`:""}${tag?`<small>${tag}</small>`:""}</div>`;}).join('');}
+
+let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
+async function loadAll(){
+  try{
+    let d={ticker:[],news:[]};
+    try{let rDepot=await fetch(`/api/storage?key=fosnalic-data?t=${Date.now()}`,{cache:"no-store"});if(rDepot.ok){let dd=await rDepot.json();if(dd&&(dd.ticker?.length||findNews(dd).length)) d=dd;}}catch(e){}
+    if(!d.ticker?.length && !findNews(d).length){
+      let r=await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});
+      if(r.ok){let gd=await r.json();d={...d,...gd};}
+    }
+    // TICKER FROM ADMIN / GIST, fallback to localStorage
+    let ticker=d.ticker||[];
+    if(!ticker.length){try{ticker=JSON.parse(localStorage.getItem('fosnalic_ticker')||'[]');}catch(e){}}
+    if(!ticker.length) ticker=["Welcome to FOSNALIC Techs — We Build Technology That Works","12 Services Now Available","Academy Intake Open"];
+    let txt=ticker.map(x=>cleanText(typeof x==='string'?x:(x.title||x.text||""))).filter(Boolean).join(' ••• ')+' ••• ';
+    document.getElementById('ticker').innerHTML=`<span class="ticker-item">${txt}</span><span class="ticker-item">${txt}</span>`;
+    renderUpdates(d);
+    // ADS FROM ADMIN / GIST, fallback to localStorage
+    function renderAd(ad,el,lsKey){let c=document.getElementById(el);if(!c) return;let dat
