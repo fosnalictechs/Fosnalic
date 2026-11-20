@@ -10,9 +10,7 @@ a{text-decoration:none}
 .auth-card{background:white;border-radius:14px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .auth-card h2{margin:0 0 4px;color:#075E54}.auth-card p{color:#667781;font-size:13px;margin:0 0 16px}
 .auth-card input{width:100%;padding:12px 14px;border:1px solid #E5E5E5;border-radius:10px;margin-bottom:10px;font-size:14px;outline:none}
-.auth-card input:focus{border-color:#075E54}
 .auth-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#075E54;color:white;font-weight:700;font-size:14px;cursor:pointer}
-.auth-btn:disabled{opacity:.6}
 .auth-link{text-align:center;font-size:13px;margin-top:12px;color:#667781}.auth-link b{color:#075E54;cursor:pointer}
 .auth-error{background:#FEE2E2;color:#991B1B;padding:10px;border-radius:8px;font-size:13px;margin-bottom:10px;display:none}
 .auth-success{background:#DCFCE7;color:#166534;padding:10px;border-radius:8px;font-size:13px;margin-bottom:10px;display:none}
@@ -26,8 +24,15 @@ a{text-decoration:none}
 .tabs-bar button{flex:1;padding:12px;border:none;background:white;font-weight:700;font-size:14px;cursor:pointer;color:#667781}
 .tabs-bar button.active{color:#075E54;border-bottom:3px solid #075E54}
 .wrap{max-width:800px;margin:105px auto 0;padding:0 6px 110px}
-.online-bar{background:white;border-radius:10px;padding:10px 12px;margin:6px 0;font-size:13px;color:#075E54;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.online-dot{width:8px;height:8px;border-radius:50%;background:#25D366;display:inline-block}
+/* PEOPLE CHATTING - NAMES VISIBLE */
+.people-card{background:white;border-radius:10px;padding:12px;margin:6px 0}
+.people-card b{font-size:14px;color:#075E54}
+.people-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.person{ display:flex;align-items:center;gap:6px;background:#F0F2F5;border-radius:20px;padding:5px 10px 5px 5px;font-size:12px;font-weight:600}
+.person .av{width:28px;height:28px;border-radius:50%;background:#075E54;color:white;display:grid;place-items:center;font-size:12px;font-weight:800}
+.person .dot{width:8px;height:8px;border-radius:50%;background:#25D366}
+.person.you{background:#DCF8C6}
+.online-bar{font-size:13px;color:#075E54;margin-top:6px}
 .chat{background:#ECE5DD;background-image:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');border-radius:10px;padding:12px 8px;min-height:420px}
 .date-sep{text-align:center;margin:14px 0}.date-sep span{background:white;padding:6px 12px;border-radius:8px;font-size:11px;color:#667781;box-shadow:0 1px 1px rgba(0,0,0,.1)}
 .filters{display:flex;gap:6px;overflow:auto;padding:8px 2px}
@@ -39,12 +44,16 @@ a{text-decoration:none}
 .bubble.mine{background:#DCF8C6;margin-left:auto;border-top-right-radius:0}
 .bubble.other{background:white;margin-right:auto;border-top-left-radius:0}
 .bubble.pinned{border-left:4px solid #FFC107}
-.bubble .name{font-size:12px;font-weight:700;color:#075E54;margin-bottom:2px}.bubble.mine .name{display:none}
-.bubble .email{font-size:10px;color:#8696A0;margin-bottom:2px}.bubble.mine .email{display:none}
+/* NAME ALWAYS VISIBLE - EVEN YOURS */
+.bubble .name{font-size:13px;font-weight:800;color:#075E54;margin-bottom:2px;display:block}
+.bubble.mine .name{color:#075E54;text-align:right}
+.bubble .email{font-size:10px;color:#8696A0;margin-bottom:2px;display:block}
+.bubble.mine .email{text-align:right}
 .bubble .text{font-size:14.5px;line-height:1.45;white-space:pre-wrap}
 .bubble .time{font-size:10px;color:#667781;text-align:right;margin-top:4px}.bubble .time .tick{color:#53BDEB;font-weight:700}
-.bubble img.chat-media{width:100%;border-radius:8px;margin:4px 0;display:block;cursor:pointer}
-.bubble video.chat-media{width:100%;border-radius:8px}.bubble audio{width:100%;margin-top:6px}
+.bubble img.chat-media{width:100%;max-height:320px;object-fit:cover;border-radius:8px;margin:6px 0;display:block;cursor:pointer;background:#ddd}
+.bubble video.chat-media{width:100%;max-height:320px;border-radius:8px;background:#000}
+.bubble audio{width:100%;margin-top:6px}
 .bubble .actions{display:flex;gap:14px;margin-top:6px;border-top:1px solid rgba(0,0,0,.06);padding-top:6px}
 .bubble .actions button{border:none;background:none;color:#075E54;font-size:12px;font-weight:600;cursor:pointer}
 .replyQuote{background:rgba(0,0,0,.05);border-left:3px solid #075E54;padding:6px 8px;border-radius:4px;font-size:12px;margin-bottom:6px;color:#667781}
@@ -88,7 +97,7 @@ a{text-decoration:none}
       <div class="auth-link"><b onclick="doReset()">Forgot password? Send reset email</b></div>
     </div>
   </div>
-  <p style="text-align:center;color:#8696A0;font-size:11px;margin-top:12px">By signing up you agree to be respectful in the community.<br><a href="index.html" style="color:#075E54">← Back to Home</a></p>
+  <p style="text-align:center;color:#8696A0;font-size:11px;margin-top:12px"><a href="index.html" style="color:#075E54">← Back to Home</a></p>
 </div>
 
 <div id="appScreen" style="display:none">
@@ -101,8 +110,13 @@ a{text-decoration:none}
 <div class="tabs-bar"><button id="tabChat" class="active" onclick="showView('chat')">💬 Chat</button><button id="tabUpdates" onclick="showView('updates')">📣 Updates &amp; Ads</button></div>
 <div class="wrap">
   <div id="viewChat">
-    <div class="online-bar"><span class="online-dot"></span><b id="onlineCount">0 online</b><span id="onlineList" style="color:#667781"></span></div>
-    <div id="typingBar" class="typing" style="display:none"></div>
+    <!-- PEOPLE CHATTING - NAMES -->
+    <div class="people-card">
+      <b>👥 People Chatting</b>
+      <div class="online-bar" id="onlineCount">Loading people...</div>
+      <div class="people-list" id="peopleList"></div>
+      <div id="typingBar" class="typing" style="display:none"></div>
+    </div>
     <div class="search"><i class="fas fa-search" style="color:#8696A0"></i><input id="q" placeholder="Search messages..." oninput="debounceLoad()"></div>
     <div class="filters"><div class="filter active" onclick="setType('all',this)">All <span id="c-all"></span></div><div class="filter" onclick="setType('text',this)">Text <span id="c-text"></span></div><div class="filter" onclick="setType('image',this)">Media <span id="c-image"></span></div><div class="filter" onclick="setType('pinned',this)">Pinned</div><select id="sort" onchange="load()" style="border:1px solid #E5E5E5;border-radius:20px;padding:7px 10px;font-size:12px"><option value="new">Newest</option><option value="old">Oldest</option></select></div>
     <div class="chat"><div class="date-sep"><span>🔒 Verified community • FOSNALIC Depot</span></div><div id="feed">Loading chat...</div></div>
@@ -117,7 +131,7 @@ a{text-decoration:none}
 </div>
 <div class="wa-input" id="inputBar">
   <div id="replyInfo" class="replyInfo"></div><div id="mediaPreview" class="mediaPreview"></div>
-  <div class="wa-input-inner"><div class="field"><label class="attach" title="Attach"><i class="fas fa-paperclip"></i><input type="file" hidden accept="image/*,video/*,audio/*" onchange="uploadFile(this)"></label><textarea id="t" rows="1" placeholder="Message"></textarea></div><button class="send" onclick="post()" id="postBtn"><i class="fas fa-paper-plane"></i></button></div>
+  <div class="wa-input-inner"><div class="field"><label class="attach" title="Attach"><i class="fas fa-paperclip"></i><input type="file" id="fileInput" hidden accept="image/*,video/*,audio/*" onchange="uploadFile(this)"></label><textarea id="t" rows="1" placeholder="Message"></textarea></div><button class="send" onclick="post()" id="postBtn"><i class="fas fa-paper-plane"></i></button></div>
   <div id="s" style="font-size:11px;color:#667781;margin-top:4px;text-align:center"></div>
 </div>
 </div>
@@ -128,7 +142,7 @@ const SUPABASE_URL = "https://lqqbvzttjstchkjfajwj.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentUser=null, currentName="", currentEmail="", replyTo=null, mediaUrl=null, mediaType=null, curType="all", allData=[], typingTimer=null;
+let currentUser=null, currentName="", currentEmail="", replyTo=null, replyName="", mediaUrl=null, mediaType=null, mediaFile=null, curType="all", allData=[], typingTimer=null;
 function toast(m){let t=document.getElementById('toast');t.innerText=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)}
 function showErr(m){let e=document.getElementById('authError');e.style.display='block';e.innerText=m;document.getElementById('authSuccess').style.display='none'}
 function showOk(m){let e=document.getElementById('authSuccess');e.style.display='block';e.innerText=m;document.getElementById('authError').style.display='none'}
@@ -139,7 +153,7 @@ async function doSignup(){
   if(!name||!email||!pass) return showErr("Fill name, email and password.");
   if(pass.length<6) return showErr("Password must be at least 6 characters.");
   let btn=document.getElementById('suBtn'); btn.disabled=true; btn.innerText="Creating...";
-  let {data, error}=await supabaseClient.auth.signUp({email, password:pass, options:{data:{full_name:name}, emailRedirectTo: window.location.href}});
+  let {error}=await supabaseClient.auth.signUp({email, password:pass, options:{data:{full_name:name}, emailRedirectTo: window.location.href}});
   btn.disabled=false; btn.innerText="Sign Up • Create Account";
   if(error) return showErr(error.message);
   showOk("Account created! Check your email ("+email+") and click the verification link, then Log In.");
@@ -149,9 +163,9 @@ async function doLogin(){
   let email=document.getElementById('liEmail').value.trim(), pass=document.getElementById('liPass').value;
   if(!email||!pass) return showErr("Enter email and password.");
   let btn=document.getElementById('liBtn'); btn.disabled=true; btn.innerText="Logging in...";
-  let {data, error}=await supabaseClient.auth.signInWithPassword({email, password:pass});
+  let {error}=await supabaseClient.auth.signInWithPassword({email, password:pass});
   btn.disabled=false; btn.innerText="Log In";
-  if(error) return showErr(error.message + (error.message.includes("Email not confirmed") ? " — Check your inbox for verification email." : ""));
+  if(error) return showErr(error.message);
   await afterLogin();
 }
 async function doReset(){
@@ -190,10 +204,18 @@ async function startPresence(){
   async function loadPresence(){
     let {data}=await supabaseClient.from('presence').select('*').gt('last_seen', new Date(Date.now()-30000).toISOString());
     if(!data) return;
+    // PEOPLE CHATTING - ALSO INCLUDE PEOPLE WHO HAVE SENT MESSAGES
+    let namesMap = new Map();
+    data.forEach(p=> namesMap.set(p.email, {name:p.name, email:p.email, online:true}));
+    (allData||[]).forEach(m=>{ if(!namesMap.has(m.email)) namesMap.set(m.email, {name:m.name, email:m.email, online:false}); });
+    let people=[...namesMap.values()];
+    document.getElementById('onlineCount').innerText = data.length + " online • " + people.length + " people have chatted";
+    document.getElementById('groupMembers').innerText = currentName + " • " + data.length + " online • " + people.length + " people";
+    document.getElementById('peopleList').innerHTML = people.map(p=>{
+      let isYou = p.email===currentEmail;
+      return `<div class="person ${isYou?'you':''}"><div class="av">${(p.name||"?").charAt(0).toUpperCase()}</div><span>${esc(p.name)}${isYou?' (You)':''}</span><span class="dot" style="background:${p.online?'#25D366':'#8696A0'}"></span><span style="color:#8696A0;font-weight:400">${p.online?'Online':'Offline'}</span></div>`;
+    }).join('') || "<span style='color:#667781;font-size:13px'>No one yet</span>";
     let others=data.filter(p=>p.user_id!==currentUser.id);
-    document.getElementById('onlineCount').innerText = data.length + " online";
-    document.getElementById('groupMembers').innerText = currentName + " • " + data.length + " online";
-    document.getElementById('onlineList').innerText = others.length ? " • " + others.map(o=>o.name).join(", ") : " • Only you online";
     let typers=others.filter(o=>o.is_typing);
     let tb=document.getElementById('typingBar'); if(typers.length){tb.style.display='block'; tb.innerText=typers.map(t=>t.name).join(", ")+" is typing..."} else tb.style.display='none';
   }
@@ -202,16 +224,38 @@ async function startPresence(){
 }
 function showView(v){document.getElementById('viewChat').style.display=v==='chat'?'block':'none';document.getElementById('viewUpdates').classList.toggle('active',v==='updates');document.getElementById('tabChat').classList.toggle('active',v==='chat');document.getElementById('tabUpdates').classList.toggle('active',v==='updates');document.getElementById('inputBar').style.display=v==='chat'?'block':'none';}
 function setType(t,el){curType=t;document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));el.classList.add('active');load()}
-function setReply(id,name){replyTo=id;let b=document.getElementById('replyInfo');b.style.display='block';b.innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>`;document.getElementById('t').focus()}
-function cancelReply(){replyTo=null;document.getElementById('replyInfo').style.display='none'}
-async function uploadFile(input){let file=input.files[0]; if(!file) return; if(file.size>8e6){toast("File too large, keep <8MB");return} document.getElementById('s').innerText="Encoding..."; let r=new FileReader(); r.onload=()=>{mediaUrl=r.result; mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio'; let p=document.getElementById('mediaPreview'); p.style.display='block'; if(mediaType==='image') p.innerHTML=`<img src="${mediaUrl}"><br><a href="#" onclick="clearMedia()">Remove</a>`; else if(mediaType==='video') p.innerHTML=`<video src="${mediaUrl}" controls style="width:100%"></video><br><a href="#" onclick="clearMedia()">Remove</a>`; else p.innerHTML=`<audio src="${mediaUrl}" controls style="width:100%"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`; document.getElementById('s').innerText="Ready! "+Math.round(mediaUrl.length/1024)+"KB"; }; r.readAsDataURL(file);}
-function clearMedia(){mediaUrl=null;mediaType=null;document.getElementById('mediaPreview').style.display='none';document.getElementById('mediaPreview').innerHTML=""}
+function setReply(id,name){replyTo=id;replyName=name;let b=document.getElementById('replyInfo');b.style.display='block';b.innerHTML=`Replying to <b>${name}</b> <a href="#" onclick="cancelReply();return false" style="float:right">✕</a>`;document.getElementById('t').focus()}
+function cancelReply(){replyTo=null;replyName="";document.getElementById('replyInfo').style.display='none'}
+
+// MEDIA - UPLOAD TO SUPABASE STORAGE SO IT REALLY APPEARS
+async function uploadFile(input){
+  let file=input.files[0]; if(!file) return;
+  if(file.size>10*1024*1024){toast("File too large, keep <10MB");return}
+  mediaFile=file; mediaType=file.type.startsWith('image')?'image':file.type.startsWith('video')?'video':'audio';
+  document.getElementById('s').innerText="Selected: "+file.name;
+  let p=document.getElementById('mediaPreview'); p.style.display='block';
+  let url=URL.createObjectURL(file);
+  if(mediaType==='image') p.innerHTML=`<img src="${url}"><br><a href="#" onclick="clearMedia()">Remove</a>`;
+  else if(mediaType==='video') p.innerHTML=`<video src="${url}" controls style="width:100%"></video><br><a href="#" onclick="clearMedia()">Remove</a>`;
+  else p.innerHTML=`<audio src="${url}" controls style="width:100%"></audio><br><a href="#" onclick="clearMedia()">Remove</a>`;
+  // Preview URL for immediate display, real upload happens on Send
+  mediaUrl=url;
+}
+function clearMedia(){mediaUrl=null;mediaType=null;mediaFile=null;document.getElementById('mediaPreview').style.display='none';document.getElementById('mediaPreview').innerHTML="";document.getElementById('fileInput').value="";document.getElementById('s').innerText="";}
+async function uploadToStorage(file){
+  let ext=file.name.split('.').pop();
+  let path = currentUser.id + "/" + Date.now() + "." + ext;
+  let {error}=await supabaseClient.storage.from('chat-media').upload(path, file, {upsert:true});
+  if(error) throw error;
+  let {data}=supabaseClient.storage.from('chat-media').getPublicUrl(path);
+  return data.publicUrl;
+}
 function esc(s){return (s||"").replace(/</g,'&lt;')}
 function highlight(text,q){if(!q) return esc(text);try{return esc(text).replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>')}catch{return esc(text)}}
 let debounce=null;function debounceLoad(){clearTimeout(debounce);debounce=setTimeout(load,300)}
 async function load(first=false){
   let {data, error}=await supabaseClient.from('messages').select('*').order('created_at',{ascending:true}).limit(300);
-  if(error){document.getElementById('feed').innerHTML="<p style='color:#667781'>"+error.message+" — Run the SQL in Supabase first.</p>";return;}
+  if(error){document.getElementById('feed').innerHTML="<p style='color:#667781'>"+error.message+"</p>";return;}
   allData=data||[];
   let q=document.getElementById('q').value.toLowerCase(); let sort=document.getElementById('sort').value;
   let filtered=[...allData]; if(curType==='text') filtered=filtered.filter(m=>!m.media_type); if(curType==='image') filtered=filtered.filter(m=>m.media_type); if(curType==='pinned') filtered=filtered.filter(m=>m.pinned); if(q) filtered=filtered.filter(m=>((m.text||"")+(m.name||"")).toLowerCase().includes(q));
@@ -222,27 +266,44 @@ async function load(first=false){
 }
 function renderBubble(m,q){
   let mine=m.user_id===currentUser?.id;
-  let media=""; if(m.media_url){ if(m.media_type==="image") media=`<img src="${m.media_url}" class="chat-media" loading="lazy" onclick="window.open(this.src)">`; if(m.media_type==="video") media=`<video src="${m.media_url}" controls class="chat-media"></video>`; if(m.media_type==="audio") media=`<audio src="${m.media_url}" controls></audio>`; }
+  let media=""; if(m.media_url){ if(m.media_type==="image") media=`<img src="${m.media_url}" class="chat-media" loading="lazy" onclick="window.open(this.src)" onerror="this.style.display='none'">`; if(m.media_type==="video") media=`<video src="${m.media_url}" controls class="chat-media" preload="metadata"></video>`; if(m.media_type==="audio") media=`<audio src="${m.media_url}" controls></audio>`; }
   let time=new Date(m.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  return `<div class="bubble ${mine?'mine':'other'} ${m.pinned?'pinned':''}"><div class="name">${esc(m.name)}</div><div class="email">${esc(m.email)} • Verified ✓</div>${m.reply_to?`<div class="replyQuote">↩ Replying</div>`:""}<div class="text">${m.pinned?'📌 ':''}${highlight(m.text,q)}</div>${media}<div class="time">${time} ${mine?'<span class="tick">✓✓</span>':''}</div><div class="actions"><button onclick="setReply(${m.id},'${esc(m.name)}')">Reply</button><button onclick="togglePin(${m.id},${!m.pinned})">Pin</button><button onclick="navigator.clipboard.writeText('${esc(m.text).slice(0,80)}');toast('Copied!')">Copy</button></div></div>`;
+  // NAME ALWAYS SHOWS - YOURS = "You (Name)", OTHERS = "Name"
+  let displayName = mine ? "You ("+esc(m.name)+")" : esc(m.name);
+  return `<div class="bubble ${mine?'mine':'other'} ${m.pinned?'pinned':''}"><div class="name">${displayName}</div><div class="email">${esc(m.email)} • Verified ✓</div>${m.reply_to?`<div class="replyQuote">↩ Replying to ${esc(replyName||"message")}</div>`:""}<div class="text">${m.pinned?'📌 ':''}${highlight(m.text,q)}</div>${media}<div class="time">${time} ${mine?'<span class="tick">✓✓</span>':''}</div><div class="actions"><button onclick="setReply(${m.id},'${esc(m.name)}')">Reply</button><button onclick="togglePin(${m.id},${!m.pinned})">Pin</button><button onclick="navigator.clipboard.writeText('${esc(m.text).slice(0,80)}');toast('Copied!')">Copy</button></div></div>`;
 }
 async function togglePin(id, val){ await supabaseClient.from('messages').update({pinned:val}).eq('id', id); load(); }
 async function post(){
   let text=document.getElementById('t').value.trim();
-  if(!text && !mediaUrl){toast("Add text or attach media");return}
-  let btn=document.getElementById('postBtn'); btn.disabled=true;
-  let {error}=await supabaseClient.from('messages').insert({user_id: currentUser.id, name: currentName, email: currentEmail, text, reply_to: replyTo, media_url: mediaUrl, media_type: mediaType, pinned:false});
-  btn.disabled=false;
-  if(error) return toast(error.message);
-  document.getElementById('t').value=""; clearMedia(); cancelReply(); toast("Sent ✅"); load();
+  if(!text && !mediaFile){toast("Add text or attach media");return}
+  let btn=document.getElementById('postBtn'); btn.disabled=true; document.getElementById('s').innerText="Sending...";
+  try{
+    let finalMediaUrl=null;
+    if(mediaFile){ finalMediaUrl=await uploadToStorage(mediaFile); }
+    let {error}=await supabaseClient.from('messages').insert({user_id: currentUser.id, name: currentName, email: currentEmail, text, reply_to: replyTo, media_url: finalMediaUrl, media_type: mediaType, pinned:false});
+    if(error) throw error;
+    document.getElementById('t').value=""; clearMedia(); cancelReply(); toast("Sent ✅"); load();
+  }catch(e){ toast("Failed: "+e.message); }
+  btn.disabled=false; document.getElementById('s').innerText="";
 }
 document.getElementById('t').addEventListener('keydown',e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); post(); }});
 document.getElementById('t').addEventListener('input',function(){ this.style.height='auto'; this.style.height=this.scrollHeight+'px'; });
 function subscribeRealtime(){
   supabaseClient.channel('messages-ch').on('postgres_changes',{event:'*',schema:'public',table:'messages'},()=>load()).subscribe();
-  supabaseClient.channel('presence-ch').on('postgres_changes',{event:'*',schema:'public',table:'presence'},()=>{}).subscribe();
 }
-function cleanText(t){if(!t) return "";return String(t).replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim();}
+
+// --- CLEAN TEXT - REMOVE TEST POPUP COMPLETELY ---
+function isTestAd(t){
+  if(!t) return true;
+  let s=String(t).toLowerCase();
+  return s.includes("test popup") || s.includes("your ads system is working") || s.includes("ads system is working");
+}
+function cleanText(t){
+  if(!t) return "";
+  let s=String(t);
+  if(isTestAd(s)) return "";
+  return s.replace(/Test popup.*/gi,"").replace(/Your ads system is working.*/gi,"").trim();
+}
 function findNews(d){let keys=['news','updates','announcements','fosnalic_news','fosnalic_updates','fosnalic_announcements','latestUpdates','posts'];for(let k of keys){if(Array.isArray(d[k])&&d[k].length) return d[k];}return [];}
 function scrollUpdates(dir){document.getElementById('updatesList').scrollBy({left:dir*254,behavior:'smooth'});}
 function dedupeUpdates(list){let seen=new Set(); return list.filter(n=>{let key=typeof n==='string'?cleanText(n).toLowerCase():cleanText(n.title||"").toLowerCase(); if(!key||seen.has(key)) return false; seen.add(key); return true;});}
@@ -252,9 +313,22 @@ async function loadAdmin(){
   try{
     let d={}; try{let r=await fetch(`/api/storage?key=fosnalic-data?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let dd=await r.json();if(dd&&(dd.ticker?.length||findNews(dd).length)) d=dd;}}catch(e){}
     if(!d.ticker?.length && !findNews(d).length){let r=await fetch(`https://gist.githubusercontent.com/fosnalictechs/${GIST_ID}/raw/fosnalic-data.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok){let gd=await r.json();d={...d,...gd};}}
-    if(d.ticker?.length){let uniq=[...new Set(d.ticker.map(x=>cleanText(typeof x==='string'?x:(x.title||x.text||""))).filter(Boolean))];let txt=uniq.join(' ••• ')+' ••• ';document.getElementById('ticker').innerHTML=`<span>${txt} ${txt}</span>`;}
+    if(d.ticker?.length){
+      let uniq=[...new Set(d.ticker.map(x=>cleanText(typeof x==='string'?x:(x.title||x.text||""))).filter(Boolean))];
+      if(uniq.length){let txt=uniq.join(' ••• ')+' ••• ';document.getElementById('ticker').innerHTML=`<span>${txt} ${txt}</span>`;} else {document.getElementById('ticker').innerHTML=`<span>Welcome to FOSNALIC Depot • Fast reply • Organized threads ••• </span>`;}
+    }
     renderUpdates(d);
-    function renderAd(ad,el){if(!ad) return;let c=document.getElementById(el);if(!c) return;let txt=cleanText(ad.text||"");if(ad.text&&String(ad.text).trim().startsWith('<')){c.innerHTML=ad.text;return;}let h='';if(ad.image) h+=`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.image}" style="max-width:100%;border-radius:8px"></a>`;if(txt) h+=`<div style="padding:8px">${txt}</div>`;if(h) c.innerHTML=h;}
+    // ADS - IF TEST TEXT, SHOW NOTHING
+    function renderAd(ad,el){
+      let c=document.getElementById(el); if(!c) return; c.innerHTML="";
+      if(!ad) return;
+      if(isTestAd(ad.text) && !ad.image) return;
+      if(ad.text && String(ad.text).trim().startsWith('<') && !isTestAd(ad.text)){c.innerHTML=ad.text;return;}
+      let txt=cleanText(ad.text||"");
+      let h=''; if(ad.image && !isTestAd(ad.image)) h+=`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.image}" style="max-width:100%;border-radius:8px"></a>`;
+      if(txt) h+=`<div style="padding:8px">${txt}</div>`;
+      if(h) c.innerHTML=h;
+    }
     renderAd(d.adHeader,'adHeaderContent');renderAd(d.adMiddle,'adMiddleContent');renderAd(d.adFooter,'adFooterContent');
     if(d.ads&&Array.isArray(d.ads)){renderAd(d.ads[0],'adHeaderContent');renderAd(d.ads[1],'adMiddleContent');renderAd(d.ads[2],'adFooterContent');}
   }catch(e){console.log(e);}
