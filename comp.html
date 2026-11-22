@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FOSNALIC — Telegram Browser Video Compressor</title>
-  <!-- Single-threaded FFmpeg.wasm UMD build (works without COOP/COEP headers on Cloudflare Pages) -->
   <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.min.js"></script>
   <style>
@@ -24,6 +23,7 @@
     .err { color: #f87171; }
     .info { color: #38bdf8; }
   </style>
+  <script src="/fosnalic-announcements.js" defer></script>
 </head>
 <body>
   <div class="card">
@@ -32,9 +32,12 @@
     <label for="token">Telegram Bot API Token (Saved locally in browser)</label>
     <input type="password" id="token" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz" />
 
+    <label for="webhookUrl">Website Endpoint to Notify After Resend (Optional)</label>
+    <input type="text" id="webhookUrl" placeholder="/api/video-compressed" />
+
     <div class="row">
       <div style="flex:1">
-        <label for="crf">Compression (CRF: 23=High, 28=Balanced, 32=Small)</label>
+        <label for="crf">Compression (CRF: 24=High, 28=Balanced, 32=Small)</label>
         <select id="crf">
           <option value="24">24 — High Quality</option>
           <option value="28" selected>28 — Balanced (Recommended)</option>
@@ -63,19 +66,26 @@
     const { FFmpeg } = FFmpegWASM;
     const { fetchFile, toBlobURL } = FFmpegUtil;
 
+    const MAX_BOT_API_BYTES = 20 * 1024 * 1024;
     const tokenInput = document.getElementById("token");
+    const webhookInput = document.getElementById("webhookUrl");
     const crfSelect = document.getElementById("crf");
     const scaleSelect = document.getElementById("scale");
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const logEl = document.getElementById("log");
 
-    // Load saved token from localStorage
     tokenInput.value = localStorage.getItem("tg_bot_token") || "";
+    webhookInput.value = localStorage.getItem("fosnalic_site_webhook") || "/api/video-compressed";
+
+    const siteChannel = new BroadcastChannel("fosnalic_video_events");
 
     let ffmpeg = null;
     let isRunning = false;
+    let isProcessing = false;
     let lastUpdateId = 0;
+    let pollAbortController = null;
+    const queue = [];
 
     function log(msg, cls = "") {
       const time = new Date().toLocaleTimeString();
@@ -90,9 +100,12 @@
       if (ffmpeg) return;
       log("Loading FFmpeg.wasm core (~30MB, cached after first load)...", "info");
       ffmpeg = new FFmpeg();
+      let lastPct = -1;
       ffmpeg.on("progress", ({ progress }) => {
-        if (progress > 0 && progress <= 1) {
-          log(`Encoding: ${Math.round(progress * 100)}%`);
+        const pct = Math.round(progress * 100);
+        if (pct > 0 && pct <= 100 && pct !== lastPct && pct % 15 === 0) {
+          lastPct = pct;
+          log(`Encoding: ${pct}%`);
         }
       });
 
@@ -104,110 +117,185 @@
       log("FFmpeg engine ready.", "ok");
     }
 
-    async function tgApi(token, method, body = null, isFormData = false) {
+    async function tgApi(token, method, body = null, isFormData = false, signal = undefined) {
       const url = `https://api.telegram.org/bot${token}/${method}`;
       const opts = body
         ? {
             method: "POST",
             headers: isFormData ? {} : { "Content-Type": "application/json" },
             body: isFormData ? body : JSON.stringify(body),
+            signal,
           }
-        : { method: "GET" };
+        : { method: "GET", signal };
       const res = await fetch(url, opts);
       return res.json();
     }
 
-    async function processVideo(token, chatId, fileId, originalSize) {
+    // Fast push/notify to your website right after Telegram resend succeeds
+    async function notifyWebsiteAfterResend(payload) {
+      siteChannel.postMessage({ type: "VIDEO_RESENT", payload });
+      window.dispatchEvent(new CustomEvent("fosnalic:video-resent", { detail: payload }));
+
+      const endpoint = webhookInput.value.trim();
+      if (!endpoint) return;
+
       try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          keepalive: true,
+        });
+        if (res.ok) {
+          log(`Sent completion event to website (${endpoint}).`, "ok");
+        } else {
+          log(`Website endpoint returned HTTP ${res.status}.`, "err");
+        }
+      } catch (err) {
+        log(`Could not reach website endpoint (${endpoint}): ${err.message}`, "err");
+      }
+    }
+
+    async function processVideo(token, job) {
+      const { chatId, fileId, originalSize, fileName } = job;
+      const jobId = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const inName = `in_${jobId}.mp4`;
+      const outName = `out_${jobId}.mp4`;
+      const startedAt = performance.now();
+
+      try {
+        if (originalSize && originalSize > MAX_BOT_API_BYTES) {
+          throw new Error("File exceeds Telegram Bot API's 20 MB download limit.");
+        }
+
         await tgApi(token, "sendMessage", {
           chat_id: chatId,
-          text: "⏳ Video received by browser. Downloading & compressing...",
+          text: "⏳ Video received. Compressing & sending back fast...",
         });
 
-        // 1. Get file path from Telegram
         const fileInfo = await tgApi(token, "getFile", { file_id: fileId });
         if (!fileInfo.ok) {
-          throw new Error(fileInfo.description || "Failed to get file (must be under 20MB).");
+          throw new Error(fileInfo.description || "Failed to get file info from Telegram.");
         }
 
         const fileUrl = `https://api.telegram.org/file/bot${token}/${fileInfo.result.file_path}`;
-        log(`Downloading ${(originalSize / 1024 / 1024).toFixed(2)} MB from Telegram...`, "info");
+        log(`Downloading ${(originalSize / 1024 / 1024).toFixed(2)} MB...`, "info");
 
-        // 2. Write input video into FFmpeg virtual memory
-        await ffmpeg.writeFile("input.mp4", await fetchFile(fileUrl));
+        await ffmpeg.writeFile(inName, await fetchFile(fileUrl));
 
-        // 3. Compress using H.264 + AAC
         const crf = crfSelect.value;
         const width = scaleSelect.value;
-        const scaleFilter = width === "iw" ? "scale=trunc(iw/2)*2:trunc(ih/2)*2" : `scale='min(${width},iw)':-2`;
+        const scaleFilter =
+          width === "iw"
+            ? "scale=trunc(iw/2)*2:trunc(ih/2)*2"
+            : `scale='min(${width},iw)':-2`;
 
-        log(`Compressing (CRF ${crf}, scale ${width})...`, "info");
+        log(`Compressing fast (CRF ${crf}, max width ${width})...`, "info");
         await ffmpeg.exec([
-          "-i", "input.mp4",
+          "-i", inName,
+          "-map", "0:v:0",
+          "-map", "0:a?",
           "-vf", scaleFilter,
           "-c:v", "libx264",
           "-crf", crf,
-          "-preset", "veryfast",
+          "-preset", "ultrafast",
           "-c:a", "aac",
           "-b:a", "96k",
           "-movflags", "+faststart",
-          "output.mp4"
+          outName,
         ]);
 
-        // 4. Read compressed output
-        const data = await ffmpeg.readFile("output.mp4");
+        const data = await ffmpeg.readFile(outName);
         const compressedBlob = new Blob([data.buffer], { type: "video/mp4" });
-        const newSizeMB = (compressedBlob.size / 1024 / 1024).toFixed(2);
-        const oldSizeMB = (originalSize / 1024 / 1024).toFixed(2);
+        const newSizeMB = Number((compressedBlob.size / 1024 / 1024).toFixed(2));
+        const oldSizeMB = Number((originalSize / 1024 / 1024).toFixed(2));
+        const elapsedSec = Number(((performance.now() - startedAt) / 1000).toFixed(1));
 
-        log(`Done! Reduced ${oldSizeMB} MB → ${newSizeMB} MB. Sending back...`, "ok");
+        log(`Done in ${elapsedSec}s! ${oldSizeMB} MB → ${newSizeMB} MB. Resending...`, "ok");
 
-        // 5. Upload compressed video back to Telegram chat
         const formData = new FormData();
         formData.append("chat_id", chatId);
         formData.append("video", compressedBlob, "compressed.mp4");
-        formData.append("caption", `✅ Compressed: ${oldSizeMB} MB → ${newSizeMB} MB`);
+        formData.append("caption", `✅ Compressed in ${elapsedSec}s: ${oldSizeMB} MB → ${newSizeMB} MB`);
         formData.append("supports_streaming", "true");
 
         const sendRes = await tgApi(token, "sendVideo", formData, true);
         if (!sendRes.ok) throw new Error(sendRes.description);
 
-        log("Compressed video sent back to Telegram!", "ok");
+        log("Compressed video resent to Telegram! Notifying website...", "ok");
 
-        // Cleanup virtual filesystem memory
-        await ffmpeg.deleteFile("input.mp4");
-        await ffmpeg.deleteFile("output.mp4");
+        // Immediately send completion data to your website after resending
+        await notifyWebsiteAfterResend({
+          status: "resent",
+          chatId,
+          fileId,
+          fileName: fileName || "video.mp4",
+          oldSizeMB,
+          newSizeMB,
+          elapsedSec,
+          timestamp: new Date().toISOString(),
+        });
       } catch (err) {
         log(`Error: ${err.message}`, "err");
         await tgApi(token, "sendMessage", {
           chat_id: chatId,
           text: `❌ Compression failed: ${err.message}`,
-        });
+        }).catch(() => {});
+      } finally {
+        await ffmpeg.deleteFile(inName).catch(() => {});
+        await ffmpeg.deleteFile(outName).catch(() => {});
       }
     }
 
-    async function pollLoop() {
-      const token = tokenInput.value.trim();
+    async function drainQueue(token) {
+      if (isProcessing) return;
+      isProcessing = true;
+      while (queue.length > 0) {
+        const nextJob = queue.shift();
+        await processVideo(token, nextJob);
+      }
+      isProcessing = false;
+    }
+
+    async function pollLoop(token) {
       while (isRunning) {
+        pollAbortController = new AbortController();
         try {
-          const data = await tgApi(token, `getUpdates?offset=${lastUpdateId + 1}&timeout=20`);
-          if (data.ok && data.result.length > 0) {
+          const data = await tgApi(
+            token,
+            "getUpdates",
+            { offset: lastUpdateId + 1, timeout: 20 },
+            false,
+            pollAbortController.signal
+          );
+          if (data.ok && Array.isArray(data.result)) {
             for (const update of data.result) {
               lastUpdateId = update.update_id;
               const msg = update.message;
               if (!msg) continue;
 
-              // Check for video or video sent as document
-              const video = msg.video || (msg.document && msg.document.mime_type?.startsWith("video/") ? msg.document : null);
+              const video =
+                msg.video ||
+                (msg.document && msg.document.mime_type?.startsWith("video/")
+                  ? msg.document
+                  : null);
+
               if (video) {
-                log(`New video received from chat ${msg.chat.id}`, "info");
-                await processVideo(token, msg.chat.id, video.file_id, video.file_size || 0);
+                log(`Queued video from chat ${msg.chat.id} (${queue.length + 1} in queue)`, "info");
+                queue.push({
+                  chatId: msg.chat.id,
+                  fileId: video.file_id,
+                  originalSize: video.file_size || 0,
+                  fileName: video.file_name || "video.mp4",
+                });
+                drainQueue(token);
               }
             }
           }
         } catch (err) {
+          if (err.name === "AbortError" || !isRunning) break;
           log(`Polling error: ${err.message}`, "err");
-          await new Promise(r => setTimeout(r, 3000));
+          await new Promise((r) => setTimeout(r, 3000));
         }
       }
     }
@@ -216,16 +304,16 @@
       const token = tokenInput.value.trim();
       if (!token) return alert("Please enter your Telegram Bot Token.");
       localStorage.setItem("tg_bot_token", token);
+      localStorage.setItem("fosnalic_site_webhook", webhookInput.value.trim());
 
       startBtn.disabled = true;
       try {
         await initFFmpeg();
-        // Ensure no webhook is blocking getUpdates
         await tgApi(token, "deleteWebhook");
         isRunning = true;
         stopBtn.disabled = false;
         log("Listening for videos sent to your bot...", "ok");
-        pollLoop();
+        pollLoop(token);
       } catch (e) {
         log(`Init failed: ${e.message}`, "err");
         startBtn.disabled = false;
@@ -234,10 +322,12 @@
 
     stopBtn.addEventListener("click", () => {
       isRunning = false;
+      if (pollAbortController) pollAbortController.abort();
       startBtn.disabled = false;
       stopBtn.disabled = true;
       log("Stopped listening.", "err");
     });
   </script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f4043667174c4bcf8ce18fb577700342"}'></script>
 </body>
 </html>
