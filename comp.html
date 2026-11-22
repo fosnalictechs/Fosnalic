@@ -9,7 +9,7 @@
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body { background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; display: flex; justify-content: center; }
-    .card { width: 100%; max-width: 620px; background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+    .card { width: 100%; max-width: 640px; background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
     h2 { margin-top: 0; font-size: 1.25rem; color: #38bdf8; }
     label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; }
     input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 14px; }
@@ -18,7 +18,7 @@
     .btn-start { background: #0284c7; color: #fff; }
     .btn-stop { background: #dc2626; color: #fff; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-    #log { background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; height: 240px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; line-height: 1.5; margin-top: 16px; white-space: pre-wrap; }
+    #log { background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; height: 280px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; line-height: 1.5; margin-top: 16px; white-space: pre-wrap; }
     .feed { margin-top: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
     .feed-title { font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
     .feed-item { font-size: 0.8rem; padding: 6px 0; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
@@ -26,6 +26,7 @@
     .ok { color: #4ade80; }
     .err { color: #f87171; }
     .info { color: #38bdf8; }
+    .warn { color: #fbbf24; }
   </style>
   <script src="/fosnalic-announcements.js" defer></script>
 </head>
@@ -63,7 +64,7 @@
       <button id="stopBtn" class="btn-stop" disabled>Stop</button>
     </div>
 
-    <div id="log">Ready. Enter your Bot Token and click "Start Listening".</div>
+    <div id="log">Initializing...</div>
 
     <div class="feed">
       <div class="feed-title">Recent Resends Sent to API</div>
@@ -107,6 +108,15 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
+    window.addEventListener("error", (e) => {
+      log(`Uncaught error: ${e.message} (${e.filename || "inline"}:${e.lineno || 0})`, "err");
+    });
+
+    window.addEventListener("unhandledrejection", (e) => {
+      const reason = e.reason?.message || String(e.reason || "Unknown promise rejection");
+      log(`Unhandled promise rejection: ${reason}`, "err");
+    });
+
     function addFeedItem(payload) {
       if (!hasFeedItems) {
         feedListEl.innerHTML = "";
@@ -122,12 +132,19 @@
       if (ffmpeg) return;
       log("Loading FFmpeg.wasm core (~30MB, cached after first load)...", "info");
       ffmpeg = new FFmpeg();
+
       let lastPct = -1;
       ffmpeg.on("progress", ({ progress }) => {
         const pct = Math.round(progress * 100);
         if (pct > 0 && pct <= 100 && pct !== lastPct && pct % 15 === 0) {
           lastPct = pct;
           log(`Encoding: ${pct}%`);
+        }
+      });
+
+      ffmpeg.on("log", ({ message }) => {
+        if (message && (message.includes("Error") || message.includes("error") || message.includes("Invalid"))) {
+          log(`FFmpeg: ${message}`, "warn");
         }
       });
 
@@ -149,8 +166,14 @@
             signal,
           }
         : { method: "GET", signal };
+
       const res = await fetch(url, opts);
-      return res.json();
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        throw new Error(`Non-JSON Telegram response (HTTP ${res.status}): ${text.slice(0, 160)}`);
+      }
     }
 
     async function notifyWebsiteAfterResend(payload) {
@@ -159,7 +182,10 @@
       addFeedItem(payload);
 
       const endpoint = webhookInput.value.trim();
-      if (!endpoint) return;
+      if (!endpoint) {
+        log("No API endpoint set; skipped HTTP POST.", "warn");
+        return;
+      }
 
       try {
         const res = await fetch(endpoint, {
@@ -202,9 +228,11 @@
         }
 
         const fileUrl = `https://api.telegram.org/file/bot${token}/${fileInfo.result.file_path}`;
-        log(`Downloading ${(originalSize / 1024 / 1024).toFixed(2)} MB...`, "info");
+        log(`Downloading ${originalSize ? (originalSize / 1024 / 1024).toFixed(2) + " MB" : "video"}...`, "info");
 
-        await ffmpeg.writeFile(inName, await fetchFile(fileUrl));
+        const rawBytes = await fetchFile(fileUrl);
+        const actualSize = originalSize || rawBytes.byteLength || 0;
+        await ffmpeg.writeFile(inName, rawBytes);
 
         const crf = crfSelect.value;
         const width = scaleSelect.value;
@@ -231,7 +259,7 @@
         const data = await ffmpeg.readFile(outName);
         const compressedBlob = new Blob([data.buffer], { type: "video/mp4" });
         const newSizeMB = Number((compressedBlob.size / 1024 / 1024).toFixed(2));
-        const oldSizeMB = Number((originalSize / 1024 / 1024).toFixed(2));
+        const oldSizeMB = Number((actualSize / 1024 / 1024).toFixed(2));
         const elapsedSec = Number(((performance.now() - startedAt) / 1000).toFixed(1));
 
         log(`Done in ${elapsedSec}s! ${oldSizeMB} MB → ${newSizeMB} MB. Resending...`, "ok");
@@ -259,25 +287,32 @@
           timestamp: new Date().toISOString(),
         });
       } catch (err) {
-        log(`Error: ${err.message}`, "err");
+        log(`Process error: ${err.message}`, "err");
         await tgApi(token, "sendMessage", {
           chat_id: chatId,
           text: `❌ Compression failed: ${err.message}`,
         }).catch(() => {});
       } finally {
-        await ffmpeg.deleteFile(inName).catch(() => {});
-        await ffmpeg.deleteFile(outName).catch(() => {});
+        if (ffmpeg) {
+          await ffmpeg.deleteFile(inName).catch(() => {});
+          await ffmpeg.deleteFile(outName).catch(() => {});
+        }
       }
     }
 
     async function drainQueue(token) {
       if (isProcessing) return;
       isProcessing = true;
-      while (queue.length > 0) {
-        const nextJob = queue.shift();
-        await processVideo(token, nextJob);
+      try {
+        while (queue.length > 0) {
+          const nextJob = queue.shift();
+          await processVideo(token, nextJob);
+        }
+      } catch (err) {
+        log(`Queue error: ${err.message}`, "err");
+      } finally {
+        isProcessing = false;
       }
-      isProcessing = false;
     }
 
     async function pollLoop(token) {
@@ -291,11 +326,21 @@
             false,
             pollAbortController.signal
           );
-          if (data.ok && Array.isArray(data.result)) {
+
+          if (!data.ok) {
+            log(`Telegram getUpdates error: ${data.description || "Unknown error"}`, "err");
+            await new Promise((r) => setTimeout(r, 3000));
+            continue;
+          }
+
+          if (Array.isArray(data.result) && data.result.length > 0) {
             for (const update of data.result) {
               lastUpdateId = update.update_id;
-              const msg = update.message;
-              if (!msg) continue;
+              const msg = update.message || update.channel_post || update.edited_message;
+              if (!msg) {
+                log(`Update ${update.update_id} has no message payload.`, "warn");
+                continue;
+              }
 
               const video =
                 msg.video ||
@@ -303,16 +348,19 @@
                   ? msg.document
                   : null);
 
-              if (video) {
-                log(`Queued video from chat ${msg.chat.id} (${queue.length + 1} in queue)`, "info");
-                queue.push({
-                  chatId: msg.chat.id,
-                  fileId: video.file_id,
-                  originalSize: video.file_size || 0,
-                  fileName: video.file_name || "video.mp4",
-                });
-                drainQueue(token);
+              if (!video) {
+                log(`Message in chat ${msg.chat?.id ?? "unknown"} is not a video (${Object.keys(msg).join(", ")}).`, "info");
+                continue;
               }
+
+              log(`Video received from chat ${msg.chat.id} (${video.file_name || "video.mp4"}). Queueing...`, "info");
+              queue.push({
+                chatId: msg.chat.id,
+                fileId: video.file_id,
+                originalSize: video.file_size || 0,
+                fileName: video.file_name || "video.mp4",
+              });
+              drainQueue(token);
             }
           }
         } catch (err) {
@@ -323,25 +371,42 @@
       }
     }
 
-    startBtn.addEventListener("click", async () => {
+    async function startWorker(isAuto = false) {
       const token = tokenInput.value.trim();
-      if (!token) return alert("Please enter your Telegram Bot Token.");
+      if (!token) {
+        log(isAuto ? "Auto-listen skipped: no saved bot token found." : "Please enter your Telegram Bot Token.", "warn");
+        if (!isAuto) alert("Please enter your Telegram Bot Token.");
+        return;
+      }
+
+      if (isRunning) return;
+
       localStorage.setItem("tg_bot_token", token);
       localStorage.setItem("fosnalic_site_webhook", webhookInput.value.trim());
 
       startBtn.disabled = true;
       try {
+        log(isAuto ? "Auto-starting worker..." : "Starting worker...", "info");
         await initFFmpeg();
-        await tgApi(token, "deleteWebhook");
+
+        const wh = await tgApi(token, "deleteWebhook");
+        if (!wh.ok) {
+          throw new Error(`deleteWebhook failed: ${wh.description || "Unknown error"}`);
+        }
+
         isRunning = true;
         stopBtn.disabled = false;
         log("Listening for videos sent to your bot...", "ok");
         pollLoop(token);
       } catch (e) {
-        log(`Init failed: ${e.message}`, "err");
+        log(`Startup error: ${e.message}`, "err");
+        isRunning = false;
         startBtn.disabled = false;
+        stopBtn.disabled = true;
       }
-    });
+    }
+
+    startBtn.addEventListener("click", () => startWorker(false));
 
     stopBtn.addEventListener("click", () => {
       isRunning = false;
@@ -349,6 +414,14 @@
       startBtn.disabled = false;
       stopBtn.disabled = true;
       log("Stopped listening.", "err");
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (tokenInput.value.trim()) {
+        startWorker(true);
+      } else {
+        log("Ready. Enter your Bot Token and click 'Start Listening'.", "info");
+      }
     });
   </script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f4043667174c4bcf8ce18fb577700342"}'></script>
