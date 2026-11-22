@@ -9,7 +9,7 @@
   <style>
     * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
     body { background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; display: flex; justify-content: center; }
-    .card { width: 100%; max-width: 600px; background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+    .card { width: 100%; max-width: 620px; background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
     h2 { margin-top: 0; font-size: 1.25rem; color: #38bdf8; }
     label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; }
     input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; margin-bottom: 14px; }
@@ -18,7 +18,11 @@
     .btn-start { background: #0284c7; color: #fff; }
     .btn-stop { background: #dc2626; color: #fff; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-    #log { background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; height: 260px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; line-height: 1.5; margin-top: 16px; white-space: pre-wrap; }
+    #log { background: #020617; border: 1px solid #334155; border-radius: 8px; padding: 12px; height: 240px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; line-height: 1.5; margin-top: 16px; white-space: pre-wrap; }
+    .feed { margin-top: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
+    .feed-title { font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+    .feed-item { font-size: 0.8rem; padding: 6px 0; border-bottom: 1px solid #1e293b; color: #e2e8f0; }
+    .feed-item:last-child { border-bottom: none; }
     .ok { color: #4ade80; }
     .err { color: #f87171; }
     .info { color: #38bdf8; }
@@ -32,7 +36,7 @@
     <label for="token">Telegram Bot API Token (Saved locally in browser)</label>
     <input type="password" id="token" placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz" />
 
-    <label for="webhookUrl">Website Endpoint to Notify After Resend (Optional)</label>
+    <label for="webhookUrl">Website API Endpoint</label>
     <input type="text" id="webhookUrl" placeholder="/api/video-compressed" />
 
     <div class="row">
@@ -60,6 +64,11 @@
     </div>
 
     <div id="log">Ready. Enter your Bot Token and click "Start Listening".</div>
+
+    <div class="feed">
+      <div class="feed-title">Recent Resends Sent to API</div>
+      <div id="feedList">None yet.</div>
+    </div>
   </div>
 
   <script>
@@ -74,6 +83,7 @@
     const startBtn = document.getElementById("startBtn");
     const stopBtn = document.getElementById("stopBtn");
     const logEl = document.getElementById("log");
+    const feedListEl = document.getElementById("feedList");
 
     tokenInput.value = localStorage.getItem("tg_bot_token") || "";
     webhookInput.value = localStorage.getItem("fosnalic_site_webhook") || "/api/video-compressed";
@@ -85,6 +95,7 @@
     let isProcessing = false;
     let lastUpdateId = 0;
     let pollAbortController = null;
+    let hasFeedItems = false;
     const queue = [];
 
     function log(msg, cls = "") {
@@ -94,6 +105,17 @@
       span.textContent = `[${time}] ${msg}`;
       logEl.appendChild(span);
       logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function addFeedItem(payload) {
+      if (!hasFeedItems) {
+        feedListEl.innerHTML = "";
+        hasFeedItems = true;
+      }
+      const row = document.createElement("div");
+      row.className = "feed-item";
+      row.textContent = `${payload.fileName} (${payload.oldSizeMB} MB → ${payload.newSizeMB} MB in ${payload.elapsedSec}s) — chat ${payload.chatId}`;
+      feedListEl.prepend(row);
     }
 
     async function initFFmpeg() {
@@ -131,10 +153,10 @@
       return res.json();
     }
 
-    // Fast push/notify to your website right after Telegram resend succeeds
     async function notifyWebsiteAfterResend(payload) {
       siteChannel.postMessage({ type: "VIDEO_RESENT", payload });
       window.dispatchEvent(new CustomEvent("fosnalic:video-resent", { detail: payload }));
+      addFeedItem(payload);
 
       const endpoint = webhookInput.value.trim();
       if (!endpoint) return;
@@ -146,13 +168,14 @@
           body: JSON.stringify(payload),
           keepalive: true,
         });
+        const data = await res.json().catch(() => ({}));
         if (res.ok) {
-          log(`Sent completion event to website (${endpoint}).`, "ok");
+          log(`API acknowledged (${endpoint}) at ${data.receivedAt || "now"}.`, "ok");
         } else {
-          log(`Website endpoint returned HTTP ${res.status}.`, "err");
+          log(`API returned HTTP ${res.status}: ${data.error || "Unknown error"}`, "err");
         }
       } catch (err) {
-        log(`Could not reach website endpoint (${endpoint}): ${err.message}`, "err");
+        log(`Could not reach API (${endpoint}): ${err.message}`, "err");
       }
     }
 
@@ -222,13 +245,13 @@
         const sendRes = await tgApi(token, "sendVideo", formData, true);
         if (!sendRes.ok) throw new Error(sendRes.description);
 
-        log("Compressed video resent to Telegram! Notifying website...", "ok");
+        log("Compressed video resent to Telegram! Sending to API...", "ok");
 
-        // Immediately send completion data to your website after resending
         await notifyWebsiteAfterResend({
           status: "resent",
           chatId,
           fileId,
+          compressedFileId: sendRes.result?.video?.file_id || null,
           fileName: fileName || "video.mp4",
           oldSizeMB,
           newSizeMB,
