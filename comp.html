@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOSNALIC High-Speed Compressor</title>
+<title>FOSNALIC Compressor</title>
 <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
 <style>
@@ -47,7 +47,7 @@ button:disabled{background:#555}
 </div>
 <div class="card">
 <label>Activity Log</label>
-<div id="logs" style="max-height:200px;overflow-y:auto"></div>
+<div id="logs" style="max-height:250px;overflow-y:auto"></div>
 </div>
 </div>
 
@@ -63,7 +63,7 @@ button:disabled{background:#555}
 
 <script>
 const { FFmpeg } = window.FFmpeg;
-const { fetchFile, toBlobURL } = window.FFmpegUtil;
+const { fetchFile } = window.FFmpegUtil;
 
 let ffmpeg = null;
 let botToken = localStorage.getItem('fosnalic_token') || '';
@@ -144,7 +144,7 @@ async function startBot(){
     const me=await apiCall('getMe');
     if(!me.ok) throw new Error(me.description||'Invalid token');
     log(`Connected as @${me.result.username}`,'success');
-    els.status.textContent='Ready - Waiting for video'; els.status.style.color='var(--success)';
+    els.status.textContent='Ready - Send a video to your bot'; els.status.style.color='var(--success)';
     if(!polling){ polling=true; pollUpdates(); }
   }catch(e){
     log(`Connection failed: ${e.message}`,'error');
@@ -162,7 +162,7 @@ async function pollUpdates(){
       const data=await res.json();
       if(data.ok){
         for(const update of data.result){
-          lastUpdateId=update.update_id+1; // FIX: +1 or you get same update forever
+          lastUpdateId=update.update_id+1;
           if(update.message?.video){
             processVideo(update.message).catch(err=>log(`Error: ${err.message}`,'error'));
           }
@@ -195,8 +195,10 @@ async function ensureFFmpeg(){
     setProgress(pct,`Encoding: ${Math.round(pct)}%`);
   });
   log('Loading FFmpeg...');
-  const base='https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.4/dist/umd';
-  await ffmpeg.load({ coreURL: await toBlobURL(`${base}/ffmpeg-core.js`,'text/javascript'), wasmURL: await toBlobURL(`${base}/ffmpeg-core.wasm`,'application/wasm') });
+  await ffmpeg.load({
+    coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+    wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
+  });
   log('FFmpeg loaded.');
 }
 
@@ -209,14 +211,14 @@ async function processVideo(msg){
   const fileName=msg.video.file_name||'video.mp4';
   log(`Received video. Getting file path...`);
   try{
-    // FIX: Must call getFile first
     const fileInfo=await apiCall('getFile',{file_id:fileId});
     if(!fileInfo.ok) throw new Error(fileInfo.description);
     const filePath=fileInfo.result.file_path;
     const fileUrl=`https://api.telegram.org/file/bot${botToken}/${filePath}`;
     const resp=await fetch(fileUrl);
     const blob=await resp.blob();
-    log(`Downloaded ${(blob.size/1024/1024).toFixed(2)} MB`);
+    const originalSizeMB = (blob.size/1024/1024).toFixed(2);
+    log(`Downloaded ${originalSizeMB} MB`);
     const {width,height}=await getVideoDimensions(blob);
     log(`Source: ${width}x${height}`);
 
@@ -231,14 +233,26 @@ async function processVideo(msg){
     const data=await ffmpeg.readFile('output.mp4');
     await ffmpeg.deleteFile('input.mp4');
     await ffmpeg.deleteFile('output.mp4');
+    const newSizeMB = (data.length/1024/1024).toFixed(2);
     setProgress(100,'Uploading...');
-    log('Uploading...');
+    log(`Encoded: ${originalSizeMB} MB -> ${newSizeMB} MB. Uploading...`);
     const fd=new FormData();
     fd.append('chat_id',chatId);
     fd.append('video', new Blob([data.buffer],{type:'video/mp4'}), fileName);
     const up=await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`,{method:'POST',body:fd});
     const upJson=await up.json();
     if(!upJson.ok) throw new Error(upJson.description);
+
+    // Notify your Pages Function - MUST use leading / because page is at /comp
+    try{
+      await fetch('/api/video-compressor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: fileName, newSizeMB: parseFloat(newSizeMB), originalSizeMB: parseFloat(originalSizeMB), chatId: chatId, at: new Date().toISOString() })
+      });
+      log('Event saved to server','success');
+    }catch(e){ log('Could not save event: '+e.message,'error'); }
+
     log('Done!','success');
     els.status.textContent='Ready'; els.status.style.color='var(--success)';
   }catch(e){
