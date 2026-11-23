@@ -24,18 +24,18 @@ button.green{background:#4caf50} button.grey{background:#444}
 <h1>⚡ FOSNALIC Compressor</h1>
 
 <div class="card">
-<label>1. YOUR BOT TOKEN (always visible here)</label>
+<label>1. YOUR BOT TOKEN</label>
 <input type="text" id="tokenInput" placeholder="123456:ABC-DEF..." autocomplete="off">
 <button id="startBtn">✅ SAVE TOKEN & CONNECT</button>
 <button id="clearBtn" class="grey">Clear Token</button>
-<div style="margin-top:12px"><b>Status:</b> <span id="connectionStatus" style="color:yellow">Waiting for token...</span></div>
+<div style="margin-top:12px"><b>Status:</b> <span id="connectionStatus" style="color:yellow">Loading...</span></div>
 <div id="debugInfo" style="font-size:.75rem;color:#888;margin-top:8px"></div>
 <div id="chatInfo" style="font-size:.85rem;color:#4caf50;margin-top:8px"></div>
 </div>
 
 <div class="card">
 <label>2. TEST BOT - It will send YOU a message</label>
-<p style="font-size:.85rem;color:#aaa">First send ANY message to your bot on Telegram (like "hi"), then click below. The bot will reply to you to prove it works.</p>
+<p style="font-size:.85rem;color:#aaa">First send ANY message to your bot on Telegram (like "hi"), then click below.</p>
 <button id="testMsgBtn" class="green">📩 SEND TEST MESSAGE TO ME</button>
 <button id="testConnBtn">🔍 TEST CONNECTION</button>
 </div>
@@ -60,6 +60,7 @@ const { FFmpeg } = window.FFmpeg;
 const { fetchFile } = window.FFmpegUtil;
 let ffmpeg=null, botToken=localStorage.getItem('fosnalic_token')||'', lastUpdateId=0, isProcessing=false, polling=false, lastChatId=null;
 let currentQuality=parseInt(localStorage.getItem('fosnalic_quality'))||23;
+
 const els={
  tokenInput:document.getElementById('tokenInput'),
  startBtn:document.getElementById('startBtn'),
@@ -72,14 +73,20 @@ const els={
  testMsgBtn:document.getElementById('testMsgBtn'),
  testConnBtn:document.getElementById('testConnBtn')
 };
-function log(m,t='info'){ const d=document.createElement('div'); d.className='log-entry '+t; d.textContent=`[${new Date().toLocaleTimeString()}] ${m}`; els.logs.prepend(d); }
+
+function log(m,t='info'){
+  const d=document.createElement('div');
+  d.className='log-entry '+t;
+  d.textContent='['+new Date().toLocaleTimeString()+'] '+m;
+  els.logs.prepend(d);
+}
 function setStatus(t,c){ els.status.textContent=t; els.status.style.color=c; }
+
 function init(){
   els.debug.textContent='SharedArrayBuffer: '+(typeof SharedArrayBuffer!=='undefined'?'YES ✅':'NO ❌ - _headers missing');
   els.quality.value=currentQuality;
   els.quality.onchange=e=>{ currentQuality=parseInt(e.target.value); localStorage.setItem('fosnalic_quality',currentQuality); };
-  if(botToken){ els.tokenInput.value=botToken; log('Token loaded from storage. Click SAVE TOKEN & CONNECT'); setStatus('Token found - click SAVE TOKEN & CONNECT','#ff9800'); }
-  else{ log('No token saved. Paste token above.'); }
+
   els.startBtn.onclick=()=>{
     const t=els.tokenInput.value.trim();
     if(!t||!t.includes(':')){ log('Invalid token - must contain :','error'); setStatus('Invalid token','#f44336'); return; }
@@ -89,32 +96,55 @@ function init(){
   els.testConnBtn.onclick=()=>startBot();
   els.testMsgBtn.onclick=sendTestMessage;
   els.tokenInput.onkeydown=e=>{ if(e.key==='Enter') els.startBtn.click(); };
+
+  // AUTO-LOGIN FROM LINK ?token=...
+  const urlToken=new URLSearchParams(window.location.search).get('token');
+  if(urlToken){
+    botToken=urlToken.trim();
+    localStorage.setItem('fosnalic_token',botToken);
+    els.tokenInput.value=botToken;
+    log('Token found in link! Auto-connecting...');
+    startBot();
+    return;
+  }
+
+  if(botToken){
+    els.tokenInput.value=botToken;
+    log('Token found in storage. Click SAVE TOKEN & CONNECT');
+    setStatus('Token found - click SAVE TOKEN & CONNECT','#ff9800');
+  }else{
+    log('No token saved. Paste token above or use ?token= link');
+    setStatus('Waiting for token...','#ff9800');
+  }
 }
+
 async function apiCall(method, params={}){
-  const fd=new FormData(); for(const [k,v] of Object.entries(params)) fd.append(k,v);
-  const res=await fetch(`https://api.telegram.org/bot${botToken}/${method}`,{method:'POST',body:fd});
+  const fd=new FormData();
+  for(const [k,v] of Object.entries(params)) fd.append(k,v);
+  const res=await fetch('https://api.telegram.org/bot'+botToken+'/'+method,{method:'POST',body:fd});
   return res.json();
 }
+
 async function startBot(){
   if(!botToken){ log('Paste token first','error'); return; }
   setStatus('Connecting...','#ff9800');
   try{
     const me=await apiCall('getMe');
     if(!me.ok) throw new Error(me.description||'Invalid token');
-    log(`✅ Connected as @${me.result.username}`,'success');
-    setStatus(`✅ Ready as @${me.result.username} - Send video to bot`,'#4caf50');
+    log('✅ Connected as @'+me.result.username,'success');
+    setStatus('✅ Ready as @'+me.result.username+' - Send video to bot','#4caf50');
     if(!polling){ polling=true; pollUpdates(); }
   }catch(e){ log('❌ '+e.message,'error'); setStatus('❌ Failed: '+e.message,'#f44336'); }
 }
+
 async function sendTestMessage(){
   if(!botToken){ log('Paste token first','error'); return; }
   log('Looking for your chat... Send "hi" to bot first if not found');
   try{
-    // Get your chat_id from last message you sent to bot
-    const res=await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?timeout=5&offset=${lastUpdateId}`);
+    const res=await fetch('https://api.telegram.org/bot'+botToken+'/getUpdates?timeout=5&offset='+lastUpdateId);
     const data=await res.json();
     if(data.ok){
-      for(const u of data.result){ lastUpdateId=u.update_id+1; if(u.message?.chat?.id) lastChatId=u.message.chat.id; }
+      for(const u of data.result){ lastUpdateId=u.update_id+1; if(u.message && u.message.chat && u.message.chat.id) lastChatId=u.message.chat.id; }
     }
     if(!lastChatId){ log('❌ I cannot find you. Go to Telegram, send "hi" to your bot, then click this button again.','error'); return; }
     els.chatInfo.textContent='Your Chat ID: '+lastChatId;
@@ -123,42 +153,73 @@ async function sendTestMessage(){
     else log('Failed to send: '+send.description,'error');
   }catch(e){ log('Error: '+e.message,'error'); }
 }
+
 async function pollUpdates(){
   log('Listening... Keep this page OPEN');
   while(polling){
     try{
-      const res=await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?timeout=20&offset=${lastUpdateId}`);
+      const res=await fetch('https://api.telegram.org/bot'+botToken+'/getUpdates?timeout=20&offset='+lastUpdateId);
       const data=await res.json();
       if(data.ok){
         for(const u of data.result){
           lastUpdateId=u.update_id+1;
-          if(u.message?.chat?.id) lastChatId=u.message.chat.id;
-          if(u.message?.video){ log('📹 VIDEO RECEIVED! Compressing...','success'); processVideo(u.message); }
-          else if(u.message?.text){ log(`Message from you: "${u.message.text}"`); }
+          if(u.message && u.message.chat && u.message.chat.id) lastChatId=u.message.chat.id;
+          if(u.message && u.message.video){ log('📹 VIDEO RECEIVED! Compressing...','success'); processVideo(u.message); }
+          else if(u.message && u.message.text){ log('Message from you: "'+u.message.text+'"'); }
         }
       }
-      if(!data.result?.length) await new Promise(r=>setTimeout(r,1500));
+      if(!data.result || !data.result.length) await new Promise(r=>setTimeout(r,1500));
     }catch(e){ log('Poll error: '+e.message,'error'); await new Promise(r=>setTimeout(r,5000)); }
   }
 }
-async function getDims(blob){ return new Promise(res=>{ const u=URL.createObjectURL(blob); const v=document.createElement('video'); v.preload='metadata'; v.onloadedmetadata=()=>{ URL.revokeObjectURL(u); res({width:v.videoWidth}); }; v.onerror=()=>res({width:1280}); v.src=u; }); }
-async function ensureFFmpeg(){ if(ffmpeg) return; ffmpeg=new FFmpeg(); log('Loading FFmpeg... 10-20 sec'); await ffmpeg.load({coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'}); log('FFmpeg loaded ✅'); }
+
+async function getDims(blob){
+  return new Promise(res=>{
+    const u=URL.createObjectURL(blob);
+    const v=document.createElement('video');
+    v.preload='metadata';
+    v.onloadedmetadata=()=>{ URL.revokeObjectURL(u); res({width:v.videoWidth}); };
+    v.onerror=()=>res({width:1280});
+    v.src=u;
+  });
+}
+async function ensureFFmpeg(){
+  if(ffmpeg) return;
+  ffmpeg=new FFmpeg();
+  log('Loading FFmpeg... 10-20 sec');
+  await ffmpeg.load({
+    coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+    wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
+  });
+  log('FFmpeg loaded ✅');
+}
 async function processVideo(msg){
-  if(isProcessing) return; isProcessing=true; setStatus('⏳ Processing...','#ff9800');
+  if(isProcessing) return;
+  isProcessing=true; setStatus('⏳ Processing...','#ff9800');
   try{
-    const info=await apiCall('getFile',{file_id:msg.video.file_id}); if(!info.ok) throw new Error(info.description);
-    const blob=await (await fetch(`https://api.telegram.org/file/bot${botToken}/${info.result.file_path}`)).blob();
-    log(`Downloaded ${(blob.size/1024/1024).toFixed(2)} MB`);
-    const {width}=await getDims(blob); await ensureFFmpeg();
+    const info=await apiCall('getFile',{file_id:msg.video.file_id});
+    if(!info.ok) throw new Error(info.description);
+    const blob=await (await fetch('https://api.telegram.org/file/bot'+botToken+'/'+info.result.file_path)).blob();
+    log('Downloaded '+(blob.size/1024/1024).toFixed(2)+' MB');
+    const dims=await getDims(blob);
+    await ensureFFmpeg();
     await ffmpeg.writeFile('input.mp4', await fetchFile(blob));
-    let vf='format=yuv420p'; if(blob.size>15000000&&width>1280) vf='scale=1280:-2,format=yuv420p';
+    let vf='format=yuv420p';
+    if(blob.size>15000000 && dims.width>1280) vf='scale=1280:-2,format=yuv420p';
     await ffmpeg.exec(['-i','input.mp4','-c:v','libx264','-crf',String(currentQuality),'-preset','ultrafast','-c:a','aac','-b:a','96k','-vf',vf,'-movflags','+faststart','-y','output.mp4']);
-    const data=await ffmpeg.readFile('output.mp4'); await ffmpeg.deleteFile('input.mp4'); await ffmpeg.deleteFile('output.mp4');
-    log(`Encoded to ${(data.length/1024/1024).toFixed(2)} MB. Uploading...`);
-    const fd=new FormData(); fd.append('chat_id',msg.chat.id); fd.append('video',new Blob([data.buffer],{type:'video/mp4'}),'compressed.mp4');
-    const up=await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`,{method:'POST',body:fd}); const upJ=await up.json(); if(!upJ.ok) throw new Error(upJ.description);
-    log('✅ DONE! Check Telegram!','success'); setStatus('✅ Ready','#4caf50');
-  }catch(e){ log('❌ '+e.message,'error'); setStatus('❌ Error','#f44336'); } finally{ isProcessing=false; }
+    const data=await ffmpeg.readFile('output.mp4');
+    await ffmpeg.deleteFile('input.mp4'); await ffmpeg.deleteFile('output.mp4');
+    log('Encoded to '+(data.length/1024/1024).toFixed(2)+' MB. Uploading...');
+    const fd=new FormData();
+    fd.append('chat_id',msg.chat.id);
+    fd.append('video',new Blob([data.buffer],{type:'video/mp4'}),'compressed.mp4');
+    const up=await fetch('https://api.telegram.org/bot'+botToken+'/sendVideo',{method:'POST',body:fd});
+    const upJ=await up.json();
+    if(!upJ.ok) throw new Error(upJ.description);
+    log('✅ DONE! Check Telegram!','success');
+    setStatus('✅ Ready','#4caf50');
+  }catch(e){ log('❌ '+e.message,'error'); setStatus('❌ Error','#f44336'); }
+  finally{ isProcessing=false; }
 }
 init();
 </script>
