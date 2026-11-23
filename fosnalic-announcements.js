@@ -5,10 +5,14 @@
   const EXCLUDED_PATHS = new Set([
     "/admin.html", "/auth.html", "/dashboard.html", "/depot.html",
     "/my-files.html", "/phone.html", "/phone_sync.html", "/storage.html",
-    "/tracker.html",
+    "/tracker.html", "/my-apps.html",
   ]);
   const path = location.pathname.toLowerCase();
   if (EXCLUDED_PATHS.has(path)) return;
+
+  // NEW: If page has data-no-ads, stop everything - no ticker, no ads
+  if (document.body && document.body.hasAttribute("data-no-ads")) return;
+  if (document.querySelector('meta[name="fos-no-ads"]')) return;
 
   const cleanTicker = (items) => [...new Set((Array.isArray(items) ? items : [])
     .filter((item) => typeof item === "string" && item.trim())
@@ -39,7 +43,6 @@
       document.body.insertBefore(bar, document.body.firstChild);
     }
 
-    // Preserve each page's existing ticker container/style and update only its message content.
     if (target.id === "tickerContent" && !target.parentElement?.id.includes("tickerTrack")) {
       target.textContent = messages.join(" ••• ");
       return;
@@ -54,14 +57,15 @@
     })[char]);
   }
 
-  // Keep the page's native swipe/auto-scroll updates section as the sole updates UI.
-  // Remove only the duplicate section previously injected by this shared script.
   function renderUpdates() {
     document.querySelectorAll("[data-fos-shared-updates]").forEach((section) => section.remove());
   }
 
   function renderAds(data) {
-    // Existing page-specific ad systems and explicit ad slots remain in control.
+    // FIX: Never show ads on admin / private pages, even if called
+    if (EXCLUDED_PATHS.has(location.pathname.toLowerCase())) return;
+    if (document.body && document.body.hasAttribute("data-no-ads")) return;
+
     if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
         document.querySelector("#adHeader, #adMiddle, #adFooter, [data-fos-shared-ads]")) return;
 
@@ -77,12 +81,12 @@
 
     const container = document.createElement("div");
     container.setAttribute("data-fos-shared-ads", "true");
-    container.style.cssText = "width:min(100% - 32px,1100px);margin:18px auto;display:grid;gap:12px";
+    // FIX: position:relative + clear:both stops overlapping your work
+    container.style.cssText = "width:min(100% - 32px,1100px);margin:18px auto;display:grid;gap:12px;position:relative;z-index:1;clear:both";
 
     const makeAd = (html) => {
       const card = document.createElement("aside");
-      card.style.cssText = "position:relative;box-sizing:border-box;padding:14px 18px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#222;box-shadow:0 4px 16px rgba(0,0,.08);overflow-wrap:anywhere";
-      // Ad markup is authored in the site's admin. Text-only entries are escaped.
+      card.style.cssText = "position:relative;box-sizing:border-box;padding:14px 18px;border:1px solid #E2E8F0;border-radius:12px;background:#fff;color:#222;box-shadow:0 4px 16px rgba(0,0,0,.08);overflow-wrap:anywhere";
       card.innerHTML = html;
       return card;
     };
@@ -90,7 +94,6 @@
     for (const { value } of slotAds) container.appendChild(makeAd(value.text));
     for (const ad of listAds.slice(0, 4)) container.appendChild(makeAd(ad.html || ad.text));
 
-    // Keep ad content out of the way of page controls and preserve all existing content.
     const footer = document.querySelector("footer");
     document.body.insertBefore(container, footer || null);
   }
@@ -106,7 +109,6 @@
       renderUpdates();
       renderAds(data);
     } catch (error) {
-      // Announcements are optional; leave the page intact if the feed is unavailable.
       console.warn("FOSNALIC shared content could not be loaded.", error);
     }
   }
