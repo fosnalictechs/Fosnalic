@@ -2,17 +2,18 @@
   "use strict";
 
   const DEFAULT_GIST_ID = "0f719dd44c5c9bce109b0bce767f9162";
-  const EXCLUDED_PATHS = new Set([
-    "/admin.html", "/auth.html", "/dashboard.html", "/depot.html",
-    "/my-files.html", "/phone.html", "/phone_sync.html", "/storage.html",
-    "/tracker.html", "/my-apps.html",
-  ]);
-  const path = location.pathname.toLowerCase();
-  if (EXCLUDED_PATHS.has(path)) return;
 
-  // NEW: If page has data-no-ads, stop everything - no ticker, no ads
-  if (document.body && document.body.hasAttribute("data-no-ads")) return;
-  if (document.querySelector('meta[name="fos-no-ads"]')) return;
+  // >>> YOU DECIDE HERE <<<
+  // ONLY these pages get ads. No other page gets ads.
+  // To allow a new page, just add its name here, e.g. "/new-page.html",
+  const ALLOWED_AD_PAGES = new Set([
+    "/",
+    "/index.html",
+    "/services.html",
+    "/extra-help.html",
+  ]);
+
+  const path = location.pathname.toLowerCase();
 
   const cleanTicker = (items) => [...new Set((Array.isArray(items) ? items : [])
     .filter((item) => typeof item === "string" && item.trim())
@@ -22,14 +23,12 @@
   function renderTicker(items) {
     const messages = cleanTicker(items);
     if (!messages.length) return;
-
     const selectors = ["#tickerTrack", "#tickerContent", "#fosTickerTrack", "#ticker", ".ticker", ".ticker-track"];
     let target = null;
     for (const selector of selectors) {
       target = document.querySelector(selector);
       if (target) break;
     }
-
     if (!target) {
       const bar = document.createElement("div");
       bar.setAttribute("data-fos-shared-ticker", "true");
@@ -42,7 +41,6 @@
       document.head.appendChild(style);
       document.body.insertBefore(bar, document.body.firstChild);
     }
-
     if (target.id === "tickerContent" && !target.parentElement?.id.includes("tickerTrack")) {
       target.textContent = messages.join(" ••• ");
       return;
@@ -62,9 +60,9 @@
   }
 
   function renderAds(data) {
-    // FIX: Never show ads on admin / private pages, even if called
-    if (EXCLUDED_PATHS.has(location.pathname.toLowerCase())) return;
-    if (document.body && document.body.hasAttribute("data-no-ads")) return;
+    // >>> YOUR CONTROL <<<
+    // If page is NOT in your list, NO ads. Stop here.
+    if (!ALLOWED_AD_PAGES.has(path)) return;
 
     if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
         document.querySelector("#adHeader, #adMiddle, #adFooter, [data-fos-shared-ads]")) return;
@@ -81,7 +79,6 @@
 
     const container = document.createElement("div");
     container.setAttribute("data-fos-shared-ads", "true");
-    // FIX: position:relative + clear:both stops overlapping your work
     container.style.cssText = "width:min(100% - 32px,1100px);margin:18px auto;display:grid;gap:12px;position:relative;z-index:1;clear:both";
 
     const makeAd = (html) => {
