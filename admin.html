@@ -1547,7 +1547,8 @@ async function uploadApkDirect() {
             xhr.timeout = 300000; // 5 minutes
             xhr.setRequestHeader('Authorization', authVal);
             xhr.setRequestHeader('Accept', 'application/vnd.github+json');
-            xhr.setRequestHeader('Content-Type', file.type || 'application/vnd.android.package-archive');
+            // Use application/octet-stream to avoid empty file.type issues on Android pickers
+            xhr.setRequestHeader('Content-Type', 'application/octet-stream');
 
             xhr.upload.onprogress = (e) => {
                 if (e.lengthComputable) {
@@ -1568,7 +1569,10 @@ async function uploadApkDirect() {
                 resolve({ status: xhr.status, data: parsed });
             };
             xhr.ontimeout = () => reject(new Error('Upload timed out after 5 minutes'));
-            xhr.onerror = () => reject(new Error('Upload blocked or dropped by browser/network'));
+            xhr.onerror = () => {
+                const originInfo = window.location.protocol === 'file:' ? ' (opened via file:// — try serving over http://localhost or HTTPS)' : '';
+                reject(new Error(`Browser/network blocked POST to uploads.github.com${originInfo}. Check ad-blockers, Private DNS/VPN, or token Contents/Releases write permission.`));
+            };
             xhr.send(file); // Raw File stream — zero Base64 bloat!
         });
 
