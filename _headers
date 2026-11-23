@@ -1,11 +1,29 @@
+# Full _headers - merged version
+
 /*
-  X-Frame-Options: ALLOWALL
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
   Content-Security-Policy: frame-ancestors * 'self' https://*.netlify.app https://*.pages.dev
   Access-Control-Allow-Origin: *
   X-Robots-Tag: all
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/comp
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cache-Control: no-cache, no-store, must-revalidate
 
 /sitemap.xml
   Content-Type: application/xml
+  Cache-Control: public, max-age=3600
 
 /robots.txt
   Content-Type: text/plain
+  Cache-Control: public, max-age=3600
+
+/api/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: POST, OPTIONS
+  Access-Control-Allow-Headers: Content-Type
+  Cache-Control: no-store
