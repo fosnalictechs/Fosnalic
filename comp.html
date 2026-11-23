@@ -7,127 +7,113 @@
 <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/ffmpeg.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
 <style>
-:root{--bg:#121212;--card:#1e1e1e;--text:#e0e0e0;--accent:#0088cc;--success:#4caf50;--error:#f44336;--border:#333}
-body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:20px;display:flex;justify-content:center}
+body{font-family:system-ui,sans-serif;background:#121212;color:#e0e0e0;margin:0;padding:20px;display:flex;justify-content:center}
 .container{width:100%;max-width:500px;display:flex;flex-direction:column;gap:15px}
-h1{text-align:center;font-size:1.5rem}
-.card{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border)}
-label{display:block;margin-bottom:8px;font-weight:bold;font-size:.9rem}
-input,select{width:100%;padding:12px;background:#2c2c2c;border:1px solid var(--border);border-radius:6px;color:#fff;font-size:1rem;box-sizing:border-box}
-button{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer;font-weight:bold}
-button:hover{background:#006699}
+h1{text-align:center}
+.card{background:#1e1e1e;border-radius:12px;padding:20px;border:1px solid #333}
+label{display:block;margin-bottom:8px;font-weight:bold}
+input,select{width:100%;padding:12px;background:#2c2c2c;border:1px solid #333;border-radius:6px;color:#fff;box-sizing:border-box}
+button{width:100%;padding:12px;background:#0088cc;color:#fff;border:none;border-radius:6px;font-weight:bold;cursor:pointer;margin-top:10px}
 button:disabled{background:#555}
-.status-bar{height:6px;background:#333;border-radius:3px;overflow:hidden;margin-top:10px;display:none}
-.progress-fill{height:100%;background:var(--success);width:0%}
 .log-entry{font-size:.85rem;padding:5px 0;border-bottom:1px solid #333;word-break:break-word}
-.log-entry.error{color:var(--error)}.log-entry.success{color:var(--success)}.log-entry.info{color:#aaa}
+.log-entry.error{color:#f44336}.log-entry.success{color:#4caf50}
 .hidden{display:none!important}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;justify-content:center;align-items:center;z-index:1000}
-.modal-content{background:var(--card);padding:30px;border-radius:12px;width:90%;max-width:400px;text-align:center}
-.link-btn{background:none!important;color:#0088cc!important;padding:5px!important;font-size:.85rem!important;text-decoration:underline}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:flex;justify-content:center;align-items:center;z-index:1000}
+.modal-content{background:#1e1e1e;padding:30px;border-radius:12px;width:90%;max-width:400px;text-align:center}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>⚡ FOSNALIC Compressor</h1>
 <div class="card">
-<label>Status</label>
-<div id="connectionStatus" style="color:#aaa">Initializing...</div>
-<div class="status-bar" id="progressBarContainer"><div class="progress-fill" id="progressBar"></div></div>
-<div id="progressText" style="font-size:.8rem;margin-top:5px;text-align:center"></div>
-<button id="changeTokenBtn" class="link-btn">Change / Clear Token</button>
+<b>Status:</b> <span id="connectionStatus" style="color:yellow">Loading page...</span>
+<div id="debugInfo" style="font-size:.75rem;color:#888;margin-top:8px"></div>
+<button id="testBtn">🔍 TEST CONNECTION NOW</button>
+<button id="changeTokenBtn" style="background:#444">Change / Clear Token</button>
 </div>
 <div class="card">
 <label>Compression Level</label>
 <select id="qualitySelect">
 <option value="23">Balanced (Recommended)</option>
-<option value="28">Aggressive (Smaller Size)</option>
-<option value="18">Lossless (Larger Size)</option>
+<option value="28">Aggressive (Smaller)</option>
+<option value="18">Lossless (Larger)</option>
 </select>
 </div>
 <div class="card">
-<label>Activity Log</label>
-<div id="logs" style="max-height:250px;overflow-y:auto"></div>
+<label>Activity Log - Watch here when you send video</label>
+<div id="logs" style="max-height:300px;overflow-y:auto"></div>
 </div>
 </div>
 
 <div id="authModal" class="modal-overlay hidden">
 <div class="modal-content">
-<h2>Welcome</h2>
-<p>Enter your Telegram Bot Token to start.</p>
+<h2>Enter Bot Token</h2>
+<p>Paste your token from @BotFather</p>
 <input type="text" id="tokenInput" placeholder="123456:ABC-DEF..." autocomplete="off">
-<button id="startBtn" style="margin-top:15px">Start Compressor</button>
-<p id="authError" style="color:#f44336;font-size:.85rem"></p>
+<button id="startBtn">Start Compressor</button>
+<p id="authError" style="color:#f44336"></p>
+<p style="font-size:.8rem;color:#888">Token is saved only in YOUR browser, not on server.</p>
 </div>
 </div>
 
 <script>
 const { FFmpeg } = window.FFmpeg;
 const { fetchFile } = window.FFmpegUtil;
+let ffmpeg=null, botToken=localStorage.getItem('fosnalic_token')||'', lastUpdateId=0, isProcessing=false, polling=false;
+let currentQuality=parseInt(localStorage.getItem('fosnalic_quality'))||23;
 
-let ffmpeg = null;
-let botToken = localStorage.getItem('fosnalic_token') || '';
-let lastUpdateId = 0;
-let isProcessing = false;
-let currentQuality = parseInt(localStorage.getItem('fosnalic_quality')) || 23;
-let polling = false;
-
-const els = {
-  modal: document.getElementById('authModal'),
-  tokenInput: document.getElementById('tokenInput'),
-  startBtn: document.getElementById('startBtn'),
-  authError: document.getElementById('authError'),
-  status: document.getElementById('connectionStatus'),
-  progressBarContainer: document.getElementById('progressBarContainer'),
-  progressBar: document.getElementById('progressBar'),
-  progressText: document.getElementById('progressText'),
-  logs: document.getElementById('logs'),
-  quality: document.getElementById('qualitySelect'),
-  changeTokenBtn: document.getElementById('changeTokenBtn')
+const els={
+ modal:document.getElementById('authModal'),
+ tokenInput:document.getElementById('tokenInput'),
+ startBtn:document.getElementById('startBtn'),
+ authError:document.getElementById('authError'),
+ status:document.getElementById('connectionStatus'),
+ debug:document.getElementById('debugInfo'),
+ logs:document.getElementById('logs'),
+ quality:document.getElementById('qualitySelect'),
+ testBtn:document.getElementById('testBtn'),
+ changeTokenBtn:document.getElementById('changeTokenBtn')
 };
 
-function log(msg, type='info'){
-  const div=document.createElement('div');
-  div.className=`log-entry ${type}`;
-  div.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;
-  els.logs.prepend(div);
+function log(msg,type='info'){
+  const d=document.createElement('div'); d.className='log-entry '+type;
+  d.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`;
+  els.logs.prepend(d);
+  console.log(msg);
 }
-function setProgress(pct,text){
-  els.progressBarContainer.style.display='block';
-  els.progressBar.style.width=`${pct}%`;
-  els.progressText.textContent=text||'';
-}
-function showModal(msg=''){
-  els.authError.textContent=msg;
-  els.modal.classList.remove('hidden');
-}
+function setStatus(txt,color){ els.status.textContent=txt; els.status.style.color=color; }
+function showModal(msg=''){ els.authError.textContent=msg; els.modal.classList.remove('hidden'); }
 function hideModal(){ els.modal.classList.add('hidden'); }
 
+// === THIS IS THE FIX: Never stay on Initializing ===
 function init(){
-  els.quality.value = currentQuality;
-  els.quality.addEventListener('change', e=>{
-    currentQuality=parseInt(e.target.value);
-    localStorage.setItem('fosnalic_quality', currentQuality);
-    log(`Quality changed to CRF ${currentQuality}`);
-  });
-  els.startBtn.addEventListener('click', handleAuth);
-  els.tokenInput.addEventListener('keydown', e=>{ if(e.key==='Enter') handleAuth(); });
-  els.changeTokenBtn.addEventListener('click', ()=>{
-    localStorage.removeItem('fosnalic_token');
-    botToken=''; polling=false;
-    els.tokenInput.value='';
-    showModal('Token cleared. Enter a new one.');
-  });
-  if(botToken){ startBot(); } else { showModal(); }
+  log('Page loaded. Checking token...');
+  els.debug.textContent = 'SharedArrayBuffer: ' + (typeof SharedArrayBuffer !== 'undefined' ? 'YES ✅' : 'NO ❌ - _headers NOT working');
+  els.quality.value=currentQuality;
+  els.quality.onchange=e=>{ currentQuality=parseInt(e.target.value); localStorage.setItem('fosnalic_quality',currentQuality); log('Quality CRF '+currentQuality); };
+  els.startBtn.onclick=handleAuth;
+  els.tokenInput.onkeydown=e=>{ if(e.key==='Enter') handleAuth(); };
+  els.testBtn.onclick=()=>{ log('Manual test clicked...'); startBot(); };
+  els.changeTokenBtn.onclick=()=>{
+    localStorage.removeItem('fosnalic_token'); botToken=''; polling=false;
+    els.tokenInput.value=''; setStatus('Token cleared - enter new one','#ff9800'); showModal('Token cleared. Enter new one.');
+  };
+
+  if(!botToken){
+    setStatus('No token - please enter token','#ff9800');
+    log('No token found. Showing popup...','error');
+    showModal();
+  } else {
+    log('Token found in storage, testing it...');
+    startBot();
+  }
 }
 
 async function handleAuth(){
-  const token=els.tokenInput.value.trim();
-  if(!token || !token.includes(':')){ els.authError.textContent='Invalid token. Format: 123456:ABC...'; return; }
-  botToken=token;
-  localStorage.setItem('fosnalic_token', token);
-  els.authError.textContent='';
-  hideModal();
+  const t=els.tokenInput.value.trim();
+  if(!t || !t.includes(':')){ els.authError.textContent='Invalid token. Must contain :'; return; }
+  botToken=t; localStorage.setItem('fosnalic_token',t);
+  hideModal(); log('Token saved. Connecting...');
   startBot();
 }
 
@@ -139,38 +125,42 @@ async function apiCall(method, params={}){
 }
 
 async function startBot(){
+  setStatus('Connecting to Telegram...','#ff9800');
   try{
-    els.status.textContent='Connecting...'; els.status.style.color='#aaa';
+    log('Calling getMe...');
     const me=await apiCall('getMe');
-    if(!me.ok) throw new Error(me.description||'Invalid token');
-    log(`Connected as @${me.result.username}`,'success');
-    els.status.textContent='Ready - Send a video to your bot'; els.status.style.color='var(--success)';
+    if(!me.ok) throw new Error(me.description||'Invalid token - check token from @BotFather');
+    log(`✅ Connected as @${me.result.username}`,'success');
+    setStatus('✅ Ready - Send a video to your bot','#4caf50');
     if(!polling){ polling=true; pollUpdates(); }
   }catch(e){
-    log(`Connection failed: ${e.message}`,'error');
-    els.status.textContent='Connection Failed'; els.status.style.color='var(--error)';
-    localStorage.removeItem('fosnalic_token');
-    botToken=''; polling=false;
-    showModal('Token invalid. Enter correct token.');
+    log(`❌ Connection failed: ${e.message}`,'error');
+    setStatus('❌ Connection Failed - See log','#f44336');
+    // Don't delete token immediately, show error so user can see it
+    showModal('Failed: '+e.message);
   }
 }
 
 async function pollUpdates(){
+  log('Started listening for videos... Keep this page OPEN');
   while(polling){
     try{
-      const res=await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?timeout=25&offset=${lastUpdateId}`);
+      const res=await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?timeout=20&offset=${lastUpdateId}`);
       const data=await res.json();
       if(data.ok){
-        for(const update of data.result){
-          lastUpdateId=update.update_id+1;
-          if(update.message?.video){
-            processVideo(update.message).catch(err=>log(`Error: ${err.message}`,'error'));
+        for(const u of data.result){
+          lastUpdateId=u.update_id+1;
+          if(u.message?.video){
+            log('📹 VIDEO RECEIVED! Starting compression...','success');
+            processVideo(u.message).catch(err=>log('Error: '+err.message,'error'));
+          } else if(u.message?.text){
+            log(`Message received: "${u.message.text}" - send a VIDEO, not text`);
           }
         }
       }
-      if(!data.result?.length) await new Promise(r=>setTimeout(r,1000));
+      if(!data.result?.length) await new Promise(r=>setTimeout(r,1500));
     }catch(e){
-      log(`Poll error: ${e.message}`,'error');
+      log('Poll error: '+e.message,'error');
       await new Promise(r=>setTimeout(r,5000));
     }
   }
@@ -178,91 +168,50 @@ async function pollUpdates(){
 
 async function getVideoDimensions(blob){
   return new Promise(resolve=>{
-    const url=URL.createObjectURL(blob);
-    const v=document.createElement('video');
+    const url=URL.createObjectURL(blob); const v=document.createElement('video');
     v.preload='metadata';
     v.onloadedmetadata=()=>{ URL.revokeObjectURL(url); resolve({width:v.videoWidth,height:v.videoHeight}); };
-    v.onerror=()=>resolve({width:1280,height:720});
-    v.src=url;
+    v.onerror=()=>resolve({width:1280,height:720}); v.src=url;
   });
 }
-
 async function ensureFFmpeg(){
   if(ffmpeg) return;
   ffmpeg=new FFmpeg();
-  ffmpeg.on('progress', ({progress})=>{
-    const pct=Math.min(100,Math.max(0,progress*100));
-    setProgress(pct,`Encoding: ${Math.round(pct)}%`);
-  });
-  log('Loading FFmpeg...');
+  log('Loading FFmpeg... This takes 10-20 sec first time');
   await ffmpeg.load({
-    coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-    wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
+    coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+    wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm',
   });
-  log('FFmpeg loaded.');
+  log('FFmpeg loaded ✅');
 }
-
 async function processVideo(msg){
-  if(isProcessing){ log('Skipping: already processing one video'); return; }
-  isProcessing=true;
-  els.status.textContent='Processing...'; els.status.style.color='#ff9800';
-  const chatId=msg.chat.id;
-  const fileId=msg.video.file_id;
-  const fileName=msg.video.file_name||'video.mp4';
-  log(`Received video. Getting file path...`);
+  if(isProcessing){ log('Busy, skipping'); return; }
+  isProcessing=true; setStatus('⏳ Processing video...','#ff9800');
   try{
-    const fileInfo=await apiCall('getFile',{file_id:fileId});
-    if(!fileInfo.ok) throw new Error(fileInfo.description);
-    const filePath=fileInfo.result.file_path;
-    const fileUrl=`https://api.telegram.org/file/bot${botToken}/${filePath}`;
-    const resp=await fetch(fileUrl);
-    const blob=await resp.blob();
-    const originalSizeMB = (blob.size/1024/1024).toFixed(2);
-    log(`Downloaded ${originalSizeMB} MB`);
-    const {width,height}=await getVideoDimensions(blob);
-    log(`Source: ${width}x${height}`);
-
+    const chatId=msg.chat.id; const fileId=msg.video.file_id;
+    const info=await apiCall('getFile',{file_id:fileId});
+    if(!info.ok) throw new Error(info.description);
+    const url=`https://api.telegram.org/file/bot${botToken}/${info.result.file_path}`;
+    log('Downloading video from Telegram...');
+    const blob=await (await fetch(url)).blob();
+    log(`Downloaded ${(blob.size/1024/1024).toFixed(2)} MB`);
+    const {width}=await getVideoDimensions(blob);
     await ensureFFmpeg();
-    let scaleFilter='format=yuv420p';
-    if(blob.size>15000000 && width>1280){
-      scaleFilter=`scale=1280:-2,format=yuv420p`;
-    }
     await ffmpeg.writeFile('input.mp4', await fetchFile(blob));
-    log(`Encoding CRF ${currentQuality}...`);
-    await ffmpeg.exec(['-i','input.mp4','-c:v','libx264','-crf',String(currentQuality),'-preset','ultrafast','-c:a','aac','-b:a','96k','-vf',scaleFilter,'-movflags','+faststart','-y','output.mp4']);
+    log(`Encoding CRF ${currentQuality}... Please wait`);
+    let vf='format=yuv420p';
+    if(blob.size>15000000 && width>1280) vf='scale=1280:-2,format=yuv420p';
+    await ffmpeg.exec(['-i','input.mp4','-c:v','libx264','-crf',String(currentQuality),'-preset','ultrafast','-c:a','aac','-b:a','96k','-vf',vf,'-movflags','+faststart','-y','output.mp4']);
     const data=await ffmpeg.readFile('output.mp4');
-    await ffmpeg.deleteFile('input.mp4');
-    await ffmpeg.deleteFile('output.mp4');
-    const newSizeMB = (data.length/1024/1024).toFixed(2);
-    setProgress(100,'Uploading...');
-    log(`Encoded: ${originalSizeMB} MB -> ${newSizeMB} MB. Uploading...`);
-    const fd=new FormData();
-    fd.append('chat_id',chatId);
-    fd.append('video', new Blob([data.buffer],{type:'video/mp4'}), fileName);
+    await ffmpeg.deleteFile('input.mp4'); await ffmpeg.deleteFile('output.mp4');
+    log(`Encoded to ${(data.length/1024/1024).toFixed(2)} MB. Uploading back...`);
+    const fd=new FormData(); fd.append('chat_id',chatId); fd.append('video', new Blob([data.buffer],{type:'video/mp4'}), 'compressed.mp4');
     const up=await fetch(`https://api.telegram.org/bot${botToken}/sendVideo`,{method:'POST',body:fd});
-    const upJson=await up.json();
-    if(!upJson.ok) throw new Error(upJson.description);
-
-    // Notify your Pages Function - MUST use leading / because page is at /comp
-    try{
-      await fetch('/api/video-compressor', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fileName: fileName, newSizeMB: parseFloat(newSizeMB), originalSizeMB: parseFloat(originalSizeMB), chatId: chatId, at: new Date().toISOString() })
-      });
-      log('Event saved to server','success');
-    }catch(e){ log('Could not save event: '+e.message,'error'); }
-
-    log('Done!','success');
-    els.status.textContent='Ready'; els.status.style.color='var(--success)';
-  }catch(e){
-    log(`Error: ${e.message}`,'error');
-    els.status.textContent='Error'; els.status.style.color='var(--error)';
-  }finally{
-    isProcessing=false;
-    setProgress(0,'');
-    els.progressBarContainer.style.display='none';
-  }
+    const upJ=await up.json(); if(!upJ.ok) throw new Error(upJ.description);
+    log('✅ DONE! Compressed video sent back to you!','success');
+    setStatus('✅ Ready - Send another video','#4caf50');
+  }catch(e){ log('❌ Error: '+e.message,'error'); setStatus('❌ Error - see log','#f44336'); }
+  finally{ isProcessing=false; }
 }
 init();
 </script>
