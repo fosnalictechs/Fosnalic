@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FOSNALIC Techs — Executive Control Center V5.4.4</title>
+<title>FOSNALIC Techs — Executive Control Center V6.0 Pro</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -26,104 +26,169 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', system-ui, -apple-system, sans-serif}
 body{background:var(--bg);color:var(--text-main);padding-bottom:100px;line-height:1.6}
 
-.header{background:var(--card-bg);padding:18px 28px;box-shadow:0 1px 3px rgba(0,0,0,0.1);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto 24px;border-bottom:1px solid var(--border)}
-.header h1{font-size:1.25rem;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--primary)}
+.header{background:var(--card-bg);padding:16px 28px;box-shadow:0 1px 3px rgba(0,0,0,0.1);position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:0 auto 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--primary)}
 .header h1 i{color:var(--accent)}
+
+.toolbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 .container-fluid{max-width:1400px;margin:0 auto;padding:0 24px}
 .card{background:var(--card-bg);border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:24px;border:1px solid var(--border)}
-.card h3{color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:1.1rem;border-bottom:1px solid var(--border);padding-bottom:12px;font-weight:600}
+.card h3{color:var(--primary);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:1.1rem;border-bottom:1px solid var(--border);padding-bottom:12px;font-weight:600}
+.card h3 .title-left{display:flex;align-items:center;gap:10px}
 .card h3 i{color:var(--accent)}
 
 input,textarea,select{width:100%;padding:10px 14px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;margin:8px 0;color:var(--text-main);font-size:0.92rem;outline:none;transition:border-color 0.2s, box-shadow 0.2s}
 input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.1)}
 
-button{padding:10px 18px;border:none;border-radius:6px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:8px;font-size:0.9rem;transition:background-color 0.2s, transform 0.1s}
-button:hover{opacity:0.95}
-button:active{transform:scale(0.99)}
+button{padding:9px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:7px;font-size:0.88rem;transition:all 0.15s}
+button:hover:not(:disabled){opacity:0.92}
+button:active:not(:disabled){transform:scale(0.98)}
+button:disabled{opacity:0.45;cursor:not-allowed}
 
 .btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:hover:not(:disabled){background:var(--accent-hover)}
 .btn-dark{background:var(--primary);color:#fff}
 .btn-ghost{background:#F1F5F9;color:var(--primary);border:1px solid var(--border)}
-.btn-ghost:hover{background:#E2E8F0}
+.btn-ghost:hover:not(:disabled){background:#E2E8F0}
 .btn-danger{background:var(--danger);color:#fff}
 .btn-ok{background:var(--success);color:#fff}
+.btn-warn{background:var(--warning);color:#fff}
+.btn-xs{padding:4px 9px;font-size:0.78rem;border-radius:5px}
 
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;background:var(--card-surface);padding:6px;border-radius:8px;border:1px solid var(--border)}
-.tab{padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.88rem;color:var(--text-muted);transition:all 0.2s}
+.tab{padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.88rem;color:var(--text-muted);transition:all 0.2s;display:flex;align-items:center;gap:8px}
 .tab:hover{color:var(--primary);background:rgba(255,255,255,0.5)}
 .tab.active{background:var(--card-bg);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.badge-count{background:var(--card-surface);color:var(--text-muted);padding:2px 7px;border-radius:10px;font-size:0.75rem}
+.tab.active .badge-count{background:#DBEAFE;color:var(--accent)}
 
-.hidden{display:none}
+.hidden{display:none !important}
 .file-btn{padding:8px 14px;background:var(--card-surface);border:1px solid var(--border);border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;color:var(--primary);display:inline-flex;align-items:center;gap:6px;transition:all 0.2s}
 .file-btn:hover{border-color:var(--accent)}
 .file-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
-.file-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:6px;margin:8px 0;background:var(--card-surface)}
-.news-card{border:1px solid var(--border);border-radius:8px;padding:16px;margin:10px 0;background:var(--card-surface);display:flex;gap:16px;align-items:center}
-.news-card img{width:100px;height:75px;object-fit:cover;border-radius:6px;background:var(--border)}
+.item-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid var(--border);border-radius:8px;margin:8px 0;background:var(--card-surface);gap:12px;transition:border-color 0.2s, background 0.2s}
+.item-row:hover{border-color:#94A3B8}
+.item-row.editing{border:2px solid var(--warning);background:#FFFBEB}
+.item-row[draggable="true"]{cursor:grab}
+.item-row.dragging{opacity:0.5;border:2px dashed var(--accent)}
+
+.drag-handle{color:var(--text-muted);cursor:grab;padding:4px 6px;font-size:1rem}
+.item-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+
+.news-card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0;background:var(--card-surface);display:flex;gap:14px;align-items:center;transition:border-color 0.2s}
+.news-card:hover{border-color:#94A3B8}
+.news-card.editing{border:2px solid var(--warning);background:#FFFBEB}
+.news-card img{width:88px;height:68px;object-fit:cover;border-radius:6px;background:var(--border);flex-shrink:0}
+
+.edit-banner{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;padding:8px 14px;border-radius:6px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-size:0.86rem;font-weight:600}
 
 .ok{color:var(--success);font-weight:600}
-.err{color:var(--danger)}
+.err{color:var(--danger);font-weight:600}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr}}
 
-.app-icon-preview{width:60px;height:60px;border-radius:8px;background:var(--card-surface);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--border)}
+.app-icon-preview{width:60px;height:60px;border-radius:8px;background:var(--card-surface);display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--border);flex-shrink:0}
 .app-icon-preview img{width:100%;height:100%;object-fit:cover}
 
 .powered-badge{position:fixed;bottom:16px;right:16px;background:var(--card-bg);border:1px solid var(--border);padding:8px 16px;border-radius:20px;font-size:11px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);z-index:999;color:var(--text-muted)}
+
+/* Toast Notification */
+#toastBox{position:fixed;bottom:20px;left:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--primary);color:#fff;padding:10px 18px;border-radius:8px;font-size:0.88rem;font-weight:600;box-shadow:0 10px 15px -3px rgba(0,0,0,0.2);animation:slideIn 0.25s ease}
+.toast.ok{background:var(--success);color:#fff}
+.toast.err{background:var(--danger);color:#fff}
+@keyframes slideIn{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* Professional Code Editor styling */
 .editor-container{background:#0F172A;border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:16px;}
 .editor-toolbar{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid #334155;margin-bottom:10px;color:#94A3B8;font-size:0.85rem;}
 .editor-toolbar span{display:flex;align-items:center;gap:6px;color:#38BDF8;}
 .code-textarea{width:100%;min-height:480px;background:transparent;color:#E2E8F0;font-family:Consolas,monospace;font-size:0.88rem;border:none;outline:none;resize:vertical;line-height:1.6;}
+
+.upload-progress-wrap{display:none;margin-top:10px}
+.upload-progress-meta{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:var(--primary);margin-bottom:4px}
+.upload-progress-track{width:100%;height:9px;background:var(--card-surface);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.upload-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--success));transition:width 0.15s ease}
 </style>
 </head>
 <body>
 
+<div id="toastBox"></div>
+
 <div class="header container-fluid">
-    <h1><i class="fas fa-shield-halved"></i> FOSNALIC Techs — Executive Control Center</h1>
-    <div>
-        <span id="cfgOk" class="ok"></span> 
-        <span id="cfgErr" class="err" style="font-size:.8rem"></span>
+    <h1><i class="fas fa-shield-halved"></i> FOSNALIC Techs — Control Center <span style="font-size:0.75rem;background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:12px">PRO v6.0</span></h1>
+    <div class="toolbar-actions">
+        <button id="btnUndo" class="btn-ghost btn-xs" onclick="undo()" disabled title="Undo (Ctrl+Z)"><i class="fas fa-rotate-left"></i> Undo</button>
+        <button id="btnRedo" class="btn-ghost btn-xs" onclick="redo()" disabled title="Redo (Ctrl+Y)"><i class="fas fa-rotate-right"></i> Redo</button>
+        <button class="btn-ghost btn-xs" onclick="exportBackup()" title="Download JSON Backup"><i class="fas fa-download"></i> Backup</button>
+        <label class="btn-ghost btn-xs" style="cursor:pointer;margin:0" title="Restore JSON Backup">
+            <i class="fas fa-upload"></i> Restore
+            <input type="file" accept=".json" style="display:none" onchange="importBackup(event)">
+        </label>
+        <span id="cfgOk" class="ok" style="font-size:0.85rem;margin-left:6px"></span>
+        <span id="cfgErr" class="err" style="font-size:0.85rem"></span>
     </div>
 </div>
 
 <div class="container-fluid">
     <!-- GitHub Connection Setup -->
     <div class="card" style="border-left:4px solid var(--accent)">
-        <h3><i class="fas fa-network-wired"></i> GitHub Connection Settings</h3>
-        <div class="grid-2">
-            <input id="ghOwner" placeholder="GitHub Username (e.g. fosnalictechs)">
-            <input id="ghRepo" placeholder="Repository Name (e.g. fosnalic)">
-        </div>
-        <div class="grid-2">
-            <input id="ghBranch" placeholder="Branch (e.g. main)">
-            <input id="ghToken" type="password" placeholder="GitHub Personal Access Token (ghp_...)">
-        </div>
-        <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-            <button class="btn-primary" onclick="saveConfig()"><i class="fas fa-plug"></i> Save & Connect</button>
+        <h3>
+            <span class="title-left"><i class="fas fa-network-wired"></i> GitHub Connection Settings</span>
+            <button class="btn-ghost btn-xs" onclick="toggleConfigBody()"><i class="fas fa-eye-slash" id="cfgEyeIcon"></i> Toggle</button>
+        </h3>
+        <div id="ghConfigBody">
+            <div class="grid-2">
+                <input id="ghOwner" placeholder="GitHub Username (e.g. fosnalictechs)">
+                <input id="ghRepo" placeholder="Repository Name (e.g. fosnalic)">
+            </div>
+            <div class="grid-3">
+                <input id="ghBranch" placeholder="Branch (e.g. main)">
+                <input id="ghGistId" placeholder="Gist ID (e.g. 0f719dd4...)">
+                <input id="ghToken" type="password" placeholder="Token (ghp_... or github_pat_...)">
+            </div>
+            <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+                <button class="btn-primary" onclick="saveConfig()"><i class="fas fa-plug"></i> Save & Connect</button>
+                <button class="btn-ghost" onclick="loadData()"><i class="fas fa-rotate"></i> Sync Now</button>
+            </div>
         </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="card">
         <div class="tabs">
-            <span class="tab active" onclick="showTab('products',this)"><i class="fas fa-boxes-stacked"></i> Products</span>
-            <span class="tab" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker</span>
-            <span class="tab" onclick="showTab('ads',this)"><i class="fas fa-rectangle-ad"></i> Ads</span>
-            <span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates</span>
-            <span class="tab" onclick="showTab('apps',this)"><i class="fas fa-mobile-screen-button"></i> My Apps</span>
+            <span class="tab active" onclick="showTab('products',this)"><i class="fas fa-boxes-stacked"></i> Products <span class="badge-count" id="cnt-products">0</span></span>
+            <span class="tab" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker <span class="badge-count" id="cnt-ticker">0</span></span>
+            <span class="tab" onclick="showTab('ads',this)"><i class="fas fa-rectangle-ad"></i> Ads <span class="badge-count" id="cnt-ads">0</span></span>
+            <span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates <span class="badge-count" id="cnt-news">0</span></span>
+            <span class="tab" onclick="showTab('apps',this)"><i class="fas fa-mobile-screen-button"></i> My Apps <span class="badge-count" id="cnt-apps">0</span></span>
             <span class="tab" onclick="showTab('pages',this)"><i class="fas fa-folder-tree"></i> File Manager</span>
         </div>
 
-        <!-- Products Tab -->
+        <!-- ==================== PRODUCTS TAB ==================== -->
         <div id="tab-products">
-            <h3><i class="fas fa-box"></i> Products Manager</h3>
+            <h3>
+                <span class="title-left"><i class="fas fa-box"></i> Products Manager</span>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <select id="prodSort" style="width:auto;margin:0;padding:6px 10px;font-size:0.82rem" onchange="sortProducts()">
+                        <option value="manual">Sort: Manual / Custom</option>
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="title-asc">Sort: Title (A → Z)</option>
+                        <option value="price-asc">Sort: Price (Low → High)</option>
+                        <option value="price-desc">Sort: Price (High → Low)</option>
+                    </select>
+                </div>
+            </h3>
+
             <div style="background:#F1F5F9;padding:18px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
-                <b>Add New Product</b>
+                <div id="prodEditBanner" class="edit-banner hidden">
+                    <span><i class="fas fa-pen-to-square"></i> Editing Product: <b id="prodEditName"></b></span>
+                    <button class="btn-ghost btn-xs" onclick="cancelEditProduct()">Cancel Edit</button>
+                </div>
+                <b id="prodFormHeading">Add New Product</b>
                 <div class="grid-2">
                     <input id="prodTitle" placeholder="Product Title e.g. HP Charger 65W">
                     <input id="prodPrice" placeholder="Price e.g. 85,000 UGX">
@@ -139,25 +204,41 @@ button:active{transform:scale(0.99)}
                     <button class="btn-ghost" onclick="uploadProductImage()" style="margin-top:8px"><i class="fas fa-upload"></i> Upload Image Now</button>
                     <br><span id="prodUploadStatus" class="ok"></span>
                 </div>
-                <button class="btn-ok" style="width:100%;margin-top:8px" onclick="saveProduct()"><i class="fas fa-plus-circle"></i> Step 2: Save Product</button>
+                <button id="btnSaveProduct" class="btn-ok" style="width:100%;margin-top:8px" onclick="saveProduct()"><i class="fas fa-plus-circle"></i> Step 2: Save Product</button>
             </div>
+
+            <input id="prodSearch" placeholder="🔍 Search products by title, brand, or SKU..." oninput="renderProducts()" style="margin-bottom:12px">
             <div id="productsList"></div>
         </div>
 
-        <!-- Ticker Tab -->
+        <!-- ==================== TICKER TAB ==================== -->
         <div id="tab-ticker" class="hidden">
-            <h3><i class="fas fa-bullhorn"></i> Ticker Bar</h3>
+            <h3>
+                <span class="title-left"><i class="fas fa-bullhorn"></i> Ticker Bar</span>
+                <button class="btn-ghost btn-xs" onclick="sortTickerAZ()"><i class="fas fa-arrow-down-a-z"></i> Sort A-Z</button>
+            </h3>
+            <div id="tickerEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Ticker Message</span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditTicker()">Cancel Edit</button>
+            </div>
             <div style="display:flex;gap:10px">
-                <input id="tickerInput" placeholder="New ticker message...">
-                <button class="btn-primary" onclick="addTicker()">Add</button>
+                <input id="tickerInput" placeholder="New ticker message..." onkeydown="if(event.key==='Enter')saveTicker()">
+                <button id="btnSaveTicker" class="btn-primary" onclick="saveTicker()"><i class="fas fa-plus"></i> Add</button>
             </div>
             <div id="tickerList" style="margin-top:16px"></div>
             <button class="btn-dark" style="width:100%;margin-top:16px" onclick="fixTickerNow()"><i class="fas fa-broom"></i> Clean Old Ads from Ticker</button>
         </div>
 
-        <!-- Ads Tab -->
+        <!-- ==================== ADS TAB ==================== -->
         <div id="tab-ads" class="hidden">
-            <h3><i class="fas fa-rectangle-ad"></i> Ads Manager</h3>
+            <h3>
+                <span class="title-left"><i class="fas fa-rectangle-ad"></i> Ads Manager</span>
+                <button class="btn-ghost btn-xs" onclick="sortAdsByType()"><i class="fas fa-layer-group"></i> Group by Type</button>
+            </h3>
+            <div id="adEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Ad (<b id="adEditLabel"></b>)</span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditAd()">Cancel Edit</button>
+            </div>
             <div class="grid-2">
                 <select id="adType">
                     <option value="floating-br">Floating Bottom-Right</option>
@@ -168,24 +249,30 @@ button:active{transform:scale(0.99)}
                     <option value="fullscreen">Fullscreen</option>
                 </select>
                 <select id="adSlot">
-                    <option value="floating">Floating</option>
-                    <option value="adHeader">Header</option>
-                    <option value="adMiddle">Middle</option>
-                    <option value="adFooter">Footer</option>
+                    <option value="floating">Floating / Dynamic</option>
+                    <option value="adHeader">Header (Fixed Slot)</option>
+                    <option value="adMiddle">Middle (Fixed Slot)</option>
+                    <option value="adFooter">Footer (Fixed Slot)</option>
                 </select>
             </div>
-            <textarea id="adText" style="min-height:100px" placeholder="Ad HTML content..."></textarea>
+            <textarea id="adText" style="min-height:110px;font-family:Consolas,monospace;font-size:0.85rem" placeholder="Paste Ad HTML or <script> snippet..."></textarea>
             <div style="display:flex; gap:10px; margin-top:12px;">
-                <button class="btn-primary" style="flex:1" onclick="saveAd()">Save Ad</button>
-                <button class="btn-danger" onclick="clearAllBanners()">Clear All Ads</button>
+                <button id="btnSaveAd" class="btn-primary" style="flex:1" onclick="saveAd()"><i class="fas fa-floppy-disk"></i> Save Ad</button>
+                <button class="btn-danger" onclick="clearAllBanners()"><i class="fas fa-trash"></i> Clear All Ads</button>
             </div>
-            <div id="bannerStatus" style="margin-top:10px"></div>
-            <div id="adsList" style="margin-top:16px"></div>
+            <div id="adsList" style="margin-top:18px"></div>
         </div>
 
-        <!-- Updates Tab -->
+        <!-- ==================== UPDATES TAB ==================== -->
         <div id="tab-news" class="hidden">
-            <h3><i class="fas fa-newspaper"></i> System Updates</h3>
+            <h3>
+                <span class="title-left"><i class="fas fa-newspaper"></i> System Updates</span>
+                <button class="btn-ghost btn-xs" onclick="sortNewsAZ()"><i class="fas fa-arrow-down-a-z"></i> Sort A-Z</button>
+            </h3>
+            <div id="newsEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Update: <b id="newsEditTitle"></b></span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditNews()">Cancel Edit</button>
+            </div>
             <input id="newsTitle" placeholder="Title">
             <textarea id="newsDesc" placeholder="Description..."></textarea>
             <div class="grid-2">
@@ -197,15 +284,22 @@ button:active{transform:scale(0.99)}
                 <button class="btn-ghost" onclick="uploadImage()"><i class="fas fa-upload"></i> Upload Image</button>
             </div>
             <span id="newsUploadStatus" class="ok"></span>
-            <button class="btn-dark" style="width:100%;margin-top:12px" onclick="saveNews()">Save Update</button>
+            <button id="btnSaveNews" class="btn-dark" style="width:100%;margin-top:12px" onclick="saveNews()"><i class="fas fa-floppy-disk"></i> Save Update</button>
             <div id="newsList" style="margin-top:16px"></div>
         </div>
 
-        <!-- My Apps Tab -->
+        <!-- ==================== MY APPS TAB ==================== -->
         <div id="tab-apps" class="hidden">
-            <h3><i class="fas fa-mobile-screen"></i> My Apps Manager</h3>
+            <h3>
+                <span class="title-left"><i class="fas fa-mobile-screen"></i> My Apps Manager</span>
+                <button class="btn-ghost btn-xs" onclick="sortAppsAZ()"><i class="fas fa-arrow-down-a-z"></i> Sort Apps A-Z</button>
+            </h3>
             <div style="background:#F1F5F9;padding:18px;border-radius:8px;margin-bottom:20px;border:1px solid var(--border)">
-                <b>Add New App</b>
+                <div id="appEditBanner" class="edit-banner hidden">
+                    <span><i class="fas fa-pen-to-square"></i> Editing App: <b id="appEditName"></b></span>
+                    <button class="btn-ghost btn-xs" onclick="cancelEditApp()">Cancel Edit</button>
+                </div>
+                <b id="appFormHeading">Add New App</b>
                 <div class="grid-2">
                     <input id="appName" placeholder="App Name">
                     <input id="appIcon" placeholder="Icon (e.g. fa-store)">
@@ -223,13 +317,13 @@ button:active{transform:scale(0.99)}
                         <span id="appIconStatus" class="ok" style="font-size:.8rem"></span>
                     </div>
                 </div>
-                <button class="btn-primary" style="width:100%" onclick="addApp()">Create App</button>
+                <button id="btnSaveApp" class="btn-primary" style="width:100%" onclick="saveApp()"><i class="fas fa-plus-circle"></i> Create App</button>
             </div>
             <div id="appsList"></div>
 
             <!-- Version Box -->
             <div id="versionBox" class="hidden" style="background:#FEF3C7;padding:18px;border-radius:8px;margin-top:20px;border:1px solid #F59E0B">
-                <h4 style="color:#92400E; margin-bottom:12px;">Add Version to: <span id="verAppName" style="color:var(--primary)"></span></h4>
+                <h4 style="color:#92400E; margin-bottom:12px;"><span id="verBoxTitle">Add Version to</span>: <span id="verAppName" style="color:var(--primary)"></span></h4>
                 <div class="grid-2">
                     <input id="verNum" placeholder="Version e.g. v1.0" style="background:#FFFFFF;">
                     <input id="verDate" type="date" style="background:#FFFFFF;">
@@ -243,20 +337,28 @@ button:active{transform:scale(0.99)}
                     <b>Upload APK Directly:</b>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <input type="file" id="apkFile" accept=".apk,.aab,.zip">
-                        <button class="btn-primary" onclick="uploadApkDirect()"><i class="fas fa-upload"></i> Upload APK</button>
+                        <button id="btnUploadApk" class="btn-primary" onclick="uploadApkDirect()"><i class="fas fa-upload"></i> Upload APK</button>
+                    </div>
+                    <div id="apkProgressWrap" class="upload-progress-wrap">
+                        <div class="upload-progress-meta">
+                            <span id="apkProgressLabel">Reading file...</span>
+                            <span id="apkProgressPct">0%</span>
+                        </div>
+                        <div class="upload-progress-track">
+                            <div id="apkProgressFill" class="upload-progress-fill"></div>
+                        </div>
                     </div>
                     <span id="apkStatus" class="ok"></span>
                 </div>
-                <button class="btn-ok" style="width:100%" onclick="saveVersion()">Save Version</button>
-                <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="document.getElementById('versionBox').classList.add('hidden')">Cancel</button>
+                <button id="btnSaveVersion" class="btn-ok" style="width:100%" onclick="saveVersion()">Save Version</button>
+                <button class="btn-ghost" style="width:100%;margin-top:8px" onclick="closeVersionBox()">Cancel</button>
             </div>
         </div>
 
-        <!-- File Manager Tab -->
+        <!-- ==================== FILE MANAGER TAB ==================== -->
         <div id="tab-pages" class="hidden">
-            <h3><i class="fas fa-folder-tree"></i> File Manager</h3>
+            <h3><span class="title-left"><i class="fas fa-folder-tree"></i> File Manager</span></h3>
             
-            <!-- Path & Navigation Bar -->
             <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center;background:#F1F5F9;padding:10px 14px;border-radius:6px;border:1px solid var(--border);">
                 <span><i class="fas fa-folder-open" style="color:var(--accent);"></i> Location: <b id="currentPathDisplay" style="color:var(--primary);">/ (Root)</b></span>
                 <div style="margin-left:auto; display:flex; gap:6px;">
@@ -267,7 +369,6 @@ button:active{transform:scale(0.99)}
 
             <div id="pageButtons" style="display:flex;flex-wrap:wrap;gap:8px">Connect to load files</div>
             
-            <!-- Create Folder / File Section -->
             <div style="background:#F1F5F9;padding:18px;border-radius:8px;margin-top:20px;border:1px solid var(--border)">
                 <div class="grid-2">
                     <div>
@@ -300,7 +401,6 @@ button:active{transform:scale(0.99)}
             </div>
             <span id="anyFileStatus" class="ok"></span>
 
-            <!-- Professional Code Editor Box -->
             <div class="editor-container">
                 <div class="editor-toolbar">
                     <span id="activeEditingFile"><i class="fas fa-file-code"></i> No file open</span>
@@ -318,7 +418,7 @@ button:active{transform:scale(0.99)}
 </div>
 
 <div class="powered-badge">
-    Fosnalic Core v5.4.4 • <a href="index.html" style="color:var(--accent);font-weight:700;text-decoration:none">Fosnalic Techs Node</a>
+    Fosnalic Core v6.0 Pro • <a href="index.html" style="color:var(--accent);font-weight:700;text-decoration:none">Fosnalic Techs Node</a>
 </div>
 
 <script>
@@ -330,27 +430,175 @@ let GH = {
 };
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 let CACHE = null;
+
+// Undo / Redo History Stacks
+let UNDO_STACK = [];
+let REDO_STACK = [];
+const MAX_HISTORY = 35;
+
+// Edit State Trackers
+let editState = {
+    productIdx: null,
+    tickerIdx: null,
+    adTarget: null, // { kind: 'slot'|'array', keyOrIdx: string|number }
+    newsIdx: null,
+    appId: null,
+    versionTarget: null // { appId: string, verIdx: number }
+};
+
 let currentPage = '';
-let currentPath = ''; // Empty string means Root folder
+let currentPath = '';
 let currentSha = null;
 let currentAppId = null;
 
 document.getElementById('ghOwner').value = GH.owner;
 document.getElementById('ghRepo').value = GH.repo;
 document.getElementById('ghBranch').value = GH.branch;
+document.getElementById('ghGistId').value = GIST_ID;
 document.getElementById('ghToken').value = GH.token;
+
+// Toast Helper
+function toast(msg, type = 'ok') {
+    const box = document.getElementById('toastBox');
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    box.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+}
+
+function escapeHtml(str) {
+    return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function toggleConfigBody() {
+    document.getElementById('ghConfigBody').classList.toggle('hidden');
+}
+
+// Keyboard Shortcuts for Undo / Redo (when not typing inside inputs)
+document.addEventListener('keydown', (e) => {
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+    } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))) {
+        e.preventDefault();
+        redo();
+    }
+});
+
+// History Snapshot Manager
+function pushHistory() {
+    if (!CACHE) return;
+    UNDO_STACK.push(JSON.stringify(CACHE));
+    if (UNDO_STACK.length > MAX_HISTORY) UNDO_STACK.shift();
+    REDO_STACK = [];
+    updateHistoryButtons();
+}
+
+function updateHistoryButtons() {
+    document.getElementById('btnUndo').disabled = UNDO_STACK.length === 0;
+    document.getElementById('btnRedo').disabled = REDO_STACK.length === 0;
+}
+
+async function undo() {
+    if (UNDO_STACK.length === 0) return;
+    REDO_STACK.push(JSON.stringify(CACHE));
+    CACHE = JSON.parse(UNDO_STACK.pop());
+    updateHistoryButtons();
+    renderAll();
+    await saveToGist();
+    toast('↩️ Undone & synced');
+}
+
+async function redo() {
+    if (REDO_STACK.length === 0) return;
+    UNDO_STACK.push(JSON.stringify(CACHE));
+    CACHE = JSON.parse(REDO_STACK.pop());
+    updateHistoryButtons();
+    renderAll();
+    await saveToGist();
+    toast('↪️ Redone & synced');
+}
+
+// Array Reorder Helper (Move Up / Down / Top)
+async function moveArrayItem(arr, index, direction) {
+    let target = direction === 'top' ? 0 : index + direction;
+    if (target < 0 || target >= arr.length || target === index) return;
+    pushHistory();
+    const [item] = arr.splice(index, 1);
+    arr.splice(target, 0, item);
+    renderAll();
+    await saveToGist();
+    toast('Order updated');
+}
+
+// Backup & Restore
+function exportBackup() {
+    if (!CACHE) return toast('Nothing to backup', 'err');
+    const blob = new Blob([JSON.stringify(CACHE, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `fosnalic-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    toast('Backup downloaded');
+}
+
+function importBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (!confirm('Restore this backup? Current live data will be replaced (can be undone).')) return;
+            pushHistory();
+            CACHE = {
+                ticker: parsed.ticker || [],
+                ads: parsed.ads || [],
+                news: parsed.news || [],
+                apps: parsed.apps || [],
+                products: parsed.products || [],
+                adHeader: parsed.adHeader || { text: "" },
+                adMiddle: parsed.adMiddle || { text: "" },
+                adFooter: parsed.adFooter || { text: "" }
+            };
+            renderAll();
+            await saveToGist();
+            toast('✅ Backup restored & synced!');
+        } catch (err) {
+            toast('Invalid JSON backup file', 'err');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
 
 function showTab(id, el) {
     document.querySelectorAll('[id^=tab-]').forEach(d => d.classList.add('hidden'));
     document.getElementById('tab-' + id).classList.remove('hidden');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    if(el) el.classList.add('active');
+    if (el) el.classList.add('active');
+}
+
+function getAuthHeaders() {
+    const t = (GH.token || '').trim();
+    if (!t) return {};
+    // Fine-grained PATs use Bearer; classic ghp_ tokens accept token or Bearer
+    const scheme = t.startsWith('github_pat_') ? 'Bearer' : 'token';
+    return { Authorization: `${scheme} ${t}` };
 }
 
 function saveConfig() {
     GH.owner = document.getElementById('ghOwner').value.trim();
     GH.repo = document.getElementById('ghRepo').value.trim();
-    GH.branch = document.getElementById('ghBranch').value.trim();
+    GH.branch = document.getElementById('ghBranch').value.trim() || 'main';
+    const inputGist = (document.getElementById('ghGistId')?.value || '').trim();
+    if (inputGist) {
+        GIST_ID = inputGist;
+        localStorage.setItem('fos_gist_id', GIST_ID);
+    }
     GH.token = document.getElementById('ghToken').value.trim();
     
     localStorage.setItem('gh_owner', GH.owner);
@@ -358,240 +606,18 @@ function saveConfig() {
     localStorage.setItem('gh_branch', GH.branch);
     localStorage.setItem('gh_token', GH.token);
     
-    document.getElementById('cfgOk').textContent = '✅ Connected';
+    document.getElementById('cfgOk').textContent = 'Connecting...';
+    document.getElementById('cfgErr').textContent = '';
     loadData();
     loadFilesForCurrentPath();
 }
 
-async function getFileSha(p) {
-    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}&t=${Date.now()}`, {
-        headers: { Authorization: `token ${GH.token}` },
-        cache: "no-store"
-    });
-    if(!r.ok) {
-        if(r.status === 404) return { sha: null, content: null, notfound: true };
-        return null;
-    }
-    let j = await r.json();
-    try {
-        let bin = atob(j.content.replace(/\n/g, ''));
-        let bytes = new Uint8Array(bin.length);
-        for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-        let content = new TextDecoder().decode(bytes);
-        return { sha: j.sha, content: content, path: p };
-    } catch(e) {
-        return { sha: j.sha, content: '', path: p };
-    }
-}
-
-// File Manager navigation handlers
-async function loadFilesForCurrentPath() {
-    let pathQuery = currentPath ? `/${currentPath}` : '';
-    document.getElementById('currentPathDisplay').textContent = '/' + (currentPath ? currentPath + '/' : '');
-    document.getElementById('parentFolderBtn').style.display = currentPath ? 'inline-flex' : 'none';
-    
-    document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    
-    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
-        headers: { Authorization: `token ${GH.token}` },
-        cache: "no-store"
-    });
-    
-    if(!r.ok) {
-        document.getElementById('pageButtons').innerHTML = '❌ Failed to load folder contents.';
-        return;
-    }
-    
-    let files = await r.json();
-    files = files.sort((a, b) => {
-        if(a.type === b.type) return a.name.localeCompare(b.name);
-        return a.type === 'dir' ? -1 : 1;
-    });
-    
-    document.getElementById('pageButtons').innerHTML = files.map(f => {
-        let icon = f.type === 'dir' ? '📁' : (f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄');
-        let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
-        
-        if(f.type === 'dir') {
-            return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">${icon} ${f.name}/</span>`;
-        }
-        return `<span class="file-btn ${f.path === currentPage ? 'active' : ''}" onclick="loadPage('${f.path}',this)">${icon} ${f.name}</span>${delBtn}`;
-    }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
-}
-
-function openFolder(path) {
-    currentPath = path;
-    loadFilesForCurrentPath();
-}
-
-function goToParentFolder() {
-    if(!currentPath) return;
-    let parts = currentPath.split('/');
-    parts.pop();
-    currentPath = parts.join('/');
-    loadFilesForCurrentPath();
-}
-
-async function createFolder() {
-    let folderName = document.getElementById('newFolderName').value.trim();
-    if(!folderName) return alert('Enter folder name');
-    
-    let targetPath = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
-    
-    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${targetPath}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `Create folder ${folderName}`, content: btoa(''), branch: GH.branch })
-    });
-    
-    if(r.ok) {
-        document.getElementById('newFolderName').value = '';
-        alert('✅ Folder created successfully!');
-        loadFilesForCurrentPath();
-    } else {
-        let err = await r.json();
-        alert('❌ Error: ' + err.message);
-    }
-}
-
-async function loadPage(path, btn) {
-    currentPage = path;
-    document.querySelectorAll('.file-btn').forEach(x => x.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-    
-    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code" style="color:var(--accent);"></i> Editing: <b>${path}</b>`;
-    document.getElementById('pageStatus').textContent = 'Loading...';
-    
-    let d = await getFileSha(path);
-    if(d && d.content !== null) {
-        currentSha = d.sha;
-        document.getElementById('pageEditor').value = d.content;
-        document.getElementById('pageStatus').textContent = `Loaded (${d.content.length} chars)`;
-    } else {
-        document.getElementById('pageEditor').value = '';
-        currentSha = null;
-        document.getElementById('pageStatus').textContent = 'New file';
-    }
-}
-
-async function createPage() {
-    let name = document.getElementById('newPageName').value.trim();
-    if(!name) return alert('Enter filename');
-    let type = document.getElementById('newFileType').value;
-    if(!name.includes('.')) name += '.' + type;
-    
-    let fullPath = currentPath ? `${currentPath}/${name}` : name;
-    currentPage = fullPath;
-    
-    let templates = {
-        html: `<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<title>${name}</title>\n</head>\n<body>\n  <h1>${name}</h1>\n</body>\n</html>`,
-        css: `/* ${name} */\n`,
-        js: `// ${name}\n`,
-        json: `{\n  "name": "${name}"\n}`,
-        txt: `${name}\n`
-    };
-    
-    document.getElementById('pageEditor').value = templates[type] || templates.txt;
-    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code" style="color:var(--accent);"></i> New File: <b>${fullPath}</b>`;
-    currentSha = null;
-    document.getElementById('pageStatus').textContent = 'Ready to save';
-    document.getElementById('newPageName').value = '';
-}
-
-async function savePageToGitHub() {
-    if(!GH.token) return alert('Token required');
-    if(!currentPage) return alert('No file selected or created');
-    
-    document.getElementById('pageStatus').textContent = 'Saving...';
-    let latest = await getFileSha(currentPage);
-    if(latest && latest.sha) currentSha = latest.sha;
-    
-    let c = document.getElementById('pageEditor').value;
-    let b64 = btoa(unescape(encodeURIComponent(c)));
-    let body = { message: `Update ${currentPage}`, content: b64, branch: GH.branch };
-    if(currentSha) body.sha = currentSha;
-    
-    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`, {
-        method: 'PUT',
-        headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    });
-    
-    let j = await r.json();
-    if(r.ok) {
-        currentSha = j.content.sha;
-        document.getElementById('pageStatus').textContent = '✅ Saved successfully';
-        loadFilesForCurrentPath();
-    } else {
-        document.getElementById('pageStatus').textContent = '❌ ' + j.message;
-        if(j.message.includes('sha')) currentSha = null;
-    }
-}
-
-async function deleteFile(path) {
-    if(!confirm(`Delete ${path}?`)) return;
-    let d = await getFileSha(path);
-    if(!d || !d.sha) return alert('File not found');
-    
-    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
-        method: 'DELETE',
-        headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: `Delete ${path}`, sha: d.sha, branch: GH.branch })
-    });
-    
-    let j = await r.json();
-    if(r.ok) {
-        alert('✅ Deleted successfully');
-        loadFilesForCurrentPath();
-    } else {
-        alert('❌ ' + j.message);
-    }
-}
-
-async function deleteCurrentFile() {
-    if(!currentPage) return;
-    await deleteFile(currentPage);
-    document.getElementById('pageEditor').value = '';
-    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code"></i> No file open`;
-    currentPage = '';
-}
-
-async function uploadAnyFile() {
-    let file = document.getElementById('anyFile').files[0];
-    if(!file) return alert('Choose file');
-    document.getElementById('anyFileStatus').textContent = 'Uploading...';
-    
-    let reader = new FileReader();
-    reader.onload = async function() {
-        let b64 = reader.result.split(',')[1];
-        let path = currentPath ? `${currentPath}/${file.name}` : file.name;
-        let existing = await getFileSha(path);
-        let body = { message: `Upload ${path}`, content: b64, branch: GH.branch };
-        if(existing && existing.sha) body.sha = existing.sha;
-        
-        let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
-            method: 'PUT',
-            headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        });
-        
-        let j = await r.json();
-        if(r.ok) {
-            document.getElementById('anyFileStatus').textContent = `✅ Uploaded ${file.name}`;
-            loadFilesForCurrentPath();
-        } else {
-            document.getElementById('anyFileStatus').textContent = `❌ ${j.message}`;
-        }
-    };
-    reader.readAsDataURL(file);
-}
-
-// Core Data & Gist Sync Functions
+// ==================== GIST DATA SYNC ====================
 async function createNewGist() {
     let init = { ticker: ["Welcome to FOSNALIC Techs"], ads: [], news: [], apps: [], products: [], adHeader: { text: "" }, adMiddle: { text: "" }, adFooter: { text: "" } };
     let r = await fetch('https://api.github.com/gists', {
         method: 'POST',
-        headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: "fosnalic-data", public: true, files: { 'fosnalic-data.json': { content: JSON.stringify(init, null, 2) } } })
     });
     let j = await r.json();
@@ -603,10 +629,19 @@ async function createNewGist() {
 async function loadData() {
     try {
         let r = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`, {
-            headers: { Authorization: `token ${GH.token}` }
+            headers: getAuthHeaders(),
+            cache: "no-store"
         });
-        if(!r.ok) {
-            if(r.status === 404) { await createNewGist(); return loadData(); }
+        if (!r.ok) {
+            let errText = '';
+            try { const ej = await r.json(); errText = ej.message || ''; } catch(_) {}
+            if (r.status === 404 && GH.token && !document.getElementById('ghGistId')?.value.trim()) {
+                await createNewGist();
+                return loadData();
+            }
+            document.getElementById('cfgOk').textContent = '';
+            document.getElementById('cfgErr').textContent = `❌ Gist ${r.status}: ${errText || 'Check token/Gist ID'}`;
+            toast(`Connection error (${r.status}): ${errText || 'Check credentials'}`, 'err');
             return;
         }
         let j = await r.json();
@@ -621,56 +656,126 @@ async function loadData() {
         CACHE.adMiddle = CACHE.adMiddle || { text: "" };
         CACHE.adFooter = CACHE.adFooter || { text: "" };
         
-        document.getElementById('cfgOk').textContent = '✅ Connected';
-        renderTicker();
-        renderAds();
-        renderNews();
-        renderApps();
-        renderProducts();
-    } catch(e) {
-        document.getElementById('cfgOk').textContent = '❌ Failed';
+        document.getElementById('cfgOk').textContent = '✅ Synced';
+        document.getElementById('cfgErr').textContent = '';
+        renderAll();
+    } catch (e) {
+        document.getElementById('cfgOk').textContent = '';
+        document.getElementById('cfgErr').textContent = '❌ Network Error';
+        toast('Network error while connecting to GitHub', 'err');
     }
 }
 
 async function saveToGist() {
+    if (!GH.token) {
+        toast('GitHub token required to save changes', 'err');
+        return false;
+    }
     let body = JSON.stringify({ files: { 'fosnalic-data.json': { content: JSON.stringify(CACHE, null, 2) } } });
     let r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
         method: 'PATCH',
-        headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body
     });
-    if(!r.ok && r.status === 404) {
+    if (!r.ok && r.status === 404) {
         await createNewGist();
         return saveToGist();
     }
+    updateBadges();
     return r.ok;
 }
 
+function updateBadges() {
+    if (!CACHE) return;
+    document.getElementById('cnt-products').textContent = CACHE.products.length;
+    document.getElementById('cnt-ticker').textContent = CACHE.ticker.length;
+    let slotCount = (CACHE.adHeader?.text ? 1 : 0) + (CACHE.adMiddle?.text ? 1 : 0) + (CACHE.adFooter?.text ? 1 : 0);
+    document.getElementById('cnt-ads').textContent = CACHE.ads.length + slotCount;
+    document.getElementById('cnt-news').textContent = CACHE.news.length;
+    document.getElementById('cnt-apps').textContent = CACHE.apps.length;
+}
+
+function renderAll() {
+    updateBadges();
+    renderProducts();
+    renderTicker();
+    renderAds();
+    renderNews();
+    renderApps();
+}
+
+// ==================== 1. PRODUCTS MANAGER ====================
 function renderProducts() {
     let list = document.getElementById('productsList');
-    if(!CACHE.products || CACHE.products.length == 0) {
+    let query = (document.getElementById('prodSearch')?.value || '').toLowerCase();
+    if (!CACHE.products || CACHE.products.length === 0) {
         list.innerHTML = '<i style="color:var(--text-muted)">No products yet.</i>';
         return;
     }
-    list.innerHTML = CACHE.products.map((p, i) => `
-        <div class="news-card">
+
+    let html = CACHE.products.map((p, i) => {
+        if (query && !(`${p.title} ${p.brand} ${p.sku}`).toLowerCase().includes(query)) return '';
+        let isEditing = editState.productIdx === i;
+        return `
+        <div class="news-card ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'products',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'products',${i})">
+            <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
             <img src="${p.image || 'https://via.placeholder.com/100x75'}">
-            <div style="flex:1">
-                <b>${p.title}</b> — <span style="color:var(--accent)">${p.priceDisplay || p.price}</span><br>
-                <small style="color:var(--text-muted)">${(p.description || '').substring(0, 90)}...</small><br>
-                <small style="color:var(--success)">Brand: ${p.brand} | SKU: ${p.sku}</small>
+            <div style="flex:1;min-width:0">
+                <b>${escapeHtml(p.title)}</b> — <span style="color:var(--accent);font-weight:700">${escapeHtml(p.priceDisplay || p.price)}</span><br>
+                <small style="color:var(--text-muted)">${escapeHtml((p.description || '').substring(0, 90))}</small><br>
+                <small style="color:var(--success)">Brand: ${escapeHtml(p.brand)} | SKU: ${escapeHtml(p.sku)}</small>
             </div>
-            <button class="btn-danger" style="height:fit-content" onclick="deleteProduct(${i})">X</button>
-        </div>
-    `).join('');
+            <div class="item-actions">
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.products,${i},-1)" ${i === 0 ? 'disabled' : ''} title="Move Up"><i class="fas fa-arrow-up"></i></button>
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.products,${i},1)" ${i === CACHE.products.length - 1 ? 'disabled' : ''} title="Move Down"><i class="fas fa-arrow-down"></i></button>
+                <button class="btn-warn btn-xs" onclick="editProduct(${i})" title="Edit Product"><i class="fas fa-pen"></i> Edit</button>
+                <button class="btn-danger btn-xs" onclick="deleteProduct(${i})" title="Delete"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+    list.innerHTML = html || '<i style="color:var(--text-muted)">No matching products.</i>';
 }
 
-function makeGoogleReady(product) {
+function editProduct(i) {
+    let p = CACHE.products[i];
+    if (!p) return;
+    editState.productIdx = i;
+    document.getElementById('prodTitle').value = p.title || '';
+    document.getElementById('prodPrice').value = p.priceDisplay || p.price || '';
+    document.getElementById('prodBrand').value = p.brand || '';
+    document.getElementById('prodImage').value = p.image || '';
+    document.getElementById('prodDesc').value = p.description || '';
+
+    document.getElementById('prodEditBanner').classList.remove('hidden');
+    document.getElementById('prodEditName').textContent = p.title;
+    document.getElementById('prodFormHeading').textContent = 'Update Product';
+    document.getElementById('btnSaveProduct').innerHTML = '<i class="fas fa-check-circle"></i> Update Saved Product';
+    renderProducts();
+    document.getElementById('tab-products').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEditProduct() {
+    editState.productIdx = null;
+    document.getElementById('prodTitle').value = '';
+    document.getElementById('prodPrice').value = '';
+    document.getElementById('prodBrand').value = '';
+    document.getElementById('prodImage').value = '';
+    document.getElementById('prodDesc').value = '';
+    document.getElementById('prodFile').value = '';
+    document.getElementById('prodUploadStatus').textContent = '';
+
+    document.getElementById('prodEditBanner').classList.add('hidden');
+    document.getElementById('prodFormHeading').textContent = 'Add New Product';
+    document.getElementById('btnSaveProduct').innerHTML = '<i class="fas fa-plus-circle"></i> Step 2: Save Product';
+    renderProducts();
+}
+
+function makeGoogleReady(product, existingItem = null) {
     let priceClean = String(product.price || "").replace(/[^0-9]/g, '');
-    if(!priceClean) priceClean = "0";
+    if (!priceClean) priceClean = "0";
     return {
-        id: "FOS" + Date.now().toString().slice(-6),
-        sku: "FOS" + Date.now().toString().slice(-6),
+        id: existingItem ? existingItem.id : "FOS" + Date.now().toString().slice(-6),
+        sku: existingItem ? existingItem.sku : "FOS" + Date.now().toString().slice(-6),
         title: (product.title || "").trim(),
         description: (product.description || product.title || "FOSNALIC Product").trim(),
         price: priceClean,
@@ -692,56 +797,73 @@ async function saveProduct() {
         image: document.getElementById('prodImage').value.trim(),
         description: document.getElementById('prodDesc').value.trim()
     };
-    if(!p.title) return alert("Add Title first");
-    if(!rawPrice) return alert("Add Price");
-    if(!p.image) return alert("Upload image first");
-    
-    let googleP = makeGoogleReady(p);
-    CACHE.products = CACHE.products || [];
-    CACHE.products.unshift(googleP);
+    if (!p.title) return alert("Add Title first");
+    if (!rawPrice) return alert("Add Price");
+    if (!p.image) return alert("Upload or paste image URL first");
+
+    pushHistory();
+    if (editState.productIdx !== null) {
+        let existing = CACHE.products[editState.productIdx];
+        CACHE.products[editState.productIdx] = makeGoogleReady(p, existing);
+        cancelEditProduct();
+        toast('✅ Product updated!');
+    } else {
+        CACHE.products.unshift(makeGoogleReady(p));
+        cancelEditProduct();
+        toast('✅ Product saved!');
+    }
     await saveToGist();
-    
-    document.getElementById('prodTitle').value = '';
-    document.getElementById('prodPrice').value = '';
-    document.getElementById('prodBrand').value = '';
-    document.getElementById('prodImage').value = '';
-    document.getElementById('prodDesc').value = '';
-    document.getElementById('prodFile').value = '';
-    document.getElementById('prodUploadStatus').textContent = '';
-    
     renderProducts();
-    alert("✅ Saved!");
 }
 
 async function deleteProduct(i) {
-    if(!confirm('Delete product?')) return;
+    if (!confirm('Delete product?')) return;
+    pushHistory();
+    if (editState.productIdx === i) cancelEditProduct();
     CACHE.products.splice(i, 1);
     await saveToGist();
     renderProducts();
+    toast('Product deleted');
+}
+
+async function sortProducts() {
+    let mode = document.getElementById('prodSort').value;
+    if (mode === 'manual') return;
+    pushHistory();
+    if (mode === 'title-asc') {
+        CACHE.products.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    } else if (mode === 'price-asc') {
+        CACHE.products.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+    } else if (mode === 'price-desc') {
+        CACHE.products.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
+    } else if (mode === 'newest') {
+        CACHE.products.sort((a, b) => new Date(b.updated || 0) - new Date(a.updated || 0));
+    }
+    await saveToGist();
+    renderProducts();
+    toast('Products sorted');
 }
 
 async function uploadProductImage() {
     let file = document.getElementById('prodFile').files[0];
-    if(!file) return alert('Choose image first');
-    if(!GH.token) return alert('Add GitHub token first');
+    if (!file) return alert('Choose image first');
+    if (!GH.token) return alert('Add GitHub token first');
     
     document.getElementById('prodUploadStatus').textContent = 'Uploading...';
     let reader = new FileReader();
     reader.onload = async function() {
         let b64 = reader.result.split(',')[1];
         let path = `images/products/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-        
         let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
             method: 'PUT',
-            headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
         });
-        
         let j = await r.json();
-        if(r.ok) {
+        if (r.ok) {
             let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
             document.getElementById('prodImage').value = rawUrl;
-            document.getElementById('prodUploadStatus').textContent = '✅ Uploaded! Now save product.';
+            document.getElementById('prodUploadStatus').textContent = '✅ Uploaded!';
         } else {
             document.getElementById('prodUploadStatus').textContent = `❌ ${j.message}`;
         }
@@ -749,48 +871,158 @@ async function uploadProductImage() {
     reader.readAsDataURL(file);
 }
 
+// ==================== 2. TICKER BAR MANAGER ====================
 function renderTicker() {
     let list = document.getElementById('tickerList');
     list.innerHTML = CACHE.ticker.map((x, i) => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:6px;margin:6px 0;background:var(--card-surface)">
-            <span>${x}</span>
-            <button class="btn-danger" style="padding:4px 10px;font-size:0.8rem" onclick="removeTicker(${i})">X</button>
+        <div class="item-row ${editState.tickerIdx === i ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ticker',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ticker',${i})">
+            <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
+            <span style="flex:1">${escapeHtml(x)}</span>
+            <div class="item-actions">
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ticker,${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ticker,${i},1)" ${i === CACHE.ticker.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                <button class="btn-warn btn-xs" onclick="editTicker(${i})"><i class="fas fa-pen"></i></button>
+                <button class="btn-danger btn-xs" onclick="removeTicker(${i})"><i class="fas fa-trash"></i></button>
+            </div>
         </div>
-    `).join('') || '<i style="color:var(--text-muted)">No ticker</i>';
+    `).join('') || '<i style="color:var(--text-muted)">No ticker messages</i>';
 }
 
-async function addTicker() {
-    let v = document.getElementById('tickerInput').value.trim();
-    if(!v) return;
-    CACHE.ticker.push(v);
+function editTicker(i) {
+    editState.tickerIdx = i;
+    document.getElementById('tickerInput').value = CACHE.ticker[i];
+    document.getElementById('tickerEditBanner').classList.remove('hidden');
+    document.getElementById('btnSaveTicker').innerHTML = '<i class="fas fa-check"></i> Update';
+    renderTicker();
+}
+
+function cancelEditTicker() {
+    editState.tickerIdx = null;
     document.getElementById('tickerInput').value = '';
+    document.getElementById('tickerEditBanner').classList.add('hidden');
+    document.getElementById('btnSaveTicker').innerHTML = '<i class="fas fa-plus"></i> Add';
+    renderTicker();
+}
+
+async function saveTicker() {
+    let v = document.getElementById('tickerInput').value.trim();
+    if (!v) return;
+    pushHistory();
+    if (editState.tickerIdx !== null) {
+        CACHE.ticker[editState.tickerIdx] = v;
+        cancelEditTicker();
+        toast('✅ Ticker updated');
+    } else {
+        CACHE.ticker.push(v);
+        document.getElementById('tickerInput').value = '';
+        toast('✅ Ticker added');
+    }
     await saveToGist();
     renderTicker();
 }
 
 async function removeTicker(i) {
+    pushHistory();
+    if (editState.tickerIdx === i) cancelEditTicker();
     CACHE.ticker.splice(i, 1);
     await saveToGist();
     renderTicker();
+    toast('Ticker removed');
+}
+
+async function sortTickerAZ() {
+    pushHistory();
+    CACHE.ticker.sort((a, b) => a.localeCompare(b));
+    await saveToGist();
+    renderTicker();
+    toast('Ticker sorted A-Z');
 }
 
 async function fixTickerNow() {
+    pushHistory();
     CACHE.ticker = CACHE.ticker.filter(t => !t.toLowerCase().includes('ad') && t.length > 2);
     await saveToGist();
     renderTicker();
-    alert("✅ Ticker cleaned.");
+    toast('✅ Ticker cleaned');
 }
 
+// ==================== 3. ADS MANAGER (ALL SLOTS + EDIT + SORT) ====================
 function renderAds() {
-    document.getElementById('adsList').innerHTML = CACHE.ads.map((a, i) => `
-        <div class="file-row">
-            <div>
-                <b>${a.type}</b> → ${a.slot}<br>
-                <small style="color:var(--text-muted)">${(a.text || '').substring(0, 90)}...</small>
+    let items = [];
+
+    // Fixed Slots
+    ['adHeader', 'adMiddle', 'adFooter'].forEach(slotKey => {
+        if (CACHE[slotKey] && CACHE[slotKey].text) {
+            let isEditing = editState.adTarget && editState.adTarget.kind === 'slot' && editState.adTarget.keyOrIdx === slotKey;
+            items.push(`
+                <div class="item-row ${isEditing ? 'editing' : ''}">
+                    <div style="flex:1;min-width:0">
+                        <span style="background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">FIXED SLOT</span>
+                        <b style="margin-left:6px">${slotKey}</b><br>
+                        <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(CACHE[slotKey].text).substring(0, 110)}...</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-warn btn-xs" onclick="editSlotAd('${slotKey}')"><i class="fas fa-pen"></i> Edit</button>
+                        <button class="btn-danger btn-xs" onclick="clearSlotAd('${slotKey}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `);
+        }
+    });
+
+    // Dynamic / Floating Array Ads
+    (CACHE.ads || []).forEach((a, i) => {
+        let isEditing = editState.adTarget && editState.adTarget.kind === 'array' && editState.adTarget.keyOrIdx === i;
+        items.push(`
+            <div class="item-row ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ads',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ads',${i})">
+                <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
+                <div style="flex:1;min-width:0">
+                    <span style="background:#E2E8F0;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">${escapeHtml(a.type)}</span>
+                    <small style="color:var(--accent);margin-left:6px">→ ${escapeHtml(a.slot || 'floating')}</small><br>
+                    <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(a.text).substring(0, 110)}...</small>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ads,${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                    <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ads,${i},1)" ${i === CACHE.ads.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                    <button class="btn-warn btn-xs" onclick="editArrayAd(${i})"><i class="fas fa-pen"></i> Edit</button>
+                    <button class="btn-danger btn-xs" onclick="deleteAd(${i})"><i class="fas fa-trash"></i></button>
+                </div>
             </div>
-            <button class="btn-danger" style="padding:4px 10px;font-size:0.8rem" onclick="deleteAd(${i})">X</button>
-        </div>
-    `).join('') || '<i style="color:var(--text-muted)">No ads</i>';
+        `);
+    });
+
+    document.getElementById('adsList').innerHTML = items.join('') || '<i style="color:var(--text-muted)">No ads saved yet.</i>';
+}
+
+function editSlotAd(slotKey) {
+    editState.adTarget = { kind: 'slot', keyOrIdx: slotKey };
+    document.getElementById('adSlot').value = slotKey;
+    document.getElementById('adType').value = CACHE[slotKey].type || 'banner';
+    document.getElementById('adText').value = CACHE[slotKey].text || '';
+    document.getElementById('adEditBanner').classList.remove('hidden');
+    document.getElementById('adEditLabel').textContent = slotKey;
+    document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-check-circle"></i> Update Ad';
+    renderAds();
+}
+
+function editArrayAd(i) {
+    let a = CACHE.ads[i];
+    editState.adTarget = { kind: 'array', keyOrIdx: i };
+    document.getElementById('adType').value = a.type || 'floating-br';
+    document.getElementById('adSlot').value = a.slot || 'floating';
+    document.getElementById('adText').value = a.text || '';
+    document.getElementById('adEditBanner').classList.remove('hidden');
+    document.getElementById('adEditLabel').textContent = `${a.type} #${i + 1}`;
+    document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-check-circle"></i> Update Ad';
+    renderAds();
+}
+
+function cancelEditAd() {
+    editState.adTarget = null;
+    document.getElementById('adText').value = '';
+    document.getElementById('adEditBanner').classList.add('hidden');
+    document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-floppy-disk"></i> Save Ad';
+    renderAds();
 }
 
 async function saveAd() {
@@ -799,48 +1031,116 @@ async function saveAd() {
         slot: document.getElementById('adSlot').value,
         text: document.getElementById('adText').value.trim()
     };
-    if(!ad.text) return alert('Enter ad HTML');
-    
-    if(ad.slot === 'adHeader') CACHE.adHeader.text = ad.text;
-    else if(ad.slot === 'adMiddle') CACHE.adMiddle.text = ad.text;
-    else if(ad.slot === 'adFooter') CACHE.adFooter.text = ad.text;
-    else CACHE.ads.push(ad);
-    
+    if (!ad.text) return alert('Enter ad HTML');
+
+    pushHistory();
+    // If editing an existing array item and user switched slot to fixed slot, remove old array entry
+    if (editState.adTarget) {
+        if (editState.adTarget.kind === 'array') {
+            CACHE.ads.splice(editState.adTarget.keyOrIdx, 1);
+        } else if (editState.adTarget.kind === 'slot' && editState.adTarget.keyOrIdx !== ad.slot) {
+            CACHE[editState.adTarget.keyOrIdx] = { text: "" };
+        }
+    }
+
+    if (['adHeader', 'adMiddle', 'adFooter'].includes(ad.slot)) {
+        CACHE[ad.slot] = { type: ad.type, text: ad.text };
+    } else {
+        if (editState.adTarget && editState.adTarget.kind === 'array') {
+            CACHE.ads.splice(editState.adTarget.keyOrIdx, 0, ad);
+        } else {
+            CACHE.ads.push(ad);
+        }
+    }
+
+    cancelEditAd();
     await saveToGist();
-    document.getElementById('adText').value = '';
     renderAds();
-    alert("✅ Ad saved.");
+    toast('✅ Ad saved & synced!');
+}
+
+async function clearSlotAd(slotKey) {
+    pushHistory();
+    if (editState.adTarget?.keyOrIdx === slotKey) cancelEditAd();
+    CACHE[slotKey] = { text: "" };
+    await saveToGist();
+    renderAds();
+    toast('Fixed slot ad cleared');
 }
 
 async function deleteAd(i) {
+    pushHistory();
+    if (editState.adTarget?.keyOrIdx === i) cancelEditAd();
     CACHE.ads.splice(i, 1);
     await saveToGist();
     renderAds();
+    toast('Ad deleted');
+}
+
+async function sortAdsByType() {
+    pushHistory();
+    CACHE.ads.sort((a, b) => (a.type || '').localeCompare(b.type || ''));
+    await saveToGist();
+    renderAds();
+    toast('Ads grouped by type');
 }
 
 async function clearAllBanners() {
-    if(!confirm('Clear all ads?')) return;
+    if (!confirm('Clear ALL ads across every slot?')) return;
+    pushHistory();
+    cancelEditAd();
     CACHE.ads = [];
     CACHE.adHeader = { text: "" };
     CACHE.adMiddle = { text: "" };
     CACHE.adFooter = { text: "" };
     await saveToGist();
     renderAds();
-    alert("✅ All ads cleared.");
+    toast('All ads cleared');
 }
 
+// ==================== 4. UPDATES / NEWS MANAGER ====================
 function renderNews() {
     document.getElementById('newsList').innerHTML = CACHE.news.map((n, i) => `
-        <div class="news-card">
+        <div class="news-card ${editState.newsIdx === i ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'news',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'news',${i})">
+            <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
             <img src="${n.img || 'https://via.placeholder.com/100x75'}">
-            <div style="flex:1">
-                <b>${n.title}</b><br>
-                <small style="color:var(--text-muted)">${(n.desc || '').substring(0, 110)}...</small><br>
-                <small style="color:var(--accent)">${n.tag || ''}</small>
+            <div style="flex:1;min-width:0">
+                <b>${escapeHtml(n.title)}</b><br>
+                <small style="color:var(--text-muted)">${escapeHtml((n.desc || '').substring(0, 110))}</small><br>
+                <small style="color:var(--accent);font-weight:700">${escapeHtml(n.tag || '')}</small>
             </div>
-            <button class="btn-danger" style="height:fit-content" onclick="deleteNews(${i})">X</button>
+            <div class="item-actions">
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.news,${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.news,${i},1)" ${i === CACHE.news.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                <button class="btn-warn btn-xs" onclick="editNews(${i})"><i class="fas fa-pen"></i> Edit</button>
+                <button class="btn-danger btn-xs" onclick="deleteNews(${i})"><i class="fas fa-trash"></i></button>
+            </div>
         </div>
     `).join('') || '<i style="color:var(--text-muted)">No updates</i>';
+}
+
+function editNews(i) {
+    let n = CACHE.news[i];
+    editState.newsIdx = i;
+    document.getElementById('newsTitle').value = n.title || '';
+    document.getElementById('newsDesc').value = n.desc || '';
+    document.getElementById('newsTag').value = n.tag || '';
+    document.getElementById('newsImg').value = n.img || '';
+    document.getElementById('newsEditBanner').classList.remove('hidden');
+    document.getElementById('newsEditTitle').textContent = n.title;
+    document.getElementById('btnSaveNews').innerHTML = '<i class="fas fa-check-circle"></i> Update Post';
+    renderNews();
+}
+
+function cancelEditNews() {
+    editState.newsIdx = null;
+    document.getElementById('newsTitle').value = '';
+    document.getElementById('newsDesc').value = '';
+    document.getElementById('newsTag').value = '';
+    document.getElementById('newsImg').value = '';
+    document.getElementById('newsEditBanner').classList.add('hidden');
+    document.getElementById('btnSaveNews').innerHTML = '<i class="fas fa-floppy-disk"></i> Save Update';
+    renderNews();
 }
 
 async function saveNews() {
@@ -850,42 +1150,55 @@ async function saveNews() {
         tag: document.getElementById('newsTag').value.trim(),
         img: document.getElementById('newsImg').value.trim()
     };
-    if(!n.title) return alert('Title required');
-    
-    CACHE.news.unshift(n);
+    if (!n.title) return alert('Title required');
+
+    pushHistory();
+    if (editState.newsIdx !== null) {
+        CACHE.news[editState.newsIdx] = n;
+        cancelEditNews();
+        toast('✅ Update modified');
+    } else {
+        CACHE.news.unshift(n);
+        cancelEditNews();
+        toast('✅ Update published');
+    }
     await saveToGist();
-    
-    document.getElementById('newsTitle').value = '';
-    document.getElementById('newsDesc').value = '';
-    document.getElementById('newsTag').value = '';
-    document.getElementById('newsImg').value = '';
     renderNews();
 }
 
 async function deleteNews(i) {
+    if (!confirm('Delete update?')) return;
+    pushHistory();
+    if (editState.newsIdx === i) cancelEditNews();
     CACHE.news.splice(i, 1);
     await saveToGist();
     renderNews();
+    toast('Update deleted');
+}
+
+async function sortNewsAZ() {
+    pushHistory();
+    CACHE.news.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    await saveToGist();
+    renderNews();
+    toast('Updates sorted A-Z');
 }
 
 async function uploadImage() {
     let file = document.getElementById('newsFile').files[0];
-    if(!file) return alert('Choose image');
+    if (!file) return alert('Choose image');
     document.getElementById('newsUploadStatus').textContent = 'Uploading...';
-    
     let reader = new FileReader();
     reader.onload = async function() {
         let b64 = reader.result.split(',')[1];
         let path = `images/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-        
         let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
             method: 'PUT',
-            headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
         });
-        
         let j = await r.json();
-        if(r.ok) {
+        if (r.ok) {
             let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
             document.getElementById('newsImg').value = rawUrl;
             document.getElementById('newsUploadStatus').textContent = '✅ Uploaded';
@@ -896,36 +1209,42 @@ async function uploadImage() {
     reader.readAsDataURL(file);
 }
 
+// ==================== 5. MY APPS & VERSIONS MANAGER ====================
 function renderApps() {
     let list = document.getElementById('appsList');
-    list.innerHTML = CACHE.apps.map(app => {
+    list.innerHTML = CACHE.apps.map((app, appIdx) => {
         let vers = (app.versions || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date));
         let iconHtml = app.iconUrl ? `<img src="${app.iconUrl}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas ${app.icon || 'fa-mobile-alt'}"></i>`;
-        
+        let isEditing = editState.appId === app.id;
+
         return `
-            <div style="border:1px solid var(--border);border-radius:8px;padding:16px;margin:14px 0;background:var(--card-surface)">
-                <div style="display:flex;gap:16px;align-items:center">
+            <div style="border:${isEditing ? '2px solid var(--warning)' : '1px solid var(--border)'};border-radius:8px;padding:16px;margin:14px 0;background:${isEditing ? '#FFFBEB' : 'var(--card-surface)'}">
+                <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
                     <div class="app-icon-preview">${iconHtml}</div>
-                    <div style="flex:1">
-                        <b>${app.name}</b><br>
-                        <small style="color:var(--text-muted)">${app.desc || ''}</small>
+                    <div style="flex:1;min-width:180px">
+                        <b>${escapeHtml(app.name)}</b><br>
+                        <small style="color:var(--text-muted)">${escapeHtml(app.desc || '')}</small>
                     </div>
-                    <div style="display:flex;gap:8px">
-                        <button class="btn-primary" style="padding:6px 12px;font-size:0.8rem" onclick="openVersionBox('${app.id}')"><i class="fas fa-plus"></i> Version</button>
-                        <button class="btn-danger" style="padding:6px 10px;font-size:0.8rem" onclick="deleteApp('${app.id}')">X</button>
+                    <div class="item-actions">
+                        <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.apps,${appIdx},-1)" ${appIdx === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
+                        <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.apps,${appIdx},1)" ${appIdx === CACHE.apps.length - 1 ? 'disabled' : ''}><i class="fas fa-arrow-down"></i></button>
+                        <button class="btn-primary btn-xs" onclick="openVersionBox('${app.id}')"><i class="fas fa-plus"></i> Version</button>
+                        <button class="btn-warn btn-xs" onclick="editApp('${app.id}')"><i class="fas fa-pen"></i> Edit App</button>
+                        <button class="btn-danger btn-xs" onclick="deleteApp('${app.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
                 <div style="margin-top:12px">
                     ${vers.map((v, i) => `
-                        <div class="file-row" style="background:#FFFFFF">
-                            <div>
-                                <b>${v.ver}</b> • ${v.date} • ${v.size}<br>
-                                <small style="color:var(--text-muted)">${v.notes || ''}</small><br>
-                                <a href="${v.file}" target="_blank" style="font-size:0.78rem;color:var(--accent)">${v.file.substring(0, 65)}...</a>
+                        <div class="item-row" style="background:#FFFFFF">
+                            <div style="flex:1;min-width:0">
+                                <b>${escapeHtml(v.ver)}</b> • ${escapeHtml(v.date)} • ${escapeHtml(v.size)}<br>
+                                <small style="color:var(--text-muted)">${escapeHtml(v.notes || '')}</small><br>
+                                <a href="${v.file}" target="_blank" style="font-size:0.78rem;color:var(--accent)">${escapeHtml(v.file).substring(0, 65)}...</a>
                             </div>
-                            <div style="display:flex;gap:6px">
-                                <a href="${v.file}" class="btn-primary" style="padding:4px 10px;font-size:0.75rem;text-decoration:none" download><i class="fas fa-download"></i></a>
-                                <button class="btn-danger" style="padding:4px 8px;font-size:0.75rem" onclick="deleteVersion('${app.id}',${i})">X</button>
+                            <div class="item-actions">
+                                <a href="${v.file}" class="btn-primary btn-xs" style="text-decoration:none" download><i class="fas fa-download"></i></a>
+                                <button class="btn-warn btn-xs" onclick="editVersion('${app.id}',${i})"><i class="fas fa-pen"></i></button>
+                                <button class="btn-danger btn-xs" onclick="deleteVersion('${app.id}',${i})"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     `).join('') || '<small style="color:var(--text-muted)">No versions yet</small>'}
@@ -935,22 +1254,25 @@ function renderApps() {
     }).join('') || '<p style="text-align:center;color:var(--text-muted);padding:20px">No apps yet.</p>';
 }
 
-function addApp() {
-    let name = document.getElementById('appName').value.trim();
-    if(!name) return alert('App name required');
-    let descInput = document.getElementById('appDesc').value.trim();
-    let autoDesc = `New version of ${name}.`;
-    
-    let app = {
-        id: Date.now().toString(),
-        name: name,
-        desc: descInput || autoDesc,
-        icon: document.getElementById('appIcon').value || 'fa-mobile-alt',
-        iconUrl: document.getElementById('appIconUrl').value.trim(),
-        versions: []
-    };
-    
-    CACHE.apps.push(app);
+function editApp(appId) {
+    let app = CACHE.apps.find(a => a.id === appId);
+    if (!app) return;
+    editState.appId = appId;
+    document.getElementById('appName').value = app.name || '';
+    document.getElementById('appIcon').value = app.icon || '';
+    document.getElementById('appDesc').value = app.desc || '';
+    document.getElementById('appIconUrl').value = app.iconUrl || '';
+    document.getElementById('iconPreview').innerHTML = app.iconUrl ? `<img src="${app.iconUrl}">` : `<i class="fas ${app.icon || 'fa-image'}"></i>`;
+
+    document.getElementById('appEditBanner').classList.remove('hidden');
+    document.getElementById('appEditName').textContent = app.name;
+    document.getElementById('appFormHeading').textContent = 'Edit Application';
+    document.getElementById('btnSaveApp').innerHTML = '<i class="fas fa-check-circle"></i> Update App Details';
+    renderApps();
+}
+
+function cancelEditApp() {
+    editState.appId = null;
     document.getElementById('appName').value = '';
     document.getElementById('appDesc').value = '';
     document.getElementById('appIcon').value = '';
@@ -958,22 +1280,95 @@ function addApp() {
     document.getElementById('appIconFile').value = '';
     document.getElementById('iconPreview').innerHTML = '<i class="fas fa-image" style="color:var(--text-muted)"></i>';
     document.getElementById('appIconStatus').textContent = '';
-    
-    saveToGist().then(renderApps);
+
+    document.getElementById('appEditBanner').classList.add('hidden');
+    document.getElementById('appFormHeading').textContent = 'Add New App';
+    document.getElementById('btnSaveApp').innerHTML = '<i class="fas fa-plus-circle"></i> Create App';
+    renderApps();
+}
+
+async function saveApp() {
+    let name = document.getElementById('appName').value.trim();
+    if (!name) return alert('App name required');
+    let descInput = document.getElementById('appDesc').value.trim();
+
+    pushHistory();
+    if (editState.appId) {
+        let app = CACHE.apps.find(a => a.id === editState.appId);
+        if (app) {
+            app.name = name;
+            app.desc = descInput || `New version of ${name}.`;
+            app.icon = document.getElementById('appIcon').value || 'fa-mobile-alt';
+            app.iconUrl = document.getElementById('appIconUrl').value.trim();
+        }
+        cancelEditApp();
+        toast('✅ App updated');
+    } else {
+        CACHE.apps.push({
+            id: Date.now().toString(),
+            name: name,
+            desc: descInput || `New version of ${name}.`,
+            icon: document.getElementById('appIcon').value || 'fa-mobile-alt',
+            iconUrl: document.getElementById('appIconUrl').value.trim(),
+            versions: []
+        });
+        cancelEditApp();
+        toast('✅ App created');
+    }
+    await saveToGist();
+    renderApps();
+}
+
+async function sortAppsAZ() {
+    pushHistory();
+    CACHE.apps.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    await saveToGist();
+    renderApps();
+    toast('Apps sorted A-Z');
 }
 
 function openVersionBox(appId) {
     currentAppId = appId;
+    editState.versionTarget = null;
     let app = CACHE.apps.find(a => a.id === appId);
+    document.getElementById('verBoxTitle').textContent = 'Add Version to';
     document.getElementById('verAppName').textContent = app.name;
+    document.getElementById('verNum').value = '';
+    document.getElementById('verSize').value = '';
+    document.getElementById('verFile').value = '';
     document.getElementById('verDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('verNotes').value = `New release for ${app.name}.`;
+    document.getElementById('btnSaveVersion').textContent = 'Save Version';
     document.getElementById('versionBox').classList.remove('hidden');
 }
 
-function saveVersion() {
+function editVersion(appId, sortedIdx) {
+    let app = CACHE.apps.find(a => a.id === appId);
+    let vers = app.versions.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+    let targetVer = vers[sortedIdx];
+    let realIdx = app.versions.findIndex(v => v === targetVer);
+
+    currentAppId = appId;
+    editState.versionTarget = { appId, realIdx };
+    document.getElementById('verBoxTitle').textContent = 'Edit Version for';
+    document.getElementById('verAppName').textContent = app.name;
+    document.getElementById('verNum').value = targetVer.ver || '';
+    document.getElementById('verDate').value = targetVer.date || '';
+    document.getElementById('verSize').value = targetVer.size || '';
+    document.getElementById('verFile').value = targetVer.file || '';
+    document.getElementById('verNotes').value = targetVer.notes || '';
+    document.getElementById('btnSaveVersion').textContent = 'Update Version';
+    document.getElementById('versionBox').classList.remove('hidden');
+}
+
+function closeVersionBox() {
+    editState.versionTarget = null;
+    document.getElementById('versionBox').classList.add('hidden');
+}
+
+async function saveVersion() {
     let app = CACHE.apps.find(a => a.id === currentAppId);
-    if(!app) return;
+    if (!app) return;
     
     let v = {
         ver: document.getElementById('verNum').value.trim() || 'v1.0',
@@ -982,58 +1377,62 @@ function saveVersion() {
         file: document.getElementById('verFile').value.trim(),
         notes: document.getElementById('verNotes').value.trim() || `New release for ${app.name}.`
     };
-    
-    if(!v.file) return alert('File link or APK required');
-    
+    if (!v.file) return alert('File link or APK required');
+
+    pushHistory();
     app.versions = app.versions || [];
-    app.versions.push(v);
+    if (editState.versionTarget && editState.versionTarget.appId === currentAppId) {
+        app.versions[editState.versionTarget.realIdx] = v;
+        toast('✅ Version updated');
+    } else {
+        app.versions.push(v);
+        toast('✅ Version added');
+    }
     app.versions.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    document.getElementById('verNum').value = '';
-    document.getElementById('verSize').value = '';
-    document.getElementById('verFile').value = '';
-    document.getElementById('verNotes').value = '';
-    document.getElementById('versionBox').classList.add('hidden');
-    
-    saveToGist().then(renderApps);
+    closeVersionBox();
+    await saveToGist();
+    renderApps();
 }
 
-function deleteVersion(appId, idx) {
-    if(!confirm('Delete version?')) return;
+async function deleteVersion(appId, idx) {
+    if (!confirm('Delete version?')) return;
+    pushHistory();
     let app = CACHE.apps.find(a => a.id === appId);
     let vers = app.versions.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
     let realVer = vers[idx];
-    let realIdx = app.versions.findIndex(v => v.ver === realVer.ver && v.date === realVer.date);
-    
+    let realIdx = app.versions.findIndex(v => v === realVer);
     app.versions.splice(realIdx, 1);
-    saveToGist().then(renderApps);
+    await saveToGist();
+    renderApps();
+    toast('Version deleted');
 }
 
-function deleteApp(id) {
-    if(!confirm('Delete app?')) return;
+async function deleteApp(id) {
+    if (!confirm('Delete app?')) return;
+    pushHistory();
+    if (editState.appId === id) cancelEditApp();
     CACHE.apps = CACHE.apps.filter(a => a.id !== id);
-    saveToGist().then(renderApps);
+    await saveToGist();
+    renderApps();
+    toast('App deleted');
 }
 
 async function uploadAppIcon() {
     let file = document.getElementById('appIconFile').files[0];
-    if(!file) return alert('Choose icon');
-    if(!GH.token) return alert('GitHub token required');
-    
+    if (!file) return alert('Choose icon');
+    if (!GH.token) return alert('GitHub token required');
     document.getElementById('appIconStatus').textContent = 'Uploading...';
     let reader = new FileReader();
     reader.onload = async function() {
         let b64 = reader.result.split(',')[1];
         let path = `icons/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-        
         let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
             method: 'PUT',
-            headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
         });
-        
         let j = await r.json();
-        if(r.ok) {
+        if (r.ok) {
             let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
             document.getElementById('appIconUrl').value = rawUrl;
             document.getElementById('iconPreview').innerHTML = `<img src="${rawUrl}">`;
@@ -1045,31 +1444,387 @@ async function uploadAppIcon() {
     reader.readAsDataURL(file);
 }
 
+function setApkProgress(pct, label) {
+    const wrap = document.getElementById('apkProgressWrap');
+    const fill = document.getElementById('apkProgressFill');
+    const pctEl = document.getElementById('apkProgressPct');
+    const lblEl = document.getElementById('apkProgressLabel');
+    wrap.style.display = 'block';
+    const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+    fill.style.width = clamped + '%';
+    pctEl.textContent = clamped + '%';
+    if (label) lblEl.textContent = label;
+}
+
+function arrayBufferToBase64(buffer, onChunk) {
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        const slice = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, slice);
+        if (onChunk && (i % (chunkSize * 16) === 0 || i + chunkSize >= bytes.length)) {
+            onChunk(Math.min(100, Math.round(((i + slice.length) / bytes.length) * 100)));
+        }
+    }
+    return btoa(binary);
+}
+
+async function ghApiJson(endpoint, method = 'GET', bodyObj = null, allow404 = false) {
+    const authVal = getAuthHeaders().Authorization;
+    const opts = {
+        method,
+        headers: {
+            'Authorization': authVal,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+        }
+    };
+    if (bodyObj) opts.body = JSON.stringify(bodyObj);
+    const res = await fetch(`https://api.github.com${endpoint}`, opts);
+    let data = {};
+    try { data = await res.json(); } catch (_) {}
+    if (!res.ok) {
+        if (allow404 && res.status === 404) return null;
+        throw new Error(`${data.message || 'GitHub API Error'} (HTTP ${res.status})`);
+    }
+    return data;
+}
+
+async function getOrCreateApkRelease(ownerEnc, repoEnc, branchName) {
+    const tag = 'apk-releases';
+    let release = await ghApiJson(`/repos/${ownerEnc}/${repoEnc}/releases/tags/${tag}`, 'GET', null, true);
+    if (!release) {
+        release = await ghApiJson(`/repos/${ownerEnc}/${repoEnc}/releases`, 'POST', {
+            tag_name: tag,
+            target_commitish: branchName,
+            name: 'App Releases & APKs',
+            body: 'Automated binary storage for APK downloads.',
+            draft: false,
+            prerelease: false
+        });
+    }
+    return release;
+}
+
 async function uploadApkDirect() {
+    const inputToken = (document.getElementById('ghToken')?.value || '').replace(/\s+/g, '');
+    if (inputToken) {
+        GH.token = inputToken;
+        localStorage.setItem('gh_token', GH.token);
+    }
+    GH.owner = (document.getElementById('ghOwner')?.value || GH.owner).trim();
+    GH.repo = (document.getElementById('ghRepo')?.value || GH.repo).trim();
+    GH.branch = (document.getElementById('ghBranch')?.value || GH.branch || 'main').trim();
+
     let file = document.getElementById('apkFile').files[0];
-    if(!file) return alert('Choose APK file');
-    if(!GH.token) return alert('GitHub token required');
+    if (!file) return alert('Choose APK file');
+    if (!GH.token) return alert('GitHub token required');
+
+    const btn = document.getElementById('btnUploadApk');
+    const statusEl = document.getElementById('apkStatus');
+    btn.disabled = true;
+    statusEl.className = 'ok';
+    statusEl.textContent = '';
+    setApkProgress(5, 'Preparing GitHub Releases upload server...');
+
+    try {
+        const ownerEnc = encodeURIComponent(GH.owner);
+        const repoEnc = encodeURIComponent(GH.repo);
+
+        // 1. Get or create the dedicated 'apk-releases' GitHub Release
+        const release = await getOrCreateApkRelease(ownerEnc, repoEnc, GH.branch);
+        setApkProgress(15, `Connected to Release #${release.id}. Starting binary stream...`);
+
+        // 2. Stream raw binary APK directly to uploads.github.com (no Base64 overhead, supports up to 2 GB)
+        const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        const uploadUrl = `https://uploads.github.com/repos/${ownerEnc}/${repoEnc}/releases/${release.id}/assets?name=${encodeURIComponent(safeName)}`;
+        const authVal = getAuthHeaders().Authorization;
+
+        const assetResult = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', uploadUrl, true);
+            xhr.timeout = 300000; // 5 minutes
+            xhr.setRequestHeader('Authorization', authVal);
+            xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+            xhr.setRequestHeader('Content-Type', file.type || 'application/vnd.android.package-archive');
+
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    const pct = Math.round((e.loaded / e.total) * 100);
+                    const overall = 15 + (pct * 0.80);
+                    setApkProgress(
+                        overall,
+                        pct < 100
+                            ? `Streaming APK (${(e.loaded / 1024 / 1024).toFixed(1)} / ${(e.total / 1024 / 1024).toFixed(1)} MB — ${pct}%)...`
+                            : 'Finalizing release asset on GitHub CDN...'
+                    );
+                }
+            };
+
+            xhr.onload = () => {
+                let parsed = {};
+                try { parsed = JSON.parse(xhr.responseText || '{}'); } catch (_) {}
+                resolve({ status: xhr.status, data: parsed });
+            };
+            xhr.ontimeout = () => reject(new Error('Upload timed out after 5 minutes'));
+            xhr.onerror = () => reject(new Error('Upload blocked or dropped by browser/network'));
+            xhr.send(file); // Raw File stream — zero Base64 bloat!
+        });
+
+        if (assetResult.status < 200 || assetResult.status >= 300 || !assetResult.data.browser_download_url) {
+            throw new Error(`${assetResult.data.message || 'Asset upload failed'} (HTTP ${assetResult.status})`);
+        }
+
+        setApkProgress(100, 'Upload complete!');
+        const downloadUrl = assetResult.data.browser_download_url;
+        document.getElementById('verFile').value = downloadUrl;
+        document.getElementById('verSize').value = (file.size / 1024 / 1024).toFixed(1) + 'MB';
+        statusEl.className = 'ok';
+        statusEl.textContent = '✅ APK uploaded to GitHub Releases CDN!';
+        toast('✅ APK uploaded successfully!');
+    } catch (err) {
+        statusEl.className = 'err';
+        statusEl.textContent = `❌ ${err.message}`;
+        toast(`Upload error: ${err.message}`, 'err');
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+// ==================== DRAG & DROP REORDER HANDLERS ====================
+let dragPayload = null;
+function dragStart(e, listKey, index) {
+    dragPayload = { listKey, index };
+    e.currentTarget.classList.add('dragging');
+}
+function dragOver(e) {
+    e.preventDefault();
+}
+async function dropItem(e, listKey, dropIndex) {
+    e.preventDefault();
+    document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    if (!dragPayload || dragPayload.listKey !== listKey || dragPayload.index === dropIndex) return;
+    pushHistory();
+    let arr = CACHE[listKey];
+    const [moved] = arr.splice(dragPayload.index, 1);
+    arr.splice(dropIndex, 0, moved);
+    dragPayload = null;
+    renderAll();
+    await saveToGist();
+    toast('Reordered & saved');
+}
+
+// ==================== 6. FILE MANAGER ====================
+async function getFileSha(p) {
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}&t=${Date.now()}`, {
+        headers: { Authorization: getAuthHeaders().Authorization || '' },
+        cache: "no-store"
+    });
+    if (!r.ok) {
+        if (r.status === 404) return { sha: null, content: null, notfound: true };
+        return null;
+    }
+    let j = await r.json();
+    try {
+        let bin = atob(j.content.replace(/\n/g, ''));
+        let bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        let content = new TextDecoder().decode(bytes);
+        return { sha: j.sha, content: content, path: p };
+    } catch (e) {
+        return { sha: j.sha, content: '', path: p };
+    }
+}
+
+async function loadFilesForCurrentPath() {
+    document.getElementById('currentPathDisplay').textContent = '/' + (currentPath ? currentPath + '/' : '');
+    document.getElementById('parentFolderBtn').style.display = currentPath ? 'inline-flex' : 'none';
+    document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
     
-    document.getElementById('apkStatus').textContent = `Uploading (${(file.size / 1024 / 1024).toFixed(1)}MB)...`;
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
+        headers: GH.token ? { Authorization: getAuthHeaders().Authorization || '' } : {},
+        cache: "no-store"
+    });
+    if (!r.ok) {
+        document.getElementById('pageButtons').innerHTML = '❌ Failed to load folder contents.';
+        return;
+    }
+    let files = await r.json();
+    files = files.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'dir' ? -1 : 1;
+    });
+    document.getElementById('pageButtons').innerHTML = files.map(f => {
+        let icon = f.type === 'dir' ? '📁' : (f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄');
+        let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
+        if (f.type === 'dir') {
+            return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">${icon} ${f.name}/</span>`;
+        }
+        return `<span class="file-btn ${f.path === currentPage ? 'active' : ''}" onclick="loadPage('${f.path}',this)">${icon} ${f.name}</span>${delBtn}`;
+    }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
+}
+
+function openFolder(path) {
+    currentPath = path;
+    loadFilesForCurrentPath();
+}
+
+function goToParentFolder() {
+    if (!currentPath) return;
+    let parts = currentPath.split('/');
+    parts.pop();
+    currentPath = parts.join('/');
+    loadFilesForCurrentPath();
+}
+
+async function createFolder() {
+    let folderName = document.getElementById('newFolderName').value.trim();
+    if (!folderName) return alert('Enter folder name');
+    let targetPath = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${targetPath}`, {
+        method: 'PUT',
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Create folder ${folderName}`, content: btoa(''), branch: GH.branch })
+    });
+    if (r.ok) {
+        document.getElementById('newFolderName').value = '';
+        toast('✅ Folder created');
+        loadFilesForCurrentPath();
+    } else {
+        let err = await r.json();
+        alert('❌ Error: ' + err.message);
+    }
+}
+
+async function loadPage(path, btn) {
+    currentPage = path;
+    document.querySelectorAll('.file-btn').forEach(x => x.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code" style="color:var(--accent);"></i> Editing: <b>${path}</b>`;
+    document.getElementById('pageStatus').textContent = 'Loading...';
+    let d = await getFileSha(path);
+    if (d && d.content !== null) {
+        currentSha = d.sha;
+        document.getElementById('pageEditor').value = d.content;
+        document.getElementById('pageStatus').textContent = `Loaded (${d.content.length} chars)`;
+    } else {
+        document.getElementById('pageEditor').value = '';
+        currentSha = null;
+        document.getElementById('pageStatus').textContent = 'New file';
+    }
+}
+
+async function createPage() {
+    let name = document.getElementById('newPageName').value.trim();
+    if (!name) return alert('Enter filename');
+    let type = document.getElementById('newFileType').value;
+    if (!name.includes('.')) name += '.' + type;
+    let fullPath = currentPath ? `${currentPath}/${name}` : name;
+    currentPage = fullPath;
+    let templates = {
+        html: `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${name}</title>
+</head>
+<body>
+  <h1>${name}</h1>
+</body>
+</html>`,
+        css: `/* ${name} */
+`,
+        js: `// ${name}
+`,
+        json: `{
+  "name": "${name}"
+}`,
+        txt: `${name}
+`
+    };
+    document.getElementById('pageEditor').value = templates[type] || templates.txt;
+    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code" style="color:var(--accent);"></i> New File: <b>${fullPath}</b>`;
+    currentSha = null;
+    document.getElementById('pageStatus').textContent = 'Ready to save';
+    document.getElementById('newPageName').value = '';
+}
+
+async function savePageToGitHub() {
+    if (!GH.token) return alert('Token required');
+    if (!currentPage) return alert('No file selected or created');
+    document.getElementById('pageStatus').textContent = 'Saving...';
+    let latest = await getFileSha(currentPage);
+    if (latest && latest.sha) currentSha = latest.sha;
+    let c = document.getElementById('pageEditor').value;
+    let b64 = btoa(unescape(encodeURIComponent(c)));
+    let body = { message: `Update ${currentPage}`, content: b64, branch: GH.branch };
+    if (currentSha) body.sha = currentSha;
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`, {
+        method: 'PUT',
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    let j = await r.json();
+    if (r.ok) {
+        currentSha = j.content.sha;
+        document.getElementById('pageStatus').textContent = '✅ Saved successfully';
+        toast('✅ File saved to GitHub');
+        loadFilesForCurrentPath();
+    } else {
+        document.getElementById('pageStatus').textContent = '❌ ' + j.message;
+        if (j.message.includes('sha')) currentSha = null;
+    }
+}
+
+async function deleteFile(path) {
+    if (!confirm(`Delete ${path}?`)) return;
+    let d = await getFileSha(path);
+    if (!d || !d.sha) return alert('File not found');
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+        method: 'DELETE',
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Delete ${path}`, sha: d.sha, branch: GH.branch })
+    });
+    let j = await r.json();
+    if (r.ok) {
+        toast('✅ File deleted');
+        loadFilesForCurrentPath();
+    } else {
+        alert('❌ ' + j.message);
+    }
+}
+
+async function deleteCurrentFile() {
+    if (!currentPage) return;
+    await deleteFile(currentPage);
+    document.getElementById('pageEditor').value = '';
+    document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code"></i> No file open`;
+    currentPage = '';
+}
+
+async function uploadAnyFile() {
+    let file = document.getElementById('anyFile').files[0];
+    if (!file) return alert('Choose file');
+    document.getElementById('anyFileStatus').textContent = 'Uploading...';
     let reader = new FileReader();
     reader.onload = async function() {
         let b64 = reader.result.split(',')[1];
-        let path = `files/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
-        
+        let path = currentPath ? `${currentPath}/${file.name}` : file.name;
+        let existing = await getFileSha(path);
+        let body = { message: `Upload ${path}`, content: b64, branch: GH.branch };
+        if (existing && existing.sha) body.sha = existing.sha;
         let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
             method: 'PUT',
-            headers: { Authorization: `token ${GH.token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
         });
-        
         let j = await r.json();
-        if(r.ok) {
-            let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
-            document.getElementById('verFile').value = rawUrl;
-            document.getElementById('verSize').value = (file.size / 1024 / 1024).toFixed(1) + 'MB';
-            document.getElementById('apkStatus').textContent = '✅ APK uploaded successfully';
+        if (r.ok) {
+            document.getElementById('anyFileStatus').textContent = `✅ Uploaded ${file.name}`;
+            loadFilesForCurrentPath();
         } else {
-            document.getElementById('apkStatus').textContent = `❌ ${j.message}`;
+            document.getElementById('anyFileStatus').textContent = `❌ ${j.message}`;
         }
     };
     reader.readAsDataURL(file);
