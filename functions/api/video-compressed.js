@@ -1,16 +1,14 @@
 export async function onRequestPost(context) {
   try {
     const payload = await context.request.json();
-
-    // Do whatever you want with the event here (save to KV/D1, log, etc.)
     console.log("Video resent event received:", payload);
-
     return new Response(
       JSON.stringify({
         ok: true,
         receivedAt: new Date().toISOString(),
-        fileName: payload.fileName,
-        newSizeMB: payload.newSizeMB,
+        fileName: payload.fileName || "unknown",
+        newSizeMB: payload.newSizeMB || 0,
+        originalSizeMB: payload.originalSizeMB || 0,
       }),
       {
         status: 200,
