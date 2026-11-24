@@ -166,6 +166,7 @@ button:disabled{opacity:0.45;cursor:not-allowed}
             <span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates <span class="badge-count" id="cnt-news">0</span></span>
             <span class="tab" onclick="showTab('apps',this)"><i class="fas fa-mobile-screen-button"></i> My Apps <span class="badge-count" id="cnt-apps">0</span></span>
             <span class="tab" onclick="showTab('pages',this)"><i class="fas fa-folder-tree"></i> File Manager</span>
+            <span class="tab" onclick="showTab('appads',this)"><i class="fas fa-window-restore"></i> English App Popups &amp; Updates <span class="badge-count" id="cnt-appads">0</span></span>
         </div>
 
         <!-- ==================== PRODUCTS TAB ==================== -->
@@ -414,6 +415,55 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                 <button class="btn-danger" onclick="deleteCurrentFile()"><i class="fas fa-trash-can"></i> Delete File</button>
             </div>
         </div>
+
+        <!-- ==================== ENGLISH APP POPUPS & UPDATES TAB ==================== -->
+        <div id="tab-appads" class="hidden">
+            <h3>
+                <span class="title-left"><i class="fas fa-window-restore"></i> English App — Popup Ads &amp; Latest Updates Manager</span>
+                <button class="btn-ghost btn-xs" onclick="loadData()"><i class="fas fa-rotate"></i> Refresh Gist</button>
+            </h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px">
+                Control the popup ads that appear in the <b>Learn English</b> Android app (and keep <b>Latest Updates</b> cards on the home screen working smoothly).
+                You can enable/disable individual popup ads, create custom popup ads with title, message, image, and button link, or manage updates directly.
+            </p>
+
+            <div style="background:#F1F5F9;padding:18px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
+                <div id="appPopupEditBanner" class="edit-banner hidden">
+                    <span><i class="fas fa-pen-to-square"></i> Editing App Popup Ad: <b id="appPopupEditTitle"></b></span>
+                    <button class="btn-ghost btn-xs" onclick="cancelEditAppPopup()">Cancel Edit</button>
+                </div>
+                <b id="appPopupFormHeading">Add / Configure App Popup Ad</b>
+                <div class="grid-2">
+                    <input id="appPopupTitle" placeholder="Popup Title e.g. Need a Website or App?">
+                    <input id="appPopupUrl" placeholder="Click URL e.g. https://fosnalic.pages.dev">
+                </div>
+                <div class="grid-2">
+                    <input id="appPopupImg" placeholder="Popup Image URL (optional)">
+                    <select id="appPopupEnabled">
+                        <option value="true">Status: Active (Show in App)</option>
+                        <option value="false">Status: Paused (Hide in App)</option>
+                    </select>
+                </div>
+                <textarea id="appPopupText" style="min-height:85px" placeholder="Popup message shown to the user..."></textarea>
+                <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+                    <button id="btnSaveAppPopup" class="btn-primary" style="flex:1" onclick="saveAppPopup()"><i class="fas fa-plus-circle"></i> Save Popup Ad</button>
+                    <button class="btn-danger" onclick="disableAllAppPopups()"><i class="fas fa-ban"></i> Pause All App Popups</button>
+                    <button class="btn-ok" onclick="enableAllAppPopups()"><i class="fas fa-check"></i> Activate All App Popups</button>
+                </div>
+            </div>
+
+            <h4 style="margin-bottom:10px;color:var(--primary)"><i class="fas fa-layer-group"></i> Configured App Popup Ads</h4>
+            <div id="appPopupsList"></div>
+
+            <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--border)">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+                    <h4 style="color:var(--primary);margin:0"><i class="fas fa-newspaper"></i> Home Screen "Latest Updates" (Synced with Updates Tab)</h4>
+                    <button class="btn-ghost btn-xs" onclick="document.querySelectorAll('.tab')[3].click()"><i class="fas fa-arrow-up-right-from-square"></i> Open Full Updates Editor</button>
+                </div>
+                <div id="appUpdatesMirrorList"></div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -702,6 +752,7 @@ function renderAll() {
     renderAds();
     renderNews();
     renderApps();
+    renderAppPopups();
 }
 
 // ==================== 1. PRODUCTS MANAGER ====================
@@ -1832,6 +1883,173 @@ async function uploadAnyFile() {
         }
     };
     reader.readAsDataURL(file);
+}
+
+
+// ==================== 7. ENGLISH APP POPUPS & UPDATES MANAGER ====================
+let editAppPopupIdx = null;
+
+function ensureAppPopupConfig() {
+    if (!CACHE) return;
+    CACHE.englishAppConfig = CACHE.englishAppConfig || {
+        popups: [],
+        updatesEnabled: true
+    };
+    CACHE.englishAppConfig.popups = CACHE.englishAppConfig.popups || [];
+    if (typeof CACHE.englishAppConfig.updatesEnabled !== 'boolean') {
+        CACHE.englishAppConfig.updatesEnabled = true;
+    }
+}
+
+function updateAppAdsBadge() {
+    if (!CACHE) return;
+    ensureAppPopupConfig();
+    const activePopups = CACHE.englishAppConfig.popups.filter(p => p && p.enabled !== false).length;
+    const badge = document.getElementById('cnt-appads');
+    if (badge) badge.textContent = activePopups;
+}
+
+function renderAppPopups() {
+    if (!CACHE) return;
+    ensureAppPopupConfig();
+    updateAppAdsBadge();
+
+    const listEl = document.getElementById('appPopupsList');
+    const popups = CACHE.englishAppConfig.popups;
+
+    if (!popups.length) {
+        listEl.innerHTML = `<div class="item-row"><span style="color:var(--text-muted)">No dedicated English App popup ads configured yet. Add one above or toggle/edit popups here.</span></div>`;
+    } else {
+        listEl.innerHTML = popups.map((p, i) => {
+            const isActive = p.enabled !== false;
+            const isEditing = editAppPopupIdx === i;
+            return `
+                <div class="news-card ${isEditing ? 'editing' : ''}">
+                    ${p.img ? `<img src="${escapeHtml(p.img)}" alt="">` : `<div style="width:68px;height:68px;border-radius:6px;background:#E2E8F0;display:flex;align-items:center;justify-content:center;color:#475569;flex-shrink:0"><i class="fas fa-window-maximize" style="font-size:1.4rem"></i></div>`}
+                    <div style="flex:1;min-width:0">
+                        <span style="padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;background:${isActive ? '#D1FAE5' : '#FEE2E2'};color:${isActive ? '#065F46' : '#991B1B'}">${isActive ? 'ACTIVE IN APP' : 'PAUSED'}</span>
+                        <b style="margin-left:6px">${escapeHtml(p.title || 'App Popup')}</b><br>
+                        <small style="color:var(--text-muted)">${escapeHtml((p.text || '').substring(0, 120))}</small><br>
+                        <small style="color:var(--accent)">Link: ${escapeHtml(p.url || 'https://fosnalic.pages.dev')}</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-ghost btn-xs" onclick="toggleAppPopup(${i})">${isActive ? 'Pause' : 'Enable'}</button>
+                        <button class="btn-warn btn-xs" onclick="editAppPopup(${i})"><i class="fas fa-pen"></i> Edit</button>
+                        <button class="btn-danger btn-xs" onclick="deleteAppPopup(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    const mirrorEl = document.getElementById('appUpdatesMirrorList');
+    const updates = CACHE.news || [];
+    mirrorEl.innerHTML = updates.length ? updates.map((n, i) => `
+        <div class="item-row">
+            <div style="flex:1;min-width:0">
+                <span style="background:#DBEAFE;color:var(--accent);padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:700">${escapeHtml(n.tag || 'UPDATE')}</span>
+                <b style="margin-left:6px">${escapeHtml(n.title || '')}</b><br>
+                <small style="color:var(--text-muted)">${escapeHtml((n.desc || '').substring(0, 100))}</small>
+            </div>
+            <div class="item-actions">
+                <button class="btn-warn btn-xs" onclick="document.querySelectorAll('.tab')[3].click();editNews(${i})"><i class="fas fa-pen"></i> Edit</button>
+            </div>
+        </div>
+    `).join('') : '<i style="color:var(--text-muted)">No Latest Updates items in Gist yet.</i>';
+}
+
+function editAppPopup(i) {
+    ensureAppPopupConfig();
+    const p = CACHE.englishAppConfig.popups[i];
+    if (!p) return;
+    editAppPopupIdx = i;
+    document.getElementById('appPopupTitle').value = p.title || '';
+    document.getElementById('appPopupUrl').value = p.url || 'https://fosnalic.pages.dev';
+    document.getElementById('appPopupImg').value = p.img || '';
+    document.getElementById('appPopupEnabled').value = String(p.enabled !== false);
+    document.getElementById('appPopupText').value = p.text || '';
+    document.getElementById('appPopupEditBanner').classList.remove('hidden');
+    document.getElementById('appPopupEditTitle').textContent = p.title || 'Popup';
+    document.getElementById('btnSaveAppPopup').innerHTML = '<i class="fas fa-check-circle"></i> Update Popup Ad';
+    renderAppPopups();
+}
+
+function cancelEditAppPopup() {
+    editAppPopupIdx = null;
+    document.getElementById('appPopupTitle').value = '';
+    document.getElementById('appPopupUrl').value = '';
+    document.getElementById('appPopupImg').value = '';
+    document.getElementById('appPopupEnabled').value = 'true';
+    document.getElementById('appPopupText').value = '';
+    document.getElementById('appPopupEditBanner').classList.add('hidden');
+    document.getElementById('btnSaveAppPopup').innerHTML = '<i class="fas fa-plus-circle"></i> Save Popup Ad';
+    renderAppPopups();
+}
+
+async function saveAppPopup() {
+    if (!CACHE) return;
+    ensureAppPopupConfig();
+    const title = document.getElementById('appPopupTitle').value.trim();
+    const text = document.getElementById('appPopupText').value.trim();
+    const url = document.getElementById('appPopupUrl').value.trim() || 'https://fosnalic.pages.dev';
+    const img = document.getElementById('appPopupImg').value.trim();
+    const enabled = document.getElementById('appPopupEnabled').value === 'true';
+
+    if (!title && !text && !img) return alert('Enter popup title, text, or image URL');
+
+    pushHistory();
+    const item = { title: title || 'Featured by Fosnalic Techs', text, url, img, enabled };
+    if (editAppPopupIdx !== null) {
+        CACHE.englishAppConfig.popups[editAppPopupIdx] = item;
+        cancelEditAppPopup();
+        toast('✅ App popup ad updated');
+    } else {
+        CACHE.englishAppConfig.popups.unshift(item);
+        cancelEditAppPopup();
+        toast('✅ App popup ad added');
+    }
+    await saveToGist();
+    renderAppPopups();
+}
+
+async function toggleAppPopup(i) {
+    ensureAppPopupConfig();
+    const p = CACHE.englishAppConfig.popups[i];
+    if (!p) return;
+    pushHistory();
+    p.enabled = !(p.enabled !== false);
+    await saveToGist();
+    renderAppPopups();
+    toast(p.enabled ? '✅ Popup enabled' : '⏸️ Popup paused');
+}
+
+async function deleteAppPopup(i) {
+    if (!confirm('Delete this popup ad?')) return;
+    ensureAppPopupConfig();
+    pushHistory();
+    if (editAppPopupIdx === i) cancelEditAppPopup();
+    CACHE.englishAppConfig.popups.splice(i, 1);
+    await saveToGist();
+    renderAppPopups();
+    toast('Popup ad deleted');
+}
+
+async function disableAllAppPopups() {
+    ensureAppPopupConfig();
+    pushHistory();
+    CACHE.englishAppConfig.popups.forEach(p => p.enabled = false);
+    await saveToGist();
+    renderAppPopups();
+    toast('All app popup ads paused');
+}
+
+async function enableAllAppPopups() {
+    ensureAppPopupConfig();
+    pushHistory();
+    CACHE.englishAppConfig.popups.forEach(p => p.enabled = true);
+    await saveToGist();
+    renderAppPopups();
+    toast('All app popup ads activated');
 }
 
 loadData();
