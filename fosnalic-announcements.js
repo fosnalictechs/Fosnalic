@@ -1,17 +1,13 @@
-//file fosnalic-announcements.js
 (() => {
   "use strict";
 
   const DEFAULT_GIST_ID = "0f719dd44c5c9bce109b0bce767f9162";
 
-  // >>> YOU DECIDE HERE <<<
-  // ONLY these pages get ads. No other page gets ads.
   const ALLOWED_AD_PAGES = new Set([
     "/",
     "/index.html",
     "/services.html",
     "/extra-help.html",
-    "/my-apps.html",
   ]);
 
   const path = location.pathname.toLowerCase();
@@ -56,17 +52,14 @@
     })[char]);
   }
 
-  function sanitizeUrl(url) {
-    if (typeof url !== "string") return "";
-    const trimmed = url.trim();
-    if (!trimmed) return "";
-    if (/^(https?:\/\/|\/|\.\/|\.\.\/|data:image\/(png|jpe?g|gif|webp|svg\+xml);base64,)/i.test(trimmed)) {
-      return trimmed;
-    }
+  function sanitizeUrl(u) {
+    if (!u || typeof u !== "string") return "";
+    u = u.trim();
+    if (/^https?:\/\//i.test(u) || u.startsWith("/")) return u;
     return "";
   }
 
-  // FIXED: now shows pictures from img, from image URL in text, and from <img> HTML in text
+  // FIXED: Handles img + url + HTML text - does NOT escape <img> HTML
   function buildAdMarkup(adObj) {
     if (!adObj || typeof adObj !== "object") return "";
     const imgUrl = sanitizeUrl(adObj.img || adObj.image || adObj.imageUrl || adObj.bannerUrl || "");
@@ -75,29 +68,21 @@
     const rawText = typeof adObj.text === "string" ? adObj.text.trim() : "";
     const rawHtml = typeof adObj.html === "string" ? adObj.html.trim() : "";
 
-    let finalImg = imgUrl;
-    let finalText = rawText;
-    if (!finalImg && /^https?:\/\/.*\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(rawText)) {
-      finalImg = sanitizeUrl(rawText);
-      finalText = "";
-    }
-    if (!finalImg && /<img[\s>]/i.test(rawText)) {
-      return rawText;
+    // If text already IS HTML with <img> or <a>, return it AS-IS - do NOT escape
+    if (/<(img|a|div|p|span|script)[\s>]/i.test(rawText)) return rawText;
+    if (/<(img|a|div|p|span|script)[\s>]/i.test(rawHtml)) return rawHtml;
+
+    // If text is just an image URL, render it as image
+    if (!imgUrl && /^https?:\/\/.*\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(rawText)) {
+      return `<img src="${escapeHtml(rawText)}" style="max-width:100%;border-radius:8px;display:block;margin:0 auto;">`;
     }
 
-    if (finalImg) {
-      const safeImg = escapeHtml(finalImg);
-      const safeAlt = escapeHtml(title || "Advertisement");
-      const imgTag = `<img src="${safeImg}" alt="${safeAlt}" loading="lazy" style="max-width:100%;max-height:260px;width:auto;height:auto;border-radius:8px;display:block;object-fit:contain;margin:0 auto 10px;">`;
-      const wrappedImg = linkUrl
-        ? `<a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">${imgTag}</a>`
-        : imgTag;
-      const bodyContent = rawHtml || (finalText ? `<div style="font-size:14px;line-height:1.5;">${escapeHtml(finalText)}</div>` : "");
+    if (imgUrl) {
+      const imgTag = `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(title || "Advertisement")}" loading="lazy" style="max-width:100%;max-height:260px;width:auto;height:auto;border-radius:8px;display:block;object-fit:contain;margin:0 auto 10px;">`;
+      const wrapped = linkUrl ? `<a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:block;">${imgTag}</a>` : imgTag;
       const titleHtml = title ? `<div style="font-weight:700;font-size:15px;margin-bottom:6px;">${escapeHtml(title)}</div>` : "";
-      const ctaHtml = linkUrl
-        ? `<div style="margin-top:8px;"><a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:6px 12px;border-radius:6px;background:#2563EB;color:#fff;font-size:12px;font-weight:600;text-decoration:none;">Learn More</a></div>`
-        : "";
-      return `${wrappedImg}${titleHtml}${bodyContent}${ctaHtml}`;
+      const textHtml = rawText ? `<div>${escapeHtml(rawText)}</div>` : "";
+      return `${wrapped}${titleHtml}${textHtml}`;
     }
     return rawHtml || rawText || "";
   }
@@ -108,30 +93,21 @@
 
   function renderAds(data) {
     if (!ALLOWED_AD_PAGES.has(path)) return;
-    // FIXED: don't block just because page has #adHeader divs
-    if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
-        document.querySelector("[data-fos-shared-ads]")) return;
 
-    const hasAdContent = (value) => {
-      if (!value || typeof value !== "object") return false;
-      return Boolean(
-        (typeof value.text === "string" && value.text.trim()) ||
-        (typeof value.html === "string" && value.html.trim()) ||
-        (typeof value.img === "string" && value.img.trim()) ||
-        (typeof value.image === "string" && value.image.trim()) ||
-        (typeof value.imageUrl === "string" && value.imageUrl.trim()) ||
-        (typeof value.bannerUrl === "string" && value.bannerUrl.trim())
-      );
-    };
+    if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
+        document.querySelector("#adHeader, #adMiddle, #adFooter, [data-fos-shared-ads]")) return;
+
+    // FIXED: check text OR img OR html
+    const hasContent = (v) => v && typeof v === "object" && ((typeof v.text === "string" && v.text.trim()) || (typeof v.html === "string" && v.html.trim()) || v.img || v.image);
 
     const slotAds = [
       { slot: "header", value: data.adHeader },
       { slot: "middle", value: data.adMiddle },
       { slot: "footer", value: data.adFooter },
-    ].filter(({ value }) => hasAdContent(value));
+    ].filter(({ value }) => hasContent(value));
 
     const listAds = (Array.isArray(data.ads) ? data.ads : [])
-      .filter((ad) => ad && ad.enabled !== false && hasAdContent(ad));
+      .filter((ad) => ad && ad.enabled !== false && hasContent(ad));
 
     if (!slotAds.length && !listAds.length) return;
 
@@ -146,16 +122,9 @@
       return card;
     };
 
-    for (const { value } of slotAds) {
-      const markup = buildAdMarkup(value);
-      if (markup) container.appendChild(makeAd(markup));
-    }
-    for (const ad of listAds.slice(0, 4)) {
-      const markup = buildAdMarkup(ad);
-      if (markup) container.appendChild(makeAd(markup));
-    }
+    for (const { value } of slotAds) container.appendChild(makeAd(buildAdMarkup(value)));
+    for (const ad of listAds.slice(0, 4)) container.appendChild(makeAd(buildAdMarkup(ad)));
 
-    if (!container.children.length) return;
     const footer = document.querySelector("footer");
     document.body.insertBefore(container, footer || null);
   }
