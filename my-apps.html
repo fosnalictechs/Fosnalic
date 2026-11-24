@@ -6,107 +6,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--primary:#2A4B7C;--secondary:#FF6B35;--gray:#F5F7FA;--border:#E2E8F0;--shadow:0 10px 30px rgba(0,0,0,0.08)}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--gray)}
-.container{width:90%;max-width:1100px;margin:0 auto}
-.card{background:white;padding:18px;border-radius:16px;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;transition:.2s}
-.card:hover{transform:translateY(-3px)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:20px}
-.btn{padding:10px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;border:none;cursor:pointer}
-.btn-sm{padding:6px 14px;font-size:.8rem}
-.hero{background:linear-gradient(135deg,rgba(10,14,26,0.92),rgba(42,75,124,0.9)),url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=2000') center/cover;color:white;text-align:center;padding:90px 0 50px}
-.icon-box{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border:1px solid #E2E8F0;background:#F8FAFC}
+:root{--primary:#2A4B7C;--primary-dark:#1A365D;--secondary:#FF6B35;--gray:#F5F7FA;--border:#E2E8F0;--text:#1E293B;--muted:#64748B;--shadow:0 10px 30px rgba(0,0,0,0.08);--radius:16px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:var(--gray);color:var(--text);padding-top:68px}
+a{text-decoration:none;color:inherit}
+.container{width:92%;max-width:1150px;margin:0 auto}
+.topbar{background:white;box-shadow:0 2px 12px rgba(0,0,0,.06);position:fixed;top:0;left:0;width:100%;z-index:1000}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-weight:900;font-size:1.25rem;color:var(--primary);letter-spacing:-.5px}
+.logo span{color:var(--secondary)}
+.nav-links{display:flex;gap:4px;align-items:center;list-style:none}
+.nav-links a{padding:8px 12px;border-radius:50px;font-weight:600;font-size:.88rem;color:#334155;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{background:#EEF2FF;color:var(--primary)}
+.hamburger{display:none;font-size:1.4rem;cursor:pointer;color:var(--primary);background:none;border:none}
+@media(max-width:900px){
+  .nav-links{display:none;position:absolute;top:68px;left:0;width:100%;background:white;flex-direction:column;padding:14px;box-shadow:0 10px 20px rgba(0,0,0,.1);gap:6px}
+  .nav-links.show{display:flex}
+  .nav-links a{display:block;width:100%;padding:12px}
+  .hamburger{display:block}
+}
+.hero{background:linear-gradient(135deg,rgba(10,14,26,.94),rgba(42,75,124,.92)),url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=2000') center/cover;color:white;text-align:center;padding:70px 0 42px}
+.hero h2{font-size:2.3rem;font-weight:900;line-height:1.1}
+.hero p{color:#CBD5E1;margin-top:10px}
+.hero-pill{display:inline-flex;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700;margin-bottom:14px}
+.search-box{max-width:520px;margin:20px auto 0;background:white;border-radius:50px;display:flex;padding:5px 5px 5px 18px;align-items:center;gap:8px}
+.search-box input{flex:1;border:none;outline:none;font-size:.95rem}
+.search-box button{background:var(--primary);color:white;border:none;padding:10px 18px;border-radius:50px;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:18px;margin-top:22px}
+.card{background:white;padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#CBD5E1}
+.icon-box{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border:1px solid #E2E8F0;background:#F8FAFC}
 .icon-box img{width:100%;height:100%;object-fit:cover}
+.btn{padding:12px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:.92rem;border:none;cursor:pointer;width:100%}
+.btn-sm{padding:9px 16px;font-size:.85rem;width:auto}
+.btn-outline{background:white;color:var(--primary);border:1.5px solid var(--border)}
+.back-btn{padding:10px 18px;background:white;border:1.5px solid var(--border);border-radius:50px;font-weight:800;color:var(--primary);cursor:pointer;margin-bottom:14px;display:inline-flex;align-items:center;gap:8px}
+.badge{background:#E0F2FF;color:#1A365D;padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:800}
+.badge-green{background:#DCFCE7;color:#166534}
+.badge-dark{background:#1A365D;color:white}
+.version-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px;border:1px solid #F1F5F9;border-radius:14px;margin:10px 0;background:white;box-shadow:0 2px 8px rgba(0,0,0,.03)}
 .hidden{display:none}
-.topbar{background:white;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);position:fixed;top:0;width:100%;z-index:1000}
-.version-row{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #F1F5F9;border-radius:12px;margin:8px 0;background:#FAFBFC}
-.badge{background:#E0F2FF;color:#1A365D;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700}
+.trust{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.trust span{background:rgba(255,255,255,.12);padding:7px 12px;border-radius:50px;font-size:.8rem;font-weight:600}
+.section-title{color:var(--primary-dark);margin:14px 0;display:flex;align-items:center;gap:8px}
+.footer{background:#0F172A;color:#94A3B8;padding:36px 0;margin-top:40px;font-size:.88rem}
+.footer a{color:#E2E8F0}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:20px}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr}.version-row{flex-direction:column;align-items:stretch}.hero h2{font-size:1.8rem}}
 </style>
 </head>
 <body>
-<div class="topbar"><div class="container" style="display:flex;justify-content:space-between"><a href="index.html" style="text-decoration:none;font-weight:800;color:#2A4B7C">FOSNALIC Techs</a><a href="#" onclick="showList()" id="backBtn" class="hidden" style="text-decoration:none;color:#2A4B7C;font-weight:700"><i class="fas fa-arrow-left"></i> Back to Apps</a><a href="index.html" id="homeBtn" style="text-decoration:none;color:#2A4B7C;font-weight:700">Home</a></div></div>
 
-<section class="hero" id="hero"><div class="container"><h2 id="heroTitle" style="font-size:2.2rem;font-weight:800">My Apps — Download Center</h2><p id="heroSub" style="color:#cbd5e0;margin-top:8px">Tap any app to see its versions</p></div></section>
+<header class="topbar"><div class="container nav">
+  <a href="index.html" class="logo">FOSNALIC<span> Techs</span></a>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fas fa-bars"></i></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="my-apps.html" class="active">My Apps</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="live-chat.html">Live Chat</a></li>
+    <li><a href="tools.html">Tools</a></li>
+    <li><a href="extra-help.html">Extra Help</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div></header>
 
-<div class="container" style="padding:30px 20px">
-<!-- SECTION 1: LIST OF ALL APPS -->
-<div id="section-apps"><div id="appsList" class="grid"></div></div>
+<section class="hero" id="hero"><div class="container">
+  <span class="hero-pill"><i class="fas fa-shield-alt"></i> Verified • Safe • © FosnalicTechs®</span>
+  <h2 id="heroTitle">My Apps — Download Center</h2>
+  <p id="heroSub">Tap any app to see its versions. Secure downloads only.</p>
+  <div class="search-box"><i class="fas fa-search" style="color:#94A3B8"></i><input id="searchInput" placeholder="Search apps... e.g. Learn English" oninput="filterApps()"><button onclick="filterApps()">Search</button></div>
+  <div class="trust"><span>✅ No Virus</span><span>🔒 Privacy Protected</span><span>🇺🇬 Made in Uganda</span></div>
+</div></section>
 
-<!-- SECTION 2: ONE APP DETAIL - ALL ITS VERSIONS -->
-<div id="section-detail" class="hidden">
-  <div id="detailHeader" class="card" style="margin-bottom:18px"></div>
-  <h3 style="color:#1A365D;margin:12px 0"><i class="fas fa-layer-group"></i> All Versions - Latest First</h3>
-  <div id="detailVersions"></div>
+<div class="container" style="padding:28px 0 10px">
+  <div id="section-apps">
+    <h3 class="section-title"><i class="fas fa-th-large"></i> All Apps</h3>
+    <div id="appsList" class="grid"></div>
+  </div>
+
+  <div id="section-detail" class="hidden">
+    <button onclick="showList()" class="back-btn"><i class="fas fa-arrow-left"></i> Back to All Apps</button>
+    <div id="detailHeader" class="card" style="margin-bottom:18px;cursor:default"></div>
+    <h3 class="section-title"><i class="fas fa-layer-group"></i> All Versions — Latest First</h3>
+    <div id="detailVersions"></div>
+    <div class="card" style="cursor:default;margin-top:16px;background:#FFFBEB;border-color:#FDE68A">
+      <b style="color:#92400E"><i class="fas fa-info-circle"></i> How to Install?</b>
+      <p style="color:#78350F;font-size:.88rem;margin-top:6px;line-height:1.6">1. Tap Install → 2. Allow Unknown Apps → 3. If Play Protect appears, tap <b>More details → Install without scanning</b> → 4. Tap Open. Only install if it came from @FosnalicTechs.</p>
+    </div>
+  </div>
 </div>
-</div>
+
+<footer class="footer"><div class="container"><div class="footer-grid">
+  <div><div style="color:white;font-weight:900;font-size:1.2rem">FOSNALIC <span style="color:#FF6B35">Techs</span></div><p style="margin-top:8px;line-height:1.6">Building simple, safe apps for learning & business in Africa.<br>© 2026 FosnalicTechs®. All rights reserved.</p><p style="margin-top:10px">@FosnalicTechs • #LearnEnglish</p></div>
+  <div><b style="color:white">Quick Links</b><br><br><a href="index.html">Home</a><br><a href="my-apps.html">My Apps</a><br><a href="products.html">Products</a><br><a href="services.html">Services</a><br><a href="portfolio.html">Portfolio</a></div>
+  <div><b style="color:white">Support</b><br><br><a href="live-chat.html">Live Chat</a><br><a href="tools.html">Tools</a><br><a href="extra-help.html">Extra Help</a><br><a href="contact.html">Contact</a></div>
+</div></div></footer>
 
 <script>
-let GIST_ID=localStorage.getItem('fos_gist_id')||"0f719dd44c5c9bce109b0bce767f9162";
-let ALL_APPS=[];
+let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
+let ALL_APPS = []; let FILTERED = [];
+
+function versionText(n){ return n + (n === 1 ? " version" : " versions"); }
 
 async function loadApps(){
- let r=await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{cache:"no-store"});
- let j=await r.json();let data=JSON.parse(j.files['fosnalic-data.json'].content);
- ALL_APPS=data.apps||[];
- if(!ALL_APPS.length){document.getElementById('appsList').innerHTML='<div style="text-align:center;padding:60px;background:white;border-radius:16px">No Apps Yet</div>';return;}
- 
- document.getElementById('appsList').innerHTML=ALL_APPS.map((app,idx)=>{
-   let vers=(app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
-   let latest=vers[0];
-   let icon = app.iconUrl ? `<img src="${app.iconUrl}">` : `<i class="fas ${app.icon||'fa-mobile-alt'}" style="color:#2A4B7C"></i>`;
+ try{
+  let r = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{cache:"no-store"});
+  let j = await r.json(); let data = JSON.parse(j.files['fosnalic-data.json'].content);
+  ALL_APPS = data.apps || []; FILTERED = ALL_APPS; renderList();
+ }catch(e){ document.getElementById('appsList').innerHTML='<div style="text-align:center;padding:40px;background:white;border-radius:16px">Could not load apps. Check internet.</div>'; }
+}
+
+function filterApps(){
+ let q = (document.getElementById('searchInput').value||'').toLowerCase();
+ FILTERED = ALL_APPS.filter(a=> (a.name+' '+(a.desc||'')).toLowerCase().includes(q));
+ renderList();
+}
+
+function renderList(){
+ if(!FILTERED.length){document.getElementById('appsList').innerHTML='<div style="text-align:center;padding:50px;background:white;border-radius:16px">No Apps Found</div>';return;}
+ document.getElementById('appsList').innerHTML = FILTERED.map((app)=>{
+   let realIdx = ALL_APPS.indexOf(app);
+   let vers = (app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+   let latest = vers[0];
+   let icon = app.iconUrl ? `<img src="${app.iconUrl}" alt="">` : `<i class="fas ${app.icon||'fa-mobile-alt'}" style="color:#2A4B7C;font-size:24px"></i>`;
    let desc = app.desc || `This is the new version of ${app.name}, built with advanced features to suit the user.`;
-   return `<div class="card" onclick="openApp(${idx})">
-     <div style="display:flex;gap:14px;align-items:center"><div class="icon-box">${icon}</div><div><h3>${app.name}</h3><p style="color:#A0AEC0;font-size:.8rem">${latest?latest.ver+' • '+latest.date:''} • ${vers.length} version(s)</p></div></div>
-     <p style="color:#718096;font-size:.85rem;margin:12px 0;height:40px;overflow:hidden">${desc.substring(0,90)}...</p>
-     <div style="display:flex;justify-content:space-between;align-items:center"><span class="badge"><i class="fas fa-download"></i> ${vers.length} versions</span><span style="color:#2A4B7C;font-weight:700;font-size:.85rem">Open <i class="fas fa-chevron-right"></i></span></div>
+   return `<div class="card" onclick="openApp(${realIdx})">
+     <div style="display:flex;gap:14px;align-items:center"><div class="icon-box">${icon}</div><div><h3>${app.name}</h3><p style="color:#94A3B8;font-size:.8rem">${latest?latest.ver+' • '+latest.date:''} • ${versionText(vers.length)}</p></div></div>
+     <p style="color:#64748B;font-size:.86rem;margin:12px 0;height:42px;overflow:hidden;line-height:1.5">${desc.substring(0,95)}...</p>
+     <div style="display:flex;justify-content:space-between;align-items:center"><span class="badge"><i class="fas fa-download"></i> ${versionText(vers.length)}</span><span style="color:#2A4B7C;font-weight:800;font-size:.85rem">Open <i class="fas fa-chevron-right"></i></span></div>
    </div>`;
  }).join('');
 }
 
 function openApp(idx){
- let app=ALL_APPS[idx];
- let vers=(app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
- let latest=vers[0];
- let icon = app.iconUrl ? `<img src="${app.iconUrl}">` : `<i class="fas ${app.icon||'fa-mobile-alt'}" style="color:#2A4B7C;font-size:28px"></i>`;
- 
- // Hide list, show detail
+ let app = ALL_APPS[idx];
+ let vers = (app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+ let latest = vers[0];
+ let icon = app.iconUrl ? `<img src="${app.iconUrl}" alt="">` : `<i class="fas ${app.icon||'fa-mobile-alt'}" style="color:#2A4B7C;font-size:32px"></i>`;
  document.getElementById('section-apps').classList.add('hidden');
  document.getElementById('section-detail').classList.remove('hidden');
- document.getElementById('backBtn').classList.remove('hidden');
- document.getElementById('homeBtn').classList.add('hidden');
- document.getElementById('heroTitle').textContent=app.name;
- document.getElementById('heroSub').textContent=`${vers.length} versions available • Tap install on any version`;
-
- document.getElementById('detailHeader').innerHTML=`
-   <div style="display:flex;gap:16px;align-items:center"><div class="icon-box" style="width:72px;height:72px">${icon}</div>
-   <div style="flex:1"><h2 style="color:#1A365D">${app.name}</h2><p style="color:#718096;font-size:.9rem;margin:6px 0">${app.desc || `This is the new version of ${app.name}, built with advanced features to suit the user.`}</p><p style="font-size:.8rem"><span class="badge" style="background:#DCFCE7;color:#166534">Latest: ${latest?latest.ver:''}</span> <span style="color:#94A3B8">${latest?latest.date+' • '+latest.size:''}</span></p></div></div>
-   ${latest?`<div style="margin-top:16px"><a href="${latest.file}" class="btn" style="width:100%;justify-content:center" download><i class="fas fa-download"></i> Install Latest ${latest.ver} (${latest.size})</a></div>`:''}
+ document.getElementById('heroTitle').textContent = app.name;
+ document.getElementById('heroSub').textContent = `${versionText(vers.length)} available • Secure Download`;
+ document.getElementById('detailHeader').innerHTML = `
+   <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div class="icon-box" style="width:74px;height:74px">${icon}</div>
+   <div style="flex:1;min-width:220px"><h2 style="color:#1A365D">${app.name}</h2><p style="color:#64748B;font-size:.92rem;margin:6px 0;line-height:1.5">${app.desc || `This is the new version of ${app.name}, built with advanced features to suit the user.`}</p><p style="font-size:.82rem"><span class="badge badge-green">Latest: ${latest?latest.ver:''}</span> <span style="color:#94A3B8">${latest?latest.date+' • '+latest.size:''}</span></p></div></div>
+   ${latest?`<div style="margin-top:16px"><button class="btn" onclick="secureDownload(${idx},0)"><i class="fas fa-download"></i> Install Latest ${latest.ver} (${latest.size})</button><p style="text-align:center;font-size:.78rem;color:#94A3B8;margin-top:8px"><i class="fas fa-lock"></i> Secure link — verified by FosnalicTechs</p></div>`:''}
  `;
-
- document.getElementById('detailVersions').innerHTML=vers.map((v,i)=>{
-   let isLatest=i===0;
+ document.getElementById('detailVersions').innerHTML = vers.map((v,i)=>{
+   let isLatest = i===0;
    return `<div class="version-row" style="${isLatest?'border:2px solid #2A4B7C;background:#F0F9FF':''}">
-     <div style="flex:1"><div style="display:flex;gap:8px;align-items:center"><b>${v.ver}</b> ${isLatest?'<span class="badge" style="background:#1A365D;color:white">LATEST</span>':''} <span class="badge">${v.date}</span> <small style="color:#64748B">${v.size}</small></div>
-     <small style="color:#475569;display:block;margin-top:4px">${v.notes||`This is the new version of ${app.name}, built with advanced features`}</small>
-     <small style="color:#94A3B8;word-break:break-all;font-size:.7rem">${v.file.substring(0,50)}...</small></div>
-     <div style="display:flex;flex-direction:column;gap:6px"><a href="${v.file}" class="btn btn-sm" download><i class="fas fa-download"></i> Install</a></div>
+     <div style="flex:1"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>${v.ver}</b> ${isLatest?'<span class="badge badge-dark">LATEST</span>':''} <span class="badge">${v.date}</span> <small style="color:#64748B">${v.size}</small></div>
+     <small style="color:#475569;display:block;margin-top:6px;line-height:1.5">${v.notes||`This is the new version of ${app.name}, built with advanced features`}</small></div>
+     <div><button class="btn btn-sm" onclick="secureDownload(${idx},${i})"><i class="fas fa-download"></i> Install</button></div>
    </div>`;
  }).join('');
-
  window.scrollTo(0,0);
+}
+
+function secureDownload(appIdx, verIdx){
+ let app = ALL_APPS[appIdx];
+ let vers = (app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
+ let v = vers[verIdx]; if(!v||!v.file) return;
+ let a = document.createElement('a'); a.href = v.file; a.download=''; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
 }
 
 function showList(){
  document.getElementById('section-apps').classList.remove('hidden');
  document.getElementById('section-detail').classList.add('hidden');
- document.getElementById('backBtn').classList.add('hidden');
- document.getElementById('homeBtn').classList.remove('hidden');
- document.getElementById('heroTitle').textContent='My Apps — Download Center';
- document.getElementById('heroSub').textContent='Tap any app to see its versions';
+ document.getElementById('heroTitle').textContent = 'My Apps — Download Center';
+ document.getElementById('heroSub').textContent = 'Tap any app to see its versions. Secure downloads only.';
+ window.scrollTo(0,0);
 }
-
 loadApps();
 </script>
 </body>
 </html>
+//Fosnalictechs 
