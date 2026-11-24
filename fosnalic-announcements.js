@@ -11,6 +11,7 @@
     "/index.html",
     "/services.html",
     "/extra-help.html",
+    "/my-apps.html",
   ]);
 
   const path = location.pathname.toLowerCase();
