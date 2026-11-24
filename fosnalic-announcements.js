@@ -6,7 +6,6 @@
 
   // >>> YOU DECIDE HERE <<<
   // ONLY these pages get ads. No other page gets ads.
-  // To allow a new page, just add its name here, e.g. "/new-page.html",
   const ALLOWED_AD_PAGES = new Set([
     "/",
     "/index.html",
@@ -66,35 +65,39 @@
     return "";
   }
 
+  // FIXED: now shows pictures from img, from image URL in text, and from <img> HTML in text
   function buildAdMarkup(adObj) {
     if (!adObj || typeof adObj !== "object") return "";
-
     const imgUrl = sanitizeUrl(adObj.img || adObj.image || adObj.imageUrl || adObj.bannerUrl || "");
     const linkUrl = sanitizeUrl(adObj.url || adObj.link || adObj.href || adObj.clickUrl || "");
     const title = typeof adObj.title === "string" ? adObj.title.trim() : "";
     const rawText = typeof adObj.text === "string" ? adObj.text.trim() : "";
     const rawHtml = typeof adObj.html === "string" ? adObj.html.trim() : "";
 
-    // If an image is attached to the ad object (e.g., from admin image upload or image fields),
-    // render a rich ad card containing the image plus any text/HTML/link.
-    if (imgUrl) {
-      const safeImg = escapeHtml(imgUrl);
+    let finalImg = imgUrl;
+    let finalText = rawText;
+    if (!finalImg && /^https?:\/\/.*\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(rawText)) {
+      finalImg = sanitizeUrl(rawText);
+      finalText = "";
+    }
+    if (!finalImg && /<img[\s>]/i.test(rawText)) {
+      return rawText;
+    }
+
+    if (finalImg) {
+      const safeImg = escapeHtml(finalImg);
       const safeAlt = escapeHtml(title || "Advertisement");
       const imgTag = `<img src="${safeImg}" alt="${safeAlt}" loading="lazy" style="max-width:100%;max-height:260px;width:auto;height:auto;border-radius:8px;display:block;object-fit:contain;margin:0 auto 10px;">`;
       const wrappedImg = linkUrl
         ? `<a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">${imgTag}</a>`
         : imgTag;
-
-      const bodyContent = rawHtml || (rawText ? `<div style="font-size:14px;line-height:1.5;">${rawText}</div>` : "");
+      const bodyContent = rawHtml || (finalText ? `<div style="font-size:14px;line-height:1.5;">${escapeHtml(finalText)}</div>` : "");
       const titleHtml = title ? `<div style="font-weight:700;font-size:15px;margin-bottom:6px;">${escapeHtml(title)}</div>` : "";
       const ctaHtml = linkUrl
         ? `<div style="margin-top:8px;"><a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:6px 12px;border-radius:6px;background:#2563EB;color:#fff;font-size:12px;font-weight:600;text-decoration:none;">Learn More</a></div>`
         : "";
-
       return `${wrappedImg}${titleHtml}${bodyContent}${ctaHtml}`;
     }
-
-    // Fallback to existing HTML/text behavior when no image URL field is present
     return rawHtml || rawText || "";
   }
 
@@ -103,12 +106,10 @@
   }
 
   function renderAds(data) {
-    // >>> YOUR CONTROL <<<
-    // If page is NOT in your list, NO ads. Stop here.
     if (!ALLOWED_AD_PAGES.has(path)) return;
-
+    // FIXED: don't block just because page has #adHeader divs
     if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
-        document.querySelector("#adHeader, #adMiddle, #adFooter, [data-fos-shared-ads]")) return;
+        document.querySelector("[data-fos-shared-ads]")) return;
 
     const hasAdContent = (value) => {
       if (!value || typeof value !== "object") return false;
@@ -154,7 +155,6 @@
     }
 
     if (!container.children.length) return;
-
     const footer = document.querySelector("footer");
     document.body.insertBefore(container, footer || null);
   }
