@@ -6,32 +6,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--primary:#2A4B7C;--primary-dark:#1A365D;--secondary:#FF6B35;--gray:#F5F7FA;--border:#E2E8F0;--text:#1E293B;--muted:#64748B;--shadow:0 10px 30px rgba(0,0,0,0.08);--radius:16px}
+:root{--primary:#2A4B7C;--primary-dark:#1A365D;--secondary:#FF6B35;--gray:#F5F7FA;--border:#E2E8F0;--text:#1E293B;--shadow:0 10px 30px rgba(0,0,0,0.08);--radius:16px}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
-body{background:var(--gray);color:var(--text);padding-top:68px}
+body{background:var(--gray);color:var(--text);padding-top:108px}
 a{text-decoration:none;color:inherit}
 .container{width:92%;max-width:1150px;margin:0 auto}
+
+/* ===== TOPBAR FIXED ===== */
 .topbar{background:white;box-shadow:0 2px 12px rgba(0,0,0,.06);position:fixed;top:0;left:0;width:100%;z-index:1000}
-.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{font-weight:900;font-size:1.25rem;color:var(--primary);letter-spacing:-.5px}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:10px;overflow:hidden}
+.logo{font-weight:900;font-size:1.15rem;color:var(--primary);letter-spacing:-.5px;white-space:nowrap;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;max-width:62%}
 .logo span{color:var(--secondary)}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.login-btn{background:var(--primary);color:white;padding:8px 16px;border-radius:50px;font-weight:700;font-size:.85rem;white-space:nowrap}
 .nav-links{display:flex;gap:4px;align-items:center;list-style:none}
 .nav-links a{padding:8px 12px;border-radius:50px;font-weight:600;font-size:.88rem;color:#334155;white-space:nowrap}
 .nav-links a:hover,.nav-links a.active{background:#EEF2FF;color:var(--primary)}
-.hamburger{display:none;font-size:1.4rem;cursor:pointer;color:var(--primary);background:none;border:none}
+.hamburger{display:none;font-size:1.35rem;cursor:pointer;color:var(--primary);background:none;border:none;padding:8px;flex-shrink:0}
 @media(max-width:900px){
-  .nav-links{display:none;position:absolute;top:68px;left:0;width:100%;background:white;flex-direction:column;padding:14px;box-shadow:0 10px 20px rgba(0,0,0,.1);gap:6px}
+  .nav-links{display:none;position:absolute;top:64px;left:0;width:100%;background:white;flex-direction:column;padding:14px;box-shadow:0 10px 20px rgba(0,0,0,.1);gap:6px}
   .nav-links.show{display:flex}
   .nav-links a{display:block;width:100%;padding:12px}
   .hamburger{display:block}
+  .logo{font-size:1.05rem;max-width:55%}
 }
-.hero{background:linear-gradient(135deg,rgba(10,14,26,.94),rgba(42,75,124,.92)),url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=2000') center/cover;color:white;text-align:center;padding:70px 0 42px}
+
+/* ===== TICKER - FIXED, NOW DISPLAYS WELL ===== */
+.ticker{position:fixed;top:64px;left:0;width:100%;height:40px;background:var(--secondary);color:white;z-index:999;overflow:hidden;display:flex;align-items:center}
+.ticker-track{display:flex;gap:50px;white-space:nowrap;animation:scrollTicker 22s linear infinite;font-weight:700;font-size:.85rem;padding-left:100%}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes scrollTicker{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+@media(max-width:600px){
+  body{padding-top:104px}
+  .ticker{height:36px}
+  .ticker-track{font-size:.8rem;animation-duration:16s}
+}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,rgba(10,14,26,.94),rgba(42,75,124,.92)),url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=2000') center/cover;color:white;text-align:center;padding:60px 0 42px}
 .hero h2{font-size:2.3rem;font-weight:900;line-height:1.1}
 .hero p{color:#CBD5E1;margin-top:10px}
-.hero-pill{display:inline-flex;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700;margin-bottom:14px}
+.hero-pill{display:inline-flex;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700;margin-bottom:14px;flex-wrap:wrap;justify-content:center}
 .search-box{max-width:520px;margin:20px auto 0;background:white;border-radius:50px;display:flex;padding:5px 5px 5px 18px;align-items:center;gap:8px}
-.search-box input{flex:1;border:none;outline:none;font-size:.95rem}
-.search-box button{background:var(--primary);color:white;border:none;padding:10px 18px;border-radius:50px;font-weight:700;cursor:pointer}
+.search-box input{flex:1;border:none;outline:none;font-size:.95rem;min-width:0}
+.search-box button{background:var(--primary);color:white;border:none;padding:10px 18px;border-radius:50px;font-weight:700;cursor:pointer;white-space:nowrap}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:18px;margin-top:22px}
 .card{background:white;padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;transition:.2s}
 .card:hover{transform:translateY(-4px);border-color:#CBD5E1}
@@ -39,7 +57,6 @@ a{text-decoration:none;color:inherit}
 .icon-box img{width:100%;height:100%;object-fit:cover}
 .btn{padding:12px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:50px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:.92rem;border:none;cursor:pointer;width:100%}
 .btn-sm{padding:9px 16px;font-size:.85rem;width:auto}
-.btn-outline{background:white;color:var(--primary);border:1.5px solid var(--border)}
 .back-btn{padding:10px 18px;background:white;border:1.5px solid var(--border);border-radius:50px;font-weight:800;color:var(--primary);cursor:pointer;margin-bottom:14px;display:inline-flex;align-items:center;gap:8px}
 .badge{background:#E0F2FF;color:#1A365D;padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:800}
 .badge-green{background:#DCFCE7;color:#166534}
@@ -59,7 +76,10 @@ a{text-decoration:none;color:inherit}
 
 <header class="topbar"><div class="container nav">
   <a href="index.html" class="logo">FOSNALIC<span> Techs</span></a>
-  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fas fa-bars"></i></button>
+  <div class="nav-right">
+    <a href="login.html" class="login-btn">Log In</a>
+    <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('show')"><i class="fas fa-bars"></i></button>
+  </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html">Home</a></li>
     <li><a href="my-apps.html" class="active">My Apps</a></li>
@@ -72,6 +92,16 @@ a{text-decoration:none;color:inherit}
     <li><a href="contact.html">Contact</a></li>
   </ul>
 </div></header>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track">
+  <span>🔥 NEW: Learn English V1 is out — Download Now!</span>
+  <span>✅ 100% Safe • No Virus • Verified by FosnalicTechs</span>
+  <span>📱 MathX V2 Available — Tap My Apps</span>
+  <span>🇺🇬 Made in Uganda • @FosnalicTechs</span>
+  <span>🔥 NEW: Learn English V1 is out — Download Now!</span>
+  <span>✅ 100% Safe • No Virus • Verified by FosnalicTechs</span>
+</div></div>
 
 <section class="hero" id="hero"><div class="container">
   <span class="hero-pill"><i class="fas fa-shield-alt"></i> Verified • Safe • © FosnalicTechs®</span>
@@ -86,7 +116,6 @@ a{text-decoration:none;color:inherit}
     <h3 class="section-title"><i class="fas fa-th-large"></i> All Apps</h3>
     <div id="appsList" class="grid"></div>
   </div>
-
   <div id="section-detail" class="hidden">
     <button onclick="showList()" class="back-btn"><i class="fas fa-arrow-left"></i> Back to All Apps</button>
     <div id="detailHeader" class="card" style="margin-bottom:18px;cursor:default"></div>
@@ -108,9 +137,7 @@ a{text-decoration:none;color:inherit}
 <script>
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 let ALL_APPS = []; let FILTERED = [];
-
 function versionText(n){ return n + (n === 1 ? " version" : " versions"); }
-
 async function loadApps(){
  try{
   let r = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`,{cache:"no-store"});
@@ -118,13 +145,11 @@ async function loadApps(){
   ALL_APPS = data.apps || []; FILTERED = ALL_APPS; renderList();
  }catch(e){ document.getElementById('appsList').innerHTML='<div style="text-align:center;padding:40px;background:white;border-radius:16px">Could not load apps. Check internet.</div>'; }
 }
-
 function filterApps(){
  let q = (document.getElementById('searchInput').value||'').toLowerCase();
  FILTERED = ALL_APPS.filter(a=> (a.name+' '+(a.desc||'')).toLowerCase().includes(q));
  renderList();
 }
-
 function renderList(){
  if(!FILTERED.length){document.getElementById('appsList').innerHTML='<div style="text-align:center;padding:50px;background:white;border-radius:16px">No Apps Found</div>';return;}
  document.getElementById('appsList').innerHTML = FILTERED.map((app)=>{
@@ -140,7 +165,6 @@ function renderList(){
    </div>`;
  }).join('');
 }
-
 function openApp(idx){
  let app = ALL_APPS[idx];
  let vers = (app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
@@ -165,14 +189,12 @@ function openApp(idx){
  }).join('');
  window.scrollTo(0,0);
 }
-
 function secureDownload(appIdx, verIdx){
  let app = ALL_APPS[appIdx];
  let vers = (app.versions||[]).slice().sort((a,b)=> new Date(b.date)-new Date(a.date));
  let v = vers[verIdx]; if(!v||!v.file) return;
  let a = document.createElement('a'); a.href = v.file; a.download=''; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
 }
-
 function showList(){
  document.getElementById('section-apps').classList.remove('hidden');
  document.getElementById('section-detail').classList.add('hidden');
@@ -184,4 +206,3 @@ loadApps();
 </script>
 </body>
 </html>
-<!--Fosnalictechs-->
