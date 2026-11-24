@@ -1,3 +1,4 @@
+//file fosnalic-announcements.js
 (() => {
   "use strict";
 
@@ -50,9 +51,51 @@
   }
 
   function escapeHtml(value) {
-    return value.replace(/[&<>"']/g, (char) => ({
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
     })[char]);
+  }
+
+  function sanitizeUrl(url) {
+    if (typeof url !== "string") return "";
+    const trimmed = url.trim();
+    if (!trimmed) return "";
+    if (/^(https?:\/\/|\/|\.\/|\.\.\/|data:image\/(png|jpe?g|gif|webp|svg\+xml);base64,)/i.test(trimmed)) {
+      return trimmed;
+    }
+    return "";
+  }
+
+  function buildAdMarkup(adObj) {
+    if (!adObj || typeof adObj !== "object") return "";
+
+    const imgUrl = sanitizeUrl(adObj.img || adObj.image || adObj.imageUrl || adObj.bannerUrl || "");
+    const linkUrl = sanitizeUrl(adObj.url || adObj.link || adObj.href || adObj.clickUrl || "");
+    const title = typeof adObj.title === "string" ? adObj.title.trim() : "";
+    const rawText = typeof adObj.text === "string" ? adObj.text.trim() : "";
+    const rawHtml = typeof adObj.html === "string" ? adObj.html.trim() : "";
+
+    // If an image is attached to the ad object (e.g., from admin image upload or image fields),
+    // render a rich ad card containing the image plus any text/HTML/link.
+    if (imgUrl) {
+      const safeImg = escapeHtml(imgUrl);
+      const safeAlt = escapeHtml(title || "Advertisement");
+      const imgTag = `<img src="${safeImg}" alt="${safeAlt}" loading="lazy" style="max-width:100%;max-height:260px;width:auto;height:auto;border-radius:8px;display:block;object-fit:contain;margin:0 auto 10px;">`;
+      const wrappedImg = linkUrl
+        ? `<a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;">${imgTag}</a>`
+        : imgTag;
+
+      const bodyContent = rawHtml || (rawText ? `<div style="font-size:14px;line-height:1.5;">${rawText}</div>` : "");
+      const titleHtml = title ? `<div style="font-weight:700;font-size:15px;margin-bottom:6px;">${escapeHtml(title)}</div>` : "";
+      const ctaHtml = linkUrl
+        ? `<div style="margin-top:8px;"><a href="${escapeHtml(linkUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:6px 12px;border-radius:6px;background:#2563EB;color:#fff;font-size:12px;font-weight:600;text-decoration:none;">Learn More</a></div>`
+        : "";
+
+      return `${wrappedImg}${titleHtml}${bodyContent}${ctaHtml}`;
+    }
+
+    // Fallback to existing HTML/text behavior when no image URL field is present
+    return rawHtml || rawText || "";
   }
 
   function renderUpdates() {
@@ -67,13 +110,26 @@
     if (document.getElementById("fos-ad-mount") || document.getElementById("fosAd") ||
         document.querySelector("#adHeader, #adMiddle, #adFooter, [data-fos-shared-ads]")) return;
 
+    const hasAdContent = (value) => {
+      if (!value || typeof value !== "object") return false;
+      return Boolean(
+        (typeof value.text === "string" && value.text.trim()) ||
+        (typeof value.html === "string" && value.html.trim()) ||
+        (typeof value.img === "string" && value.img.trim()) ||
+        (typeof value.image === "string" && value.image.trim()) ||
+        (typeof value.imageUrl === "string" && value.imageUrl.trim()) ||
+        (typeof value.bannerUrl === "string" && value.bannerUrl.trim())
+      );
+    };
+
     const slotAds = [
       { slot: "header", value: data.adHeader },
       { slot: "middle", value: data.adMiddle },
       { slot: "footer", value: data.adFooter },
-    ].filter(({ value }) => value && typeof value.text === "string" && value.text.trim());
+    ].filter(({ value }) => hasAdContent(value));
+
     const listAds = (Array.isArray(data.ads) ? data.ads : [])
-      .filter((ad) => ad && ad.enabled !== false && (ad.html || ad.text));
+      .filter((ad) => ad && ad.enabled !== false && hasAdContent(ad));
 
     if (!slotAds.length && !listAds.length) return;
 
@@ -88,8 +144,16 @@
       return card;
     };
 
-    for (const { value } of slotAds) container.appendChild(makeAd(value.text));
-    for (const ad of listAds.slice(0, 4)) container.appendChild(makeAd(ad.html || ad.text));
+    for (const { value } of slotAds) {
+      const markup = buildAdMarkup(value);
+      if (markup) container.appendChild(makeAd(markup));
+    }
+    for (const ad of listAds.slice(0, 4)) {
+      const markup = buildAdMarkup(ad);
+      if (markup) container.appendChild(makeAd(markup));
+    }
+
+    if (!container.children.length) return;
 
     const footer = document.querySelector("footer");
     document.body.insertBefore(container, footer || null);
