@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOSNALIC — Live Ads, Ticker & Updates Display</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+    --primary: #0F172A;
+    --accent: #2563EB;
+    --bg: #F8FAFC;
+    --card-bg: #FFFFFF;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --border: #E2E8F0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+body { background: var(--bg); color: var(--text-main); padding-bottom: 90px; }
+
+/* --- TICKER BAR --- */
+.fos-ticker-wrap {
+    background: var(--primary);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    height: 38px;
+    font-size: 0.88rem;
+    border-bottom: 2px solid var(--accent);
+}
+.fos-ticker-label {
+    background: var(--accent);
+    color: #FFFFFF;
+    padding: 0 14px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    z-index: 2;
+}
+.fos-ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: fosTickerScroll 28s linear infinite;
+}
+.fos-ticker-track:hover { animation-play-state: paused; }
+.fos-ticker-item {
+    padding: 0 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.fos-ticker-item::after {
+    content: "•";
+    margin-left: 28px;
+    color: var(--accent);
+}
+@keyframes fosTickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --- FIXED AD SLOTS --- */
+.fos-ad-slot {
+    max-width: 1200px;
+    margin: 16px auto;
+    padding: 0 16px;
+    text-align: center;
+}
+.fos-ad-slot:empty { display: none; }
+
+/* --- TOP BAR & STICKY BOTTOM BANNERS --- */
+.fos-top-bar {
+    background: #FEF3C7;
+    color: #92400E;
+    border-bottom: 1px solid #F59E0B;
+    padding: 10px 40px 10px 16px;
+    text-align: center;
+    font-size: 0.9rem;
+    position: relative;
+}
+.fos-sticky-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--card-bg);
+    border-top: 2px solid var(--accent);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    padding: 12px 44px 12px 16px;
+    z-index: 9990;
+    text-align: center;
+}
+
+/* --- FLOATING ADS (BOTTOM-LEFT / BOTTOM-RIGHT) --- */
+.fos-floating-ad {
+    position: fixed;
+    bottom: 20px;
+    max-width: 320px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 34px 14px 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 9995;
+    animation: fosSlideUp 0.35s ease-out;
+}
+.fos-floating-br { right: 20px; }
+.fos-floating-bl { left: 20px; }
+
+@keyframes fosSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- FULLSCREEN POPUP AD --- */
+.fos-fullscreen-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10000;
+}
+.fos-fullscreen-box {
+    background: var(--card-bg);
+    border-radius: 14px;
+    max-width: 540px;
+    width: 100%;
+    padding: 28px 24px 24px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+/* Close button for dismissible ads */
+.fos-ad-close {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: rgba(15, 23, 42, 0.08);
+    color: var(--text-main);
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fos-ad-close:hover { background: #DC2626; color: #FFF; }
+
+/* --- UPDATES / NEWS SECTION --- */
+.fos-updates-section {
+    max-width: 1200px;
+    margin: 28px auto;
+    padding: 0 16px;
+}
+.fos-updates-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary);
+}
+.fos-updates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 18px;
+}
+.fos-update-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+}
+.fos-update-card img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    background: #E2E8F0;
+}
+.fos-update-body {
+    padding: 16px;
+    flex: 1;
+}
+.fos-update-tag {
+    display: inline-block;
+    background: #DBEAFE;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.fos-update-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--primary);
+}
+.fos-update-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<!-- 1. TOP BAR ADS CONTAINER -->
+<div id="fosTopBarAds"></div>
+
+<!-- 2. LIVE TICKER BAR -->
+<div class="fos-ticker-wrap" id="fosTickerContainer" style="display:none;">
+    <div class="fos-ticker-label"><i class="fas fa-bolt" style="margin-right:6px;"></i> UPDATES</div>
+    <div class="fos-ticker-track" id="fosTickerTrack"></div>
+</div>
+
+<!-- 3. HEADER AD SLOT -->
+<div id="adHeader" class="fos-ad-slot"></div>
+
+<!-- 4. MIDDLE AD SLOT -->
+<div id="adMiddle" class="fos-ad-slot"></div>
+
+<!-- 5. SYSTEM UPDATES / NEWS FEED -->
+<section class="fos-updates-section">
+    <div class="fos-updates-header">
+        <i class="fas fa-newspaper" style="color:var(--accent);"></i> Latest Updates
+    </div>
+    <div class="fos-updates-grid" id="fosUpdatesGrid"></div>
+</section>
+
+<!-- 6. FOOTER AD SLOT -->
+<div id="adFooter" class="fos-ad-slot"></div>
+
+<!-- 7. DYNAMIC FLOATING / STICKY / FULLSCREEN ADS CONTAINER -->
+<div id="fosDynamicAds"></div>
+
+<script>
+const FOS_GIST_ID = "0f719dd44c5c9bce109b0bce767f9162";
+
+// Helper to inject HTML and execute any embedded <script> tags inside ads
+function injectAdHtml(container, htmlString) {
+    container.innerHTML = htmlString;
+    container.querySelectorAll("script").forEach(oldScript => {
+        const newScript = document.createElement("script");
+        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+        newScript.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+}
+
+// Render Ticker
+function renderLiveTicker(tickerItems) {
+    const container = document.getElementById("fosTickerContainer");
+    const track = document.getElementById("fosTickerTrack");
+    if (!tickerItems || tickerItems.length === 0) {
+        container.style.display = "none";
+        return;
+    }
+    container.style.display = "flex";
+    const itemsHtml = tickerItems.map(msg => `<span class="fos-ticker-item">${msg}</span>`).join("");
+    // Duplicate content for seamless infinite scrolling
+    track.innerHTML = itemsHtml + itemsHtml;
+}
+
+// Render Updates / News
+function renderLiveUpdates(newsItems) {
+    const grid = document.getElementById("fosUpdatesGrid");
+    if (!newsItems || newsItems.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-muted);">No updates available right now.</p>`;
+        return;
+    }
+    grid.innerHTML = newsItems.map(item => `
+        <article class="fos-update-card">
+            ${item.img ? `<img src="${item.img}" alt="${item.title || 'Update'}">` : ""}
+            <div class="fos-update-body">
+                ${item.tag ? `<span class="fos-update-tag">${item.tag}</span>` : ""}
+                <h3 class="fos-update-title">${item.title || ""}</h3>
+                <p class="fos-update-desc">${item.desc || ""}</p>
+            </div>
+        </article>
+    `).join("");
+}
+
+// Render All Ads (Fixed Slots + Floating + Sticky Bottom + Top Bar + Fullscreen)
+function renderLiveAds(data) {
+    // A. Fixed Slots (adHeader, adMiddle, adFooter)
+    ["adHeader", "adMiddle", "adFooter"].forEach(slotId => {
+        const el = document.getElementById(slotId);
+        if (el && data[slotId] && data[slotId].text) {
+            injectAdHtml(el, data[slotId].text);
+        }
+    });
+
+    // B. Array Ads (CACHE.ads)
+    const topBarHost = document.getElementById("fosTopBarAds");
+    const dynamicHost = document.getElementById("fosDynamicAds");
+    topBarHost.innerHTML = "";
+    dynamicHost.innerHTML = "";
+
+    const adsList = data.ads || [];
+    let brOffset = 20;
+    let blOffset = 20;
+
+    adsList.forEach(ad => {
+        if (!ad || !ad.text) return;
+
+        // If an ad in CACHE.ads targets a fixed slot explicitly
+        if (["adHeader", "adMiddle", "adFooter"].includes(ad.slot)) {
+            const slotEl = document.getElementById(ad.slot);
+            if (slotEl) {
+                const wrapper = document.createElement("div");
+                wrapper.style.margin = "8px 0";
+                injectAdHtml(wrapper, ad.text);
+                slotEl.appendChild(wrapper);
+            }
+            return;
+        }
+
+        const adBox = document.createElement("div");
+        const contentBox = document.createElement("div");
+        injectAdHtml(contentBox, ad.text);
+
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "fos-ad-close";
+        closeBtn.innerHTML = "&times;";
+        closeBtn.title = "Close Ad";
+
+        if (ad.type === "top-bar") {
+            adBox.className = "fos-top-bar";
+            closeBtn.onclick = () => adBox.remove();
+            adBox.appendChild(closeBtn);
+            adBox.appendChild(contentBox);
+            topBarHost.appendChild(adBox);
+
+        } else if (ad.type === "sticky-bottom") {
+            adBox.className = "fos-sticky-bottom";
+            closeBtn.onclick = () => adBox.remove();
+            adBox.appendChild(closeBtn);
+            adBox.appendChild(contentBox);
+            dynamicHost.appendChild(adBox);
+
+        } else if (ad.type === "fullscreen") {
+            adBox.className = "fos-fullscreen-overlay";
+            const modal = document.createElement("div");
+            modal.className = "fos-fullscreen-box";
+            closeBtn.onclick = () => adBox.remove();
+            modal.appendChild(closeBtn);
+            modal.appendChild(contentBox);
+            adBox.appendChild(modal);
+            dynamicHost.appendChild(adBox);
+
+        } else if (ad.type === "floating-bl") {
+            adBox.className = "fos-floating-ad fos-floating-bl";
+            adBox.style.bottom = blOffset + "px";
+            blOffset += 110; // Stack multiple bottom-left floating ads cleanly
+            closeBtn.onclick = () => adBox.remove();
+            adBox.appendChild(closeBtn);
+            adBox.appendChild(contentBox);
+            dynamicHost.appendChild(adBox);
+
+        } else {
+            // Default: floating-br or banner
+            adBox.className = "fos-floating-ad fos-floating-br";
+            adBox.style.bottom = brOffset + "px";
+            brOffset += 110; // Stack multiple bottom-right floating ads cleanly
+            closeBtn.onclick = () => adBox.remove();
+            adBox.appendChild(closeBtn);
+            adBox.appendChild(contentBox);
+            dynamicHost.appendChild(adBox);
+        }
+    });
+}
+
+// Fetch live public Gist data (No GitHub token required for visitors)
+async function initLiveFosnalicDisplay() {
+    try {
+        const res = await fetch(`https://api.github.com/gists/${FOS_GIST_ID}?t=${Date.now()}`, {
+            cache: "no-store"
+        });
+        if (!res.ok) return;
+        const gist = await res.json();
+        const raw = gist.files && gist.files["fosnalic-data.json"]
+            ? JSON.parse(gist.files["fosnalic-data.json"].content)
+            : {};
+
+        renderLiveTicker(raw.ticker || []);
+        renderLiveUpdates(raw.news || []);
+        renderLiveAds(raw);
+    } catch (err) {
+        console.error("Failed to load live FOSNALIC display data:", err);
+    }
+}
+
+initLiveFosnalicDisplay();
+</script>
+</body>
+</html>
