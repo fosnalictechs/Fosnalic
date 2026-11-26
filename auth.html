@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathX Pro &mdash; Authentication Portal</title>
+    <title>FOSNALIC &mdash; Authentication Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/auth-global.js" defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0A0E1A; color: #F3F4F6; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        body { background-color: #0A0E1A; color: #F3F4F6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
         .auth-container { background-color: #111827; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid #374151; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h2 { text-align: center; margin-bottom: 20px; color: #FF6B35; font-size: 1.5rem; }
         .form-group { margin-bottom: 15px; }
@@ -26,39 +28,43 @@
 <body>
 
     <div class="auth-container">
-        <!-- REGISTRATION SECTION -->
-        <div id="register-section">
-            <h2>Create Account</h2>
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="reg-user" placeholder="Enter your username">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="reg-pass" placeholder="Enter your password">
-            </div>
-            <button onclick="handleRegister()">Register</button>
-            <p id="reg-msg" class="message"></p>
-            <div class="switch-text">
-                Already have an account? <span onclick="toggleView('login')">Login here</span>
-            </div>
-        </div>
-
-        <!-- LOGIN SECTION -->
-        <div id="login-section" class="hidden">
+        <!-- LOGIN SECTION (Default) -->
+        <div id="login-section">
             <h2>Portal Login</h2>
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="login-user" placeholder="Enter your username">
+                <label>Email</label>
+                <input type="email" id="login-email" autocomplete="email" placeholder="Enter your email">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="login-pass" placeholder="Enter your password">
+                <input type="password" id="login-pass" autocomplete="current-password" placeholder="Enter your password">
             </div>
-            <button onclick="handleLogin()">Login</button>
+            <button type="button" onclick="handleLogin()">Login</button>
             <p id="login-msg" class="message"></p>
             <div class="switch-text">
                 Don't have an account? <span onclick="toggleView('register')">Register here</span>
+            </div>
+        </div>
+
+        <!-- REGISTRATION SECTION -->
+        <div id="register-section" class="hidden">
+            <h2>Create Account</h2>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="reg-name" autocomplete="name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" autocomplete="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-pass" autocomplete="new-password" placeholder="Create a password (min 6 chars)">
+            </div>
+            <button type="button" onclick="handleRegister()">Register</button>
+            <p id="reg-msg" class="message"></p>
+            <div class="switch-text">
+                Already have an account? <span onclick="toggleView('login')">Login here</span>
             </div>
         </div>
     </div>
@@ -76,62 +82,120 @@
             }
         }
 
-        function handleRegister() {
-            const user = document.getElementById('reg-user').value.trim();
-            const pass = document.getElementById('reg-pass').value.trim();
-            const msg = document.getElementById('reg-msg');
-
-            if (!user || !pass) {
-                msg.className = 'message error';
-                msg.textContent = 'Please fill in all fields.';
-                return;
+        function getAuthClient() {
+            if (window.supabaseClient) return window.supabaseClient;
+            if (window.supabase) {
+                window.supabaseClient = window.supabase.createClient(
+                    "https://lqqbvzttjstchkjfajwj.supabase.co",
+                    "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7",
+                    { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "sb-lqqbvzttjstchkjfajwj-auth-token", storage: window.localStorage } }
+                );
+                return window.supabaseClient;
             }
-
-            if (localStorage.getItem('fos_user_' + user)) {
-                msg.className = 'message error';
-                msg.textContent = 'User already exists. Please login.';
-                return;
-            }
-
-            // Save user credentials
-            localStorage.setItem('fos_user_' + user, pass);
-            msg.className = 'message success';
-            msg.textContent = 'Registration successful! Switching to login...';
-            
-            setTimeout(() => {
-                toggleView('login');
-                document.getElementById('login-user').value = user;
-                msg.textContent = '';
-            }, 1200);
+            return null;
         }
 
-        function handleLogin() {
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-            const msg = document.getElementById('login-msg');
+        window.addEventListener('DOMContentLoaded', async () => {
+            const client = getAuthClient();
+            if (!client) return;
+            const { data } = await client.auth.getSession();
+            if (data?.session?.user) {
+                const name = data.session.user.user_metadata?.full_name || data.session.user.email.split('@')[0];
+                localStorage.setItem('activeUser', name);
+                window.location.href = 'dashboard.html';
+            }
+            document.getElementById('login-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleLogin(); });
+            document.getElementById('reg-pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') handleRegister(); });
+        });
 
-            if (!user || !pass) {
+        async function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const msg = document.getElementById('reg-msg');
+
+            if (!name || !email || !pass) {
                 msg.className = 'message error';
                 msg.textContent = 'Please fill in all fields.';
                 return;
             }
-
-            const storedPass = localStorage.getItem('fos_user_' + user);
-
-            if (storedPass && storedPass === pass) {
-                msg.className = 'message success';
-                msg.textContent = 'Login successful! Redirecting...';
-                
-                // Set active session
-                localStorage.setItem('activeUser', user);
-
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-            } else {
+            if (pass.length < 6) {
                 msg.className = 'message error';
-                msg.textContent = 'Invalid username or password.';
+                msg.textContent = 'Password must be at least 6 characters.';
+                return;
             }
+
+            const client = getAuthClient();
+            if (!client) {
+                msg.className = 'message error';
+                msg.textContent = 'Auth service still loading. Please retry.';
+                return;
+            }
+
+            msg.className = 'message';
+            msg.textContent = 'Creating account...';
+
+            const { data, error } = await client.auth.signUp({
+                email,
+                password: pass,
+                options: { data: { full_name: name } }
+            });
+
+            if (error) {
+                msg.className = 'message error';
+                msg.textContent = error.message;
+                return;
+            }
+
+            if (data.session) {
+                localStorage.setItem('activeUser', name);
+                msg.className = 'message success';
+                msg.textContent = 'Account created! Redirecting to dashboard...';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            } else {
+                msg.className = 'message success';
+                msg.textContent = 'Account created! Check your email to verify, then log in.';
+                setTimeout(() => {
+                    toggleView('login');
+                    document.getElementById('login-email').value = email;
+                }, 1500);
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            const msg = document.getElementById('login-msg');
+
+            if (!email || !pass) {
+                msg.className = 'message error';
+                msg.textContent = 'Please enter email and password.';
+                return;
+            }
+
+            const client = getAuthClient();
+            if (!client) {
+                msg.className = 'message error';
+                msg.textContent = 'Auth service still loading. Please retry.';
+                return;
+            }
+
+            msg.className = 'message';
+            msg.textContent = 'Signing in...';
+
+            const { data, error } = await client.auth.signInWithPassword({ email, password: pass });
+
+            if (error) {
+                msg.className = 'message error';
+                msg.textContent = error.message;
+                return;
+            }
+
+            const displayName = data.user?.user_metadata?.full_name || email.split('@')[0];
+            localStorage.setItem('activeUser', displayName);
+            msg.className = 'message success';
+            msg.textContent = 'Login successful! Redirecting...';
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 700);
         }
     </script>
 </body>
