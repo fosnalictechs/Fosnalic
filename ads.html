@@ -302,91 +302,105 @@ function renderLiveUpdates(newsItems) {
 }
 
 // Render All Ads (Fixed Slots + Floating + Sticky Bottom + Top Bar + Fullscreen)
+function formatAdNode(ad) {
+    const wrap = document.createElement("div");
+    const imgUrl = ad.img || ad.image || ad.imageUrl || ad.bannerUrl || "";
+    const linkUrl = ad.url || ad.link || ad.href || ad.clickUrl || "";
+    if (imgUrl) {
+        const img = document.createElement("img");
+        img.src = imgUrl;
+        img.alt = ad.title || "Advertisement";
+        img.style.cssText = "max-width:100%;max-height:240px;border-radius:8px;display:block;margin:0 auto 8px;object-fit:contain;";
+        img.onerror = () => img.remove();
+        if (linkUrl) {
+            const a = document.createElement("a");
+            a.href = linkUrl;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.appendChild(img);
+            wrap.appendChild(a);
+        } else {
+            wrap.appendChild(img);
+        }
+    }
+    if (ad.title) {
+        const h = document.createElement("div");
+        h.style.cssText = "font-weight:700;margin-bottom:4px;";
+        h.textContent = ad.title;
+        wrap.appendChild(h);
+    }
+    if (ad.text) {
+        const body = document.createElement("div");
+        injectAdHtml(body, ad.text);
+        wrap.appendChild(body);
+    }
+    return wrap;
+}
+
 function renderLiveAds(data) {
-    // A. Fixed Slots (adHeader, adMiddle, adFooter)
     ["adHeader", "adMiddle", "adFooter"].forEach(slotId => {
         const el = document.getElementById(slotId);
-        if (el && data[slotId] && data[slotId].text) {
-            injectAdHtml(el, data[slotId].text);
+        const slotData = data[slotId];
+        if (el && slotData && (slotData.text || slotData.img || slotData.image || slotData.imageUrl)) {
+            el.innerHTML = "";
+            el.appendChild(formatAdNode(slotData));
         }
     });
 
-    // B. Array Ads (CACHE.ads)
     const topBarHost = document.getElementById("fosTopBarAds");
     const dynamicHost = document.getElementById("fosDynamicAds");
     topBarHost.innerHTML = "";
     dynamicHost.innerHTML = "";
 
-    const adsList = data.ads || [];
-    let brOffset = 20;
-    let blOffset = 20;
+    const brStack = document.createElement("div");
+    brStack.style.cssText = "position:fixed;bottom:74px;right:16px;display:flex;flex-direction:column;gap:12px;max-width:320px;max-height:calc(100vh - 110px);overflow-y:auto;z-index:9995;";
+    const blStack = document.createElement("div");
+    blStack.style.cssText = "position:fixed;bottom:74px;left:16px;display:flex;flex-direction:column;gap:12px;max-width:320px;max-height:calc(100vh - 110px);overflow-y:auto;z-index:9995;";
+    dynamicHost.appendChild(brStack);
+    dynamicHost.appendChild(blStack);
 
-    adsList.forEach(ad => {
-        if (!ad || !ad.text) return;
+    (data.ads || []).forEach(ad => {
+        if (!ad || ad.enabled === false || (!ad.text && !ad.img && !ad.image && !ad.imageUrl)) return;
 
-        // If an ad in CACHE.ads targets a fixed slot explicitly
         if (["adHeader", "adMiddle", "adFooter"].includes(ad.slot)) {
             const slotEl = document.getElementById(ad.slot);
-            if (slotEl) {
-                const wrapper = document.createElement("div");
-                wrapper.style.margin = "8px 0";
-                injectAdHtml(wrapper, ad.text);
-                slotEl.appendChild(wrapper);
-            }
+            if (slotEl) slotEl.appendChild(formatAdNode(ad));
             return;
         }
 
         const adBox = document.createElement("div");
-        const contentBox = document.createElement("div");
-        injectAdHtml(contentBox, ad.text);
-
+        const contentBox = formatAdNode(ad);
         const closeBtn = document.createElement("button");
         closeBtn.className = "fos-ad-close";
         closeBtn.innerHTML = "&times;";
         closeBtn.title = "Close Ad";
+        closeBtn.onclick = () => adBox.remove();
 
         if (ad.type === "top-bar") {
             adBox.className = "fos-top-bar";
-            closeBtn.onclick = () => adBox.remove();
-            adBox.appendChild(closeBtn);
-            adBox.appendChild(contentBox);
+            adBox.append(closeBtn, contentBox);
             topBarHost.appendChild(adBox);
-
         } else if (ad.type === "sticky-bottom") {
             adBox.className = "fos-sticky-bottom";
-            closeBtn.onclick = () => adBox.remove();
-            adBox.appendChild(closeBtn);
-            adBox.appendChild(contentBox);
+            adBox.append(closeBtn, contentBox);
             dynamicHost.appendChild(adBox);
-
         } else if (ad.type === "fullscreen") {
             adBox.className = "fos-fullscreen-overlay";
             const modal = document.createElement("div");
             modal.className = "fos-fullscreen-box";
-            closeBtn.onclick = () => adBox.remove();
-            modal.appendChild(closeBtn);
-            modal.appendChild(contentBox);
+            modal.append(closeBtn, contentBox);
             adBox.appendChild(modal);
             dynamicHost.appendChild(adBox);
-
         } else if (ad.type === "floating-bl") {
-            adBox.className = "fos-floating-ad fos-floating-bl";
-            adBox.style.bottom = blOffset + "px";
-            blOffset += 110; // Stack multiple bottom-left floating ads cleanly
-            closeBtn.onclick = () => adBox.remove();
-            adBox.appendChild(closeBtn);
-            adBox.appendChild(contentBox);
-            dynamicHost.appendChild(adBox);
-
+            adBox.className = "fos-floating-ad";
+            adBox.style.cssText = "position:relative;bottom:auto;left:auto;max-width:100%;";
+            adBox.append(closeBtn, contentBox);
+            blStack.appendChild(adBox);
         } else {
-            // Default: floating-br or banner
-            adBox.className = "fos-floating-ad fos-floating-br";
-            adBox.style.bottom = brOffset + "px";
-            brOffset += 110; // Stack multiple bottom-right floating ads cleanly
-            closeBtn.onclick = () => adBox.remove();
-            adBox.appendChild(closeBtn);
-            adBox.appendChild(contentBox);
-            dynamicHost.appendChild(adBox);
+            adBox.className = "fos-floating-ad";
+            adBox.style.cssText = "position:relative;bottom:auto;right:auto;max-width:100%;";
+            adBox.append(closeBtn, contentBox);
+            brStack.appendChild(adBox);
         }
     });
 }
