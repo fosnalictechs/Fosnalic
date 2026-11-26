@@ -113,6 +113,8 @@ button:disabled{opacity:0.45;cursor:not-allowed}
 .upload-progress-track{width:100%;height:9px;background:var(--card-surface);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
 .upload-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--success));transition:width 0.15s ease}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="/auth-global.js" defer></script>
 </head>
 <body>
 
@@ -158,7 +160,25 @@ button:disabled{opacity:0.45;cursor:not-allowed}
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="card">
+    <div class="card" id="sbAuthCard" style="border-left:4px solid #059669">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+        <div>
+            <h2 style="margin:0;font-size:1.05rem"><i class="fas fa-user-shield" style="color:#059669"></i> Independent Supabase Admin Session</h2>
+            <small id="sbAuthStatus" style="color:var(--text-muted)">Checking session...</small>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button type="button" class="btn-ghost btn-xs" onclick="syncFromSupabaseNow()"><i class="fas fa-database"></i> Sync Supabase</button>
+            <button type="button" class="btn-danger btn-xs" id="btnSbLogout" onclick="logoutAdminSession()"><i class="fas fa-right-from-bracket"></i> Log Out</button>
+        </div>
+    </div>
+    <div id="sbLoginForm" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px">
+        <input id="sbEmail" type="email" placeholder="Admin Email (e.g. possyshad@gmail.com)" autocomplete="username">
+        <input id="sbPassword" type="password" placeholder="Supabase Password" autocomplete="current-password">
+        <button type="button" class="btn-primary" onclick="loginWithSupabase()"><i class="fas fa-key"></i> Sign In with Email &amp; Password</button>
+    </div>
+</div>
+
+<div class="card">
         <div class="tabs">
             <span class="tab active" onclick="showTab('products',this)"><i class="fas fa-boxes-stacked"></i> Products <span class="badge-count" id="cnt-products">0</span></span>
             <span class="tab" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker <span class="badge-count" id="cnt-ticker">0</span></span>
@@ -2184,6 +2204,165 @@ async function enableAllAppPopups() {
     renderAppPopups();
     toast('All app popup ads activated');
 }
+
+
+const SB_URL = "https://lqqbvzttjstchkjfajwj.supabase.co";
+const SB_KEY = "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
+const SB_TABLE = "fosnalic_site_data";
+const SB_ROW_ID = "main";
+const SB_ADMIN_EMAIL = "possyshad@gmail.com";
+
+function getAdminSupabase() {
+    if (window.supabaseClient) return window.supabaseClient;
+    if (window.supabase && typeof window.supabase.createClient === "function") {
+        window.supabaseClient = window.supabase.createClient(SB_URL, SB_KEY, {
+            auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+        });
+        return window.supabaseClient;
+    }
+    return null;
+}
+
+function setAdminSessionCookie(active, email = "") {
+    if (active) {
+        document.cookie = `fos_admin_auth=1; path=/; max-age=2592000; SameSite=Lax`;
+        if (email) localStorage.setItem("fos_admin_email", email);
+    } else {
+        document.cookie = `fos_admin_auth=; path=/; max-age=0; SameSite=Lax`;
+        localStorage.removeItem("fos_admin_email");
+    }
+}
+
+async function refreshSupabaseAuthUI() {
+    const sb = getAdminSupabase();
+    const statusEl = document.getElementById("sbAuthStatus");
+    const formEl = document.getElementById("sbLoginForm");
+    const logoutBtn = document.getElementById("btnSbLogout");
+    if (!sb) {
+        if (statusEl) statusEl.textContent = "Supabase client loading...";
+        return;
+    }
+    try {
+        const { data } = await sb.auth.getSession();
+        const user = data && data.session ? data.session.user : null;
+        if (user && user.email) {
+            setAdminSessionCookie(true, user.email);
+            if (statusEl) statusEl.innerHTML = `<span style="color:#059669;font-weight:700">Signed in as ${escapeHtml(user.email)}</span> (session persisted; click Log Out anytime)`;
+            if (formEl) formEl.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-flex";
+        } else {
+            setAdminSessionCookie(false);
+            if (statusEl) statusEl.textContent = "Not signed in to Supabase (sign in with email & password to save without revoking GitHub tokens)";
+            if (formEl) formEl.style.display = "grid";
+            if (logoutBtn) logoutBtn.style.display = "none";
+        }
+    } catch (e) {
+        if (statusEl) statusEl.textContent = "Ready for Supabase email & password sign-in";
+    }
+}
+
+async function loginWithSupabase() {
+    const sb = getAdminSupabase();
+    if (!sb) return toast("Supabase SDK not loaded yet. Refresh and retry.", "err");
+    const email = (document.getElementById("sbEmail")?.value || "").trim();
+    const password = (document.getElementById("sbPassword")?.value || "");
+    if (!email || !password) return alert("Enter your Supabase email and password.");
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+        return toast("Sign-in failed: " + error.message, "err");
+    }
+    if (document.getElementById("sbPassword")) document.getElementById("sbPassword").value = "";
+    await refreshSupabaseAuthUI();
+    toast("✅ Signed in with Supabase!");
+    await syncFromSupabaseNow(true);
+}
+
+async function logoutAdminSession() {
+    const sb = getAdminSupabase();
+    try {
+        if (sb) await sb.auth.signOut();
+    } catch (_) {}
+    setAdminSessionCookie(false);
+    localStorage.removeItem("gh_token");
+    if (document.getElementById("ghToken")) document.getElementById("ghToken").value = "";
+    GH.token = "";
+    await refreshSupabaseAuthUI();
+    toast("Logged out & cleared local session/token");
+}
+
+async function saveToSupabaseTable() {
+    const sb = getAdminSupabase();
+    if (!sb || !CACHE) return false;
+    const { data: sessData } = await sb.auth.getSession();
+    const user = sessData && sessData.session ? sessData.session.user : null;
+    if (!user) return false;
+    const { error } = await sb
+        .from(SB_TABLE)
+        .upsert({
+            id: SB_ROW_ID,
+            payload: CACHE,
+            updated_at: new Date().toISOString(),
+            updated_by: user.email || SB_ADMIN_EMAIL
+        }, { onConflict: "id" });
+    if (error) {
+        console.warn("Supabase write skipped/failed:", error.message);
+        return false;
+    }
+    return true;
+}
+
+async function syncFromSupabaseNow(silent = false) {
+    const sb = getAdminSupabase();
+    if (!sb) return false;
+    const { data, error } = await sb
+        .from(SB_TABLE)
+        .select("payload, updated_at")
+        .eq("id", SB_ROW_ID)
+        .maybeSingle();
+    if (error || !data || !data.payload || typeof data.payload !== "object") {
+        if (!silent) toast("No Supabase payload yet (will use Gist/defaults)", "err");
+        return false;
+    }
+    CACHE = Object.assign({
+        ticker: [], ads: [], news: [], apps: [], products: [],
+        adHeader: { text: "" }, adMiddle: { text: "" }, adFooter: { text: "" }
+    }, data.payload);
+    CACHE.ticker = CACHE.ticker || [];
+    CACHE.ads = CACHE.ads || [];
+    CACHE.news = CACHE.news || [];
+    CACHE.apps = CACHE.apps || [];
+    CACHE.products = CACHE.products || [];
+    CACHE.adHeader = CACHE.adHeader || { text: "" };
+    CACHE.adMiddle = CACHE.adMiddle || { text: "" };
+    CACHE.adFooter = CACHE.adFooter || { text: "" };
+    renderAll();
+    updateBadges();
+    if (!silent) toast("✅ Synced from Supabase");
+    return true;
+}
+
+// Wrap saveToGist so saving works independently via Supabase session OR GitHub token
+const _origSaveToGist = saveToGist;
+saveToGist = async function() {
+    const sbSaved = await saveToSupabaseTable();
+    if (GH.token) {
+        const ghOk = await _origSaveToGist();
+        return ghOk || sbSaved;
+    }
+    if (sbSaved) {
+        updateBadges();
+        toast("✅ Saved to Supabase!");
+        return true;
+    }
+    toast("Sign in with Supabase or add a GitHub token to save", "err");
+    return false;
+};
+
+setTimeout(() => {
+    refreshSupabaseAuthUI();
+    syncFromSupabaseNow(true);
+}, 400);
 
 loadData();
 loadFilesForCurrentPath();
