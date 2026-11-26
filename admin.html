@@ -1118,6 +1118,14 @@ function editArrayAd(i) {
     renderAds();
 }
 
+function normalizeAdFields(ad) {
+    if (!ad || typeof ad !== 'object') return { img: '', url: '', text: '' };
+    const img = (ad.img || ad.image || ad.imageUrl || ad.bannerUrl || '').trim();
+    const url = (ad.url || ad.link || ad.href || '').trim();
+    const text = (ad.text || '').trim();
+    return { img, url, text };
+}
+
 function cancelEditAd() {
     editState.adTarget = null;
     document.getElementById('adImage').value = '';
@@ -1129,7 +1137,7 @@ function cancelEditAd() {
     renderAds();
 }
 
-async function saveAd() {
+async async function saveAd() {
     let img = document.getElementById('adImage').value.trim();
     let url = document.getElementById('adLink').value.trim();
     let text = document.getElementById('adText').value.trim();
