@@ -295,6 +295,151 @@ button:disabled{opacity:0.45;cursor:not-allowed}
             </div>
             <span id="newsUploadStatus" class="ok"></span>
             <button id="btnSaveNews" class="btn-dark" style="width:100%;margin-top:12px" onclick="saveNews()"><i class="fas fa-floppy-disk"></i> Save Update</button>
+            <div id="newsList" style="margin-top:16pxyle="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+                <button class="btn-primary" onclick="saveConfig()"><i class="fas fa-plug"></i> Save & Connect</button>
+                <button class="btn-ghost" onclick="loadData()"><i class="fas fa-rotate"></i> Sync Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="card">
+        <div class="tabs">
+            <span class="tab active" onclick="showTab('products',this)"><i class="fas fa-boxes-stacked"></i> Products <span class="badge-count" id="cnt-products">0</span></span>
+            <span class="tab" onclick="showTab('ticker',this)"><i class="fas fa-bullhorn"></i> Ticker <span class="badge-count" id="cnt-ticker">0</span></span>
+            <span class="tab" onclick="showTab('ads',this)"><i class="fas fa-rectangle-ad"></i> Ads <span class="badge-count" id="cnt-ads">0</span></span>
+            <span class="tab" onclick="showTab('news',this)"><i class="fas fa-newspaper"></i> Updates <span class="badge-count" id="cnt-news">0</span></span>
+            <span class="tab" onclick="showTab('apps',this)"><i class="fas fa-mobile-screen-button"></i> My Apps <span class="badge-count" id="cnt-apps">0</span></span>
+            <span class="tab" onclick="showTab('pages',this)"><i class="fas fa-folder-tree"></i> File Manager</span>
+            <span class="tab" onclick="showTab('appads',this)"><i class="fas fa-window-restore"></i> English App Popups &amp; Updates <span class="badge-count" id="cnt-appads">0</span></span>
+        </div>
+
+        <!-- ==================== PRODUCTS TAB ==================== -->
+        <div id="tab-products">
+            <h3>
+                <span class="title-left"><i class="fas fa-box"></i> Products Manager</span>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <select id="prodSort" style="width:auto;margin:0;padding:6px 10px;font-size:0.82rem" onchange="sortProducts()">
+                        <option value="manual">Sort: Manual / Custom</option>
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="title-asc">Sort: Title (A → Z)</option>
+                        <option value="price-asc">Sort: Price (Low → High)</option>
+                        <option value="price-desc">Sort: Price (High → Low)</option>
+                    </select>
+                </div>
+            </h3>
+
+            <div style="background:#F1F5F9;padding:18px;border-radius:8px;border:1px solid var(--border);margin-bottom:20px">
+                <div id="prodEditBanner" class="edit-banner hidden">
+                    <span><i class="fas fa-pen-to-square"></i> Editing Product: <b id="prodEditName"></b></span>
+                    <button class="btn-ghost btn-xs" onclick="cancelEditProduct()">Cancel Edit</button>
+                </div>
+                <b id="prodFormHeading">Add New Product</b>
+                <div class="grid-2">
+                    <input id="prodTitle" placeholder="Product Title e.g. HP Charger 65W">
+                    <input id="prodPrice" placeholder="Price e.g. 85,000 UGX">
+                </div>
+                <div class="grid-2">
+                    <input id="prodBrand" placeholder="Brand e.g. HP">
+                    <input id="prodImage" placeholder="Image link appears after upload">
+                </div>
+                <textarea id="prodDesc" placeholder="Product short description..."></textarea>
+                <div style="background:#FFFFFF;padding:14px;border-radius:6px;border:1px dashed var(--border);margin:12px 0">
+                    <b>Step 1: Upload Image</b><br>
+                    <input type="file" id="prodFile" accept="image/*" style="margin-top:6px">
+                    <button class="btn-ghost" onclick="uploadProductImage()" style="margin-top:8px"><i class="fas fa-upload"></i> Upload Image Now</button>
+                    <br><span id="prodUploadStatus" class="ok"></span>
+                </div>
+                <button id="btnSaveProduct" class="btn-ok" style="width:100%;margin-top:8px" onclick="saveProduct()"><i class="fas fa-plus-circle"></i> Step 2: Save Product</button>
+            </div>
+
+            <input id="prodSearch" placeholder="🔍 Search products by title, brand, or SKU..." oninput="renderProducts()" style="margin-bottom:12px">
+            <div id="productsList"></div>
+        </div>
+
+        <!-- ==================== TICKER TAB ==================== -->
+        <div id="tab-ticker" class="hidden">
+            <h3>
+                <span class="title-left"><i class="fas fa-bullhorn"></i> Ticker Bar</span>
+                <button class="btn-ghost btn-xs" onclick="sortTickerAZ()"><i class="fas fa-arrow-down-a-z"></i> Sort A-Z</button>
+            </h3>
+            <div id="tickerEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Ticker Message</span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditTicker()">Cancel Edit</button>
+            </div>
+            <div style="display:flex;gap:10px">
+                <input id="tickerInput" placeholder="New ticker message..." onkeydown="if(event.key==='Enter')saveTicker()">
+                <button id="btnSaveTicker" class="btn-primary" onclick="saveTicker()"><i class="fas fa-plus"></i> Add</button>
+            </div>
+            <div id="tickerList" style="margin-top:16px"></div>
+            <button class="btn-dark" style="width:100%;margin-top:16px" onclick="fixTickerNow()"><i class="fas fa-broom"></i> Clean Old Ads from Ticker</button>
+        </div>
+
+        <!-- ==================== ADS TAB ==================== -->
+        <div id="tab-ads" class="hidden">
+            <h3>
+                <span class="title-left"><i class="fas fa-rectangle-ad"></i> Ads Manager</span>
+                <button class="btn-ghost btn-xs" onclick="sortAdsByType()"><i class="fas fa-layer-group"></i> Group by Type</button>
+            </h3>
+            <div id="adEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Ad (<b id="adEditLabel"></b>)</span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditAd()">Cancel Edit</button>
+            </div>
+            <div class="grid-2">
+                <select id="adType">
+                    <option value="floating-br">Floating Bottom-Right</option>
+                    <option value="floating-bl">Floating Bottom-Left</option>
+                    <option value="banner">Banner</option>
+                    <option value="sticky-bottom">Sticky Bottom</option>
+                    <option value="top-bar">Top Bar</option>
+                    <option value="fullscreen">Fullscreen</option>
+                </select>
+                <select id="adSlot">
+                    <option value="floating">Floating / Dynamic</option>
+                    <option value="adHeader">Header (Fixed Slot)</option>
+                    <option value="adMiddle">Middle (Fixed Slot)</option>
+                    <option value="adFooter">Footer (Fixed Slot)</option>
+                </select>
+            </div>
+            <div class="grid-2" style="margin-top:8px">
+                <input id="adImage" placeholder="Ad Image URL (https://... or upload below)">
+                <input id="adLink" placeholder="Click Destination URL (optional https://...)">
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+                <input type="file" id="adFile" accept="image/*" style="flex:1">
+                <button class="btn-ghost" type="button" onclick="uploadAdImage()"><i class="fas fa-upload"></i> Upload Ad Image</button>
+                <span id="adUploadStatus" class="ok"></span>
+            </div>
+            <textarea id="adText" style="min-height:95px;margin-top:8px;font-family:Consolas,monospace;font-size:0.85rem" placeholder="Ad caption text or custom HTML / <script> snippet..."></textarea>
+            <div style="display:flex; gap:10px; margin-top:12px;">
+                <button id="btnSaveAd" class="btn-primary" style="flex:1" onclick="saveAd()"><i class="fas fa-floppy-disk"></i> Save Ad</button>
+                <button class="btn-danger" onclick="clearAllBanners()"><i class="fas fa-trash"></i> Clear All Ads</button>
+            </div>
+            <div id="adsList" style="margin-top:18px"></div>
+        </div>
+
+        <!-- ==================== UPDATES TAB ==================== -->
+        <div id="tab-news" class="hidden">
+            <h3>
+                <span class="title-left"><i class="fas fa-newspaper"></i> System Updates</span>
+                <button class="btn-ghost btn-xs" onclick="sortNewsAZ()"><i class="fas fa-arrow-down-a-z"></i> Sort A-Z</button>
+            </h3>
+            <div id="newsEditBanner" class="edit-banner hidden">
+                <span><i class="fas fa-pen-to-square"></i> Editing Update: <b id="newsEditTitle"></b></span>
+                <button class="btn-ghost btn-xs" onclick="cancelEditNews()">Cancel Edit</button>
+            </div>
+            <input id="newsTitle" placeholder="Title">
+            <textarea id="newsDesc" placeholder="Description..."></textarea>
+            <div class="grid-2">
+                <input id="newsTag" placeholder="Tag e.g. UPDATE">
+                <input id="newsImg" placeholder="Image URL">
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;margin:10px 0">
+                <input type="file" id="newsFile" accept="image/*">
+                <button class="btn-ghost" onclick="uploadImage()"><i class="fas fa-upload"></i> Upload Image</button>
+            </div>
+            <span id="newsUploadStatus" class="ok"></span>
+            <button id="btnSaveNews" class="btn-dark" style="width:100%;margin-top:12px" onclick="saveNews()"><i class="fas fa-floppy-disk"></i> Save Update</button>
             <div id="newsList" style="margin-top:16px"></div>
         </div>
 
