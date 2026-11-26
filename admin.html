@@ -2233,17 +2233,33 @@ function setAdminSessionCookie(active, email = "") {
     }
 }
 
+let _sbAuthPollTimer = null;
+let _sbAuthPollAttempts = 0;
+
 async function refreshSupabaseAuthUI() {
     const sb = getAdminSupabase();
     const statusEl = document.getElementById("sbAuthStatus");
     const formEl = document.getElementById("sbLoginForm");
     const logoutBtn = document.getElementById("btnSbLogout");
     if (!sb) {
-        if (statusEl) statusEl.textContent = "Supabase client loading...";
+        _sbAuthPollAttempts++;
+        if (_sbAuthPollAttempts <= 25) {
+            if (statusEl) statusEl.textContent = "Loading Supabase sign-in...";
+            clearTimeout(_sbAuthPollTimer);
+            _sbAuthPollTimer = setTimeout(refreshSupabaseAuthUI, 250);
+            return;
+        }
+        setAdminSessionCookie(false);
+        if (statusEl) statusEl.textContent = "Sign in with your Supabase email & password below";
+        if (formEl) formEl.style.display = "grid";
+        if (logoutBtn) logoutBtn.style.display = "none";
         return;
     }
+    clearTimeout(_sbAuthPollTimer);
     try {
-        const { data } = await sb.auth.getSession();
+        const sessionPromise = sb.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Session check timed out")), 4000));
+        const { data } = await Promise.race([sessionPromise, timeoutPromise]);
         const user = data && data.session ? data.session.user : null;
         if (user && user.email) {
             setAdminSessionCookie(true, user.email);
@@ -2257,7 +2273,10 @@ async function refreshSupabaseAuthUI() {
             if (logoutBtn) logoutBtn.style.display = "none";
         }
     } catch (e) {
-        if (statusEl) statusEl.textContent = "Ready for Supabase email & password sign-in";
+        setAdminSessionCookie(false);
+        if (statusEl) statusEl.textContent = "Not signed in — enter your Supabase email & password below";
+        if (formEl) formEl.style.display = "grid";
+        if (logoutBtn) logoutBtn.style.display = "none";
     }
 }
 
@@ -2359,10 +2378,16 @@ saveToGist = async function() {
     return false;
 };
 
+if (document.getElementById("sbAuthStatus")) {
+    document.getElementById("sbAuthStatus").textContent = "Not signed in — enter your Supabase email & password below";
+}
 setTimeout(() => {
     refreshSupabaseAuthUI();
     syncFromSupabaseNow(true);
-}, 400);
+}, 150);
+window.addEventListener("load", () => {
+    refreshSupabaseAuthUI();
+});
 
 loadData();
 loadFilesForCurrentPath();
