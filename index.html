@@ -283,9 +283,29 @@ async function loadAll(){
     }
   }
   renderUpdates(d);
-  function renderAd(ad,el){ if(!ad) return; let c=document.getElementById(el); if(!c) return; let txt=cleanText(ad.text||""); if(ad.text && String(ad.text).trim().startsWith('<') && !String(ad.text).includes('Test popup')){c.innerHTML=ad.text;return;} let h=''; if(ad.image||ad.img) h+=`<a href="${ad.link||ad.url||'#'}" target="_blank"><img src="${ad.image||ad.img}" onerror="this.style.display='none'" style="max-width:100%;border-radius:8px"></a>`; if(txt) h+=`<div style="padding:8px;color:#111">${txt}</div>`; if(h) c.innerHTML=h; }
-  renderAd(d.adHeader,'adHeaderContent'); renderAd(d.adMiddle,'adMiddleContent'); renderAd(d.adFooter,'adFooterContent');
-  if(d.ads && Array.isArray(d.ads)){ renderAd(d.ads[0],'adHeaderContent'); renderAd(d.ads[1],'adMiddleContent'); renderAd(d.ads[2],'adFooterContent'); }
+  function renderAd(ad,el){
+    if(!ad || ad.enabled===false) return;
+    let c=document.getElementById(el); if(!c) return;
+    let rawText=String(ad.text||"").trim();
+    if(/test\s*popup|ads\s+system\s+is\s+working/i.test(rawText)) return;
+    if(rawText.startsWith('<')){ c.innerHTML=rawText; return; }
+    let imgSrc=ad.image||ad.img||ad.imageUrl||ad.bannerUrl||"";
+    let linkHref=ad.link||ad.url||ad.href||"";
+    let txt=cleanText(rawText);
+    let h='';
+    if(imgSrc){
+      let imgTag=`<img src="${imgSrc}" alt="${ad.title||'Advertisement'}" onerror="this.style.display='none'" style="max-width:100%;max-height:240px;border-radius:8px;display:block;margin:0 auto 6px;object-fit:contain">`;
+      h+=linkHref?`<a href="${linkHref}" target="_blank" rel="noopener noreferrer">${imgTag}</a>`:imgTag;
+    }
+    if(ad.title) h+=`<div style="font-weight:700;color:#1a365d;margin-bottom:4px">${cleanText(ad.title)}</div>`;
+    if(txt) h+=`<div style="padding:4px 8px;color:#111">${txt}</div>`;
+    if(h) c.innerHTML=h;
+  }
+  const hasAdData=(x)=>x && typeof x==='object' && x.enabled!==false && ((x.text && String(x.text).trim()) || x.image || x.img || x.imageUrl || x.bannerUrl);
+  const validAds=(Array.isArray(d.ads)?d.ads:[]).filter(hasAdData);
+  renderAd(hasAdData(d.adHeader)?d.adHeader:validAds[0],'adHeaderContent');
+  renderAd(hasAdData(d.adMiddle)?d.adMiddle:validAds[1],'adMiddleContent');
+  renderAd(hasAdData(d.adFooter)?d.adFooter:validAds[2],'adFooterContent');
  }catch(e){console.log(e);}
 }
 loadAll(); setInterval(loadAll,60000);
