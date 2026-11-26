@@ -77,10 +77,16 @@ button:disabled{opacity:0.45;cursor:not-allowed}
 .drag-handle{color:var(--text-muted);cursor:grab;padding:4px 6px;font-size:1rem}
 .item-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
 
-.news-card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0;background:var(--card-surface);display:flex;gap:14px;align-items:center;transition:border-color 0.2s}
+.news-card{border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0;background:var(--card-surface);display:flex;gap:14px;align-items:center;flex-wrap:wrap;transition:border-color 0.2s}
 .news-card:hover{border-color:#94A3B8}
 .news-card.editing{border:2px solid var(--warning);background:#FFFBEB}
-.news-card img{width:88px;height:68px;object-fit:cover;border-radius:6px;background:var(--border);flex-shrink:0}
+.news-card img, .thumb-box img{width:96px;height:72px;object-fit:cover;border-radius:6px;background:#E2E8F0;border:1px solid var(--border);flex-shrink:0;display:block}
+.thumb-box{width:96px;height:72px;border-radius:6px;background:#E2E8F0;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);flex-shrink:0;overflow:hidden;position:relative}
+.thumb-placeholder{width:96px;height:72px;border-radius:6px;background:#E2E8F0;border:1px dashed #94A3B8;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted);font-size:0.7rem;gap:3px;flex-shrink:0}
+@media(max-width:600px){
+  .item-row{flex-wrap:wrap}
+  .news-card img,.thumb-box,.thumb-placeholder{width:78px;height:60px}
+}
 
 .edit-banner{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;padding:8px 14px;border-radius:6px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-size:0.86rem;font-weight:600}
 
@@ -112,6 +118,112 @@ button:disabled{opacity:0.45;cursor:not-allowed}
 .upload-progress-meta{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:var(--primary);margin-bottom:4px}
 .upload-progress-track{width:100%;height:9px;background:var(--card-surface);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
 .upload-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--success));transition:width 0.15s ease}
+
+/* Enhanced Image Recognition, Tap-to-View Lightbox & Distinct File Badges */
+.img-file-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;font-size:0.7rem;font-weight:700;background:#DBEAFE;color:#1D4ED8;letter-spacing:0.02em}
+.img-file-badge.broken{background:#FEE2E2;color:#B91C1C}
+.img-file-badge.none{background:#E2E8F0;color:#475569}
+.media-tap-wrap{position:relative;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;overflow:hidden;transition:transform 0.15s ease, box-shadow 0.15s ease}
+.media-tap-wrap:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(15,23,42,0.16)}
+.media-tap-wrap::after{content:'\f00e';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;bottom:4px;right:4px;background:rgba(15,23,42,0.78);color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.65rem}
+#imgLightboxModal{position:fixed;inset:0;background:rgba(2,6,23,0.88);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px}
+#imgLightboxModal.open{display:flex}
+.lightbox-card{background:#0F172A;color:#F8FAFC;border:1px solid #334155;border-radius:12px;max-width:780px;width:100%;max-height:92vh;overflow:auto;padding:18px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6)}
+.lightbox-top{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #1E293B;padding-bottom:10px;margin-bottom:14px}
+.lightbox-stage{background:#020617;border:1px solid #1E293B;border-radius:8px;padding:12px;display:flex;align-items:center;justify-content:center;min-height:220px;max-height:60vh;overflow:auto}
+.lightbox-stage img{max-width:100%;max-height:55vh;object-fit:contain;border-radius:6px}
+.lightbox-meta{margin-top:12px;font-size:0.82rem;color:#CBD5E1;word-break:break-all;background:#1E293B;padding:10px 12px;border-radius:8px}
+.lightbox-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
+
+
+/* Guaranteed Large Tap-to-View Lightbox & Image File Recognition */
+#imgLightboxModal{
+    position:fixed !important;
+    inset:0 !important;
+    width:100vw !important;
+    height:100vh !important;
+    background:rgba(2,6,23,0.92) !important;
+    z-index:999999 !important;
+    display:none !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:16px !important;
+}
+#imgLightboxModal.open{
+    display:flex !important;
+}
+#imgLightboxModal .lightbox-card{
+    background:#0F172A !important;
+    color:#F8FAFC !important;
+    border:1px solid #334155 !important;
+    border-radius:12px !important;
+    width:min(920px, 96vw) !important;
+    max-height:92vh !important;
+    overflow:auto !important;
+    padding:18px !important;
+    box-shadow:0 25px 60px rgba(0,0,0,0.75) !important;
+}
+#imgLightboxModal .lightbox-stage{
+    background:#020617 !important;
+    border:1px solid #1E293B !important;
+    border-radius:8px !important;
+    padding:14px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    min-height:300px !important;
+    max-height:70vh !important;
+    overflow:auto !important;
+}
+#imgLightboxModal .lightbox-stage img{
+    width:auto !important;
+    height:auto !important;
+    max-width:100% !important;
+    max-height:66vh !important;
+    min-width:min(360px, 75vw) !important;
+    object-fit:contain !important;
+    border-radius:6px !important;
+    display:block !important;
+}
+.media-tap-wrap{
+    position:relative !important;
+    cursor:pointer !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:6px !important;
+    overflow:hidden !important;
+}
+.fm-img-chip{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    padding:6px 12px !important;
+    border-radius:8px !important;
+    background:#EFF6FF !important;
+    border:1px solid #93C5FD !important;
+    color:#0F172A !important;
+    font-size:0.84rem !important;
+    font-weight:600 !important;
+    cursor:pointer !important;
+}
+.fm-img-chip:hover{
+    background:#DBEAFE !important;
+    border-color:#2563EB !important;
+}
+.fm-img-chip img.fm-mini-thumb{
+    width:34px !important;
+    height:34px !important;
+    max-width:34px !important;
+    max-height:34px !important;
+    min-width:34px !important;
+    object-fit:cover !important;
+    border-radius:5px !important;
+    border:1px solid #BFDBFE !important;
+    display:block !important;
+    flex-shrink:0 !important;
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="/auth-global.js" defer></script>
@@ -448,9 +560,29 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                 </div>
                 <textarea id="pageEditor" class="code-textarea" placeholder="Select a file above to view or edit code here..."></textarea>
             </div>
+<div id="liveHtmlPreviewPanel" class="hidden" style="margin-top:16px;background:#FFFFFF;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#F1F5F9;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--primary);font-size:0.9rem">
+      <i class="fas fa-eye" style="color:var(--accent)"></i>
+      <span>Live HTML Preview</span>
+      <span id="livePreviewBadge" style="font-size:0.72rem;background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:999px">LIVE</span>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" class="btn-ghost btn-xs" onclick="setPreviewViewport('100%')"><i class="fas fa-desktop"></i> Full</button>
+      <button type="button" class="btn-ghost btn-xs" onclick="setPreviewViewport('420px')"><i class="fas fa-mobile-screen"></i> Mobile</button>
+      <button type="button" class="btn-ghost btn-xs" onclick="refreshLiveHtmlPreview()"><i class="fas fa-rotate"></i> Refresh</button>
+      <button type="button" class="btn-ghost btn-xs" onclick="toggleLiveHtmlPreview(false)"><i class="fas fa-xmark"></i> Hide</button>
+    </div>
+  </div>
+  <div style="padding:12px;background:#E2E8F0;display:flex;justify-content:center;overflow:auto">
+    <iframe id="liveHtmlIframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" style="width:100%;max-width:100%;height:460px;background:#FFFFFF;border:1px solid #94A3B8;border-radius:6px"></iframe>
+  </div>
+</div>
+
             
             <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
                 <button class="btn-dark" style="flex:1" onclick="savePageToGitHub()"><i class="fas fa-floppy-disk"></i> Save File</button>
+                <button type="button" id="btnToggleLivePreview" class="btn-primary" onclick="toggleLiveHtmlPreview()"><i class="fas fa-eye"></i> Live HTML Preview</button>
                 <button class="btn-danger" onclick="deleteCurrentFile()"><i class="fas fa-trash-can"></i> Delete File</button>
             </div>
         </div>
@@ -519,6 +651,174 @@ let GH = {
 };
 let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 let CACHE = null;
+const FALLBACK_SITE_DATA = {
+  "ticker": [
+    "Welcome to Fosnalic Webpage, feel free to explore",
+    "New app added, go check ✅ out now",
+    "New VPN, for activated users and LFH"
+  ],
+  "apps": [
+    {
+      "id": "1793348390295",
+      "name": "MathX",
+      "desc": "This is the new version of MathX, built with advanced features to suit the user.",
+      "icon": "fa-mobile-alt",
+      "iconUrl": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/icons/1793348388239_ic_launcher.png",
+      "versions": [
+        {
+          "ver": "V2",
+          "date": "2026-11-06",
+          "size": "0.8MB",
+          "file": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/files/1793974898021_MathX_by_Fosnalic_V2.apk",
+          "notes": "New release for MathX, APK version works on all Android devices, improved interface, getting ready for MathX pro"
+        },
+        {
+          "ver": "v1.0",
+          "date": "2026-10-30",
+          "size": "0.9MB",
+          "file": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/files/1793348424730_MathX_null.apk",
+          "notes": "This is the new version of MathX, built with advanced features to suit the user."
+        }
+      ]
+    },
+    {
+      "id": "1795345085403",
+      "name": "Learn English",
+      "desc": "Learn English - Speak Like a Native! Want to speak English confidently? Learn British & American English with daily lessons, vocabulary, grammar, real conversations and pronunciation practice. Easy for beginners, fun for everyone. No boring books - just speak, listen and learn. Download now and start your English journey today with FOSNALIC Techs.\"",
+      "icon": "fa-mobile-alt",
+      "iconUrl": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/icons/1795345073032_IMG-20261122-WA7698.jpg",
+      "versions": [
+        {
+          "ver": "V1",
+          "date": "2026-11-24",
+          "size": "5.6MB",
+          "file": "https://upload.app/api/download?sha256=0574ea696daf5047e4a0aaa29648b96b03f461d87fe610073c98425177bb0a57&download_id=upload_97481884-854c-4f2d-a665-57daf2b5a9f5&token=bc18441976461465d4b52561e9f041436b057c3e",
+          "notes": "Learn English - Speak & See | FosnalicTechs®\n\nLearn English by speaking! 🎤\nPractice words, sentences & pronunciation with instant voice feedback.\n\nWHAT YOU GET:\n\n🎤 SPEAK & SEE\nTap the mic and say the word on screen. The app listens and shows exactly what you heard.\n\n📖 WORD MODE\nPractice: SCHOOL, WATER, THINK, BEAUTIFUL\n\n💬 SENTENCE MODE\nPractice: I LIKE WATER, I GO TO SCHOOL, THANK YOU VERY MUCH\n\n✅ INSTANT CORRECTION\nHeard: \"tink\"\nTarget: \"THINK\" - Try again!\n\nPlus smart tips for TH sounds, SCHOOL, WATER and more.\n\n🇬🇧 BRITISH ENGLISH\nClear en-GB pronunciation for school, exams & everyday conversation.\n\nWHY YOU'LL LOVE IT:\n- Very easy to use\n- Learn by speaking, no typing\n- Learn at your own pace\n- 100% Free\n\nFollow us:\n@possyshad\n @FosnalicTech\n\nDownload now and start speaking English with confidence!\n\n© 2026 FosnalicTechs®. All rights reserved.\nMade with love in Uganda."
+        }
+      ]
+    }
+  ],
+  "adHeader": {
+    "text": ""
+  },
+  "adMiddle": {
+    "text": ""
+  },
+  "adFooter": {
+    "text": ""
+  },
+  "news": [
+    {
+      "title": "World Of Coding and Programming",
+      "desc": "We have started lessons of coding starting around with command prompt, shell, to termux for all devices, Contact us",
+      "tag": "New World",
+      "img": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/images/1794557418176_Screenshot_2026-11-11-14-04-59-68_84d3000e3f4017145260f7618db1d683.jpg"
+    },
+    {
+      "title": "FREE INTERNET",
+      "desc": "VPNs, free data tricks, and also other ways of acquisition of internet have been deployed, just step in and view , #fosnalic techs Ug\nTogether we can live a free life",
+      "tag": "UPDATE",
+      "img": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/images/1793968778455_Screenshot_2026-11-05-18-19-26-26_d8e92bef011ed4bbcb340719e9d948a3.jpg"
+    },
+    {
+      "title": "Online Lessons",
+      "desc": "We are now free and available to offer you online lessons For developers, programmers, creators among others Learn coding, programming, creating apps , websites, accounts and many others Contact us for details",
+      "tag": "#fosnalictechs",
+      "img": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/images/1793349803144_a3a0deb54253a9847a632070b879ab3a.jpg"
+    },
+    {
+      "title": "App development",
+      "desc": "The Fosnalic Techs team with utilization of programming languages have started creating applications to support users and also ease their lives as our moto. \nFor the best of all.\nExplore for them",
+      "tag": "",
+      "img": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/uploads/1793101817675_download.webp",
+      "date": "2026-10-27T11:50:21.045Z"
+    }
+  ],
+  "ads": [
+    {
+      "type": "banner",
+      "slot": "floating",
+      "text": "Welcome 🤗🤗🤗🤗"
+    },
+    {
+      "type": "floating-br",
+      "slot": "floating",
+      "text": "We are looking for a team of Developers, you can apply by emailing (Fosnalic Team) to my email HINT:Go to Contact\nAll technology skills are welcomed. Thank you",
+      "img": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/images/ads/1795528468042_team-teamwork-goals-strategy-vision-business-support-concept-51219598.jpg",
+      "url": "https://fosnalic.pages.dev"
+    }
+  ],
+  "products": [
+    {
+      "id": "FOS176004",
+      "sku": "FOS176004",
+      "title": "Website Design for School, Business or Personal",
+      "description": "A website for your school, business or personal to help you trend your products and ease communication",
+      "price": "50000",
+      "priceDisplay": "50000",
+      "brand": "FOSNALIC",
+      "image": "https://raw.githubusercontent.com/fosnalictechs/fosnalic/main/images/products/1793446424177_IMG-20261030-WA3339.jpg",
+      "availability": "in_stock",
+      "condition": "new",
+      "updated": "2026-11-19T08:32:56.004Z"
+    }
+  ],
+  "englishAppConfig": {
+    "popups": [
+      {
+        "title": "Are You Born Again?",
+        "text": "Turn to the Lord, repent your sins and confess that Jesus Christ is your personal Lord and Savior and you'll be saved. Keep in mind, judgement day is coming soon.",
+        "url": "https://fosnalic.pages.dev",
+        "img": "",
+        "enabled": true
+      },
+      {
+        "title": "Need a website? Check Out",
+        "text": "If you need a website for your business, school or personal, just contact us Now",
+        "url": "https://fosnalic.pages.dev",
+        "img": "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=400&q=80",
+        "enabled": true
+      }
+    ],
+    "updatesEnabled": true
+  }
+};
+
+function normalizeSiteData(raw) {
+    const d = (raw && typeof raw === "object") ? raw : {};
+    return Object.assign({
+        ticker: [],
+        ads: [],
+        news: [],
+        apps: [],
+        products: [],
+        adHeader: { text: "" },
+        adMiddle: { text: "" },
+        adFooter: { text: "" }
+    }, d, {
+        ticker: Array.isArray(d.ticker) ? d.ticker : [],
+        ads: Array.isArray(d.ads) ? d.ads : [],
+        news: Array.isArray(d.news) ? d.news : [],
+        apps: Array.isArray(d.apps) ? d.apps : [],
+        products: Array.isArray(d.products) ? d.products : [],
+        adHeader: (d.adHeader && typeof d.adHeader === "object") ? d.adHeader : { text: "" },
+        adMiddle: (d.adMiddle && typeof d.adMiddle === "object") ? d.adMiddle : { text: "" },
+        adFooter: (d.adFooter && typeof d.adFooter === "object") ? d.adFooter : { text: "" }
+    });
+}
+
+function ensureCache(sourceObj = null, shouldRender = false) {
+    if (!CACHE) {
+        CACHE = normalizeSiteData(sourceObj || FALLBACK_SITE_DATA);
+        if (shouldRender) renderAll();
+    } else if (sourceObj && typeof sourceObj === "object") {
+        CACHE = normalizeSiteData(sourceObj);
+        if (shouldRender) renderAll();
+    }
+    return CACHE;
+}
+
+CACHE = normalizeSiteData(FALLBACK_SITE_DATA);
 
 // Undo / Redo History Stacks
 let UNDO_STACK = [];
@@ -554,6 +854,34 @@ function toast(msg, type = 'ok') {
     el.textContent = msg;
     box.appendChild(el);
     setTimeout(() => el.remove(), 3200);
+}
+
+const FALLBACK_IMG_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 120 90"><rect width="120" height="90" fill="#E2E8F0"/><path d="M22 68l22-24 16 18 14-14 24 20H22z" fill="#94A3B8"/><circle cx="42" cy="30" r="8" fill="#94A3B8"/></svg>`);
+
+function resolveMediaUrl(rawUrl) {
+    let u = String(rawUrl || '').trim();
+    if (!u) return '';
+    // Convert github.com/<owner>/<repo>/blob/<branch>/<path> to raw.githubusercontent.com
+    const blobMatch = u.match(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/i);
+    if (blobMatch) {
+        return `https://raw.githubusercontent.com/${blobMatch[1]}/${blobMatch[2]}/${blobMatch[3]}/${blobMatch[4]}`;
+    }
+    // If someone pasted a repo-relative path like images/ads/foo.jpg
+    if (!/^https?:\/\//i.test(u) && !u.startsWith('data:') && !u.startsWith('/')) {
+        const cleanPath = u.replace(/^\.?\//, '');
+        return `https://raw.githubusercontent.com/${GH.owner || 'fosnalictechs'}/${GH.repo || 'fosnalic'}/${GH.branch || 'main'}/${cleanPath}`;
+    }
+    return u;
+}
+
+function renderMediaThumb(rawUrl, altText = 'Media') {
+    const resolved = resolveMediaUrl(rawUrl);
+    if (!resolved) {
+        return `<div class="thumb-placeholder"><i class="fas fa-image"></i><span>No Image</span></div>`;
+    }
+    const safeSrc = escapeHtml(resolved);
+    const safeAlt = escapeHtml(altText);
+    return `<img src="${safeSrc}" alt="${safeAlt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';this.setAttribute('data-broken','1');">`;
 }
 
 function escapeHtml(str) {
@@ -728,13 +1056,15 @@ async function loadData() {
                 await createNewGist();
                 return loadData();
             }
+            ensureCache(null, true);
             document.getElementById('cfgOk').textContent = '';
             document.getElementById('cfgErr').textContent = `❌ Gist ${r.status}: ${errText || 'Check token/Gist ID'}`;
             toast(`Connection error (${r.status}): ${errText || 'Check credentials'}`, 'err');
             return;
         }
         let j = await r.json();
-        CACHE = j.files && j.files['fosnalic-data.json'] ? JSON.parse(j.files['fosnalic-data.json'].content) : { ticker: [], ads: [], news: [], apps: [], products: [] };
+        const parsedGist = j.files && j.files['fosnalic-data.json'] ? JSON.parse(j.files['fosnalic-data.json'].content) : null;
+        CACHE = normalizeSiteData(parsedGist || CACHE || FALLBACK_SITE_DATA);
         
         CACHE.ticker = CACHE.ticker || [];
         CACHE.ads = CACHE.ads || [];
@@ -809,7 +1139,7 @@ function renderProducts() {
         return `
         <div class="news-card ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'products',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'products',${i})">
             <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-            <img src="${p.image || 'https://via.placeholder.com/100x75'}">
+            ${renderMediaThumb(p.image, p.title || 'Product')}
             <div style="flex:1;min-width:0">
                 <b>${escapeHtml(p.title)}</b> — <span style="color:var(--accent);font-weight:700">${escapeHtml(p.priceDisplay || p.price)}</span><br>
                 <small style="color:var(--text-muted)">${escapeHtml((p.description || '').substring(0, 90))}</small><br>
@@ -1042,14 +1372,20 @@ function renderAds() {
 
     // Fixed Slots
     ['adHeader', 'adMiddle', 'adFooter'].forEach(slotKey => {
-        if (CACHE[slotKey] && (CACHE[slotKey].text || CACHE[slotKey].img || CACHE[slotKey].image)) {
+        const slotObj = CACHE[slotKey];
+        const fields = normalizeAdFields(slotObj);
+        if (slotObj && (fields.text || fields.img || fields.url)) {
             let isEditing = editState.adTarget && editState.adTarget.kind === 'slot' && editState.adTarget.keyOrIdx === slotKey;
+            const resolvedImg = resolveMediaUrl(fields.img);
             items.push(`
-                <div class="item-row ${isEditing ? 'editing' : ''}">
-                    <div style="flex:1;min-width:0">
+                <div class="news-card ${isEditing ? 'editing' : ''}">
+                    ${renderMediaThumb(fields.img, slotKey)}
+                    <div style="flex:1;min-width:180px">
                         <span style="background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">FIXED SLOT</span>
                         <b style="margin-left:6px">${slotKey}</b><br>
-                        <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(CACHE[slotKey].text || CACHE[slotKey].img || CACHE[slotKey].image || '').substring(0, 110)}...</small>
+                        ${fields.text ? `<div style="font-size:0.86rem;margin-top:2px">${escapeHtml(fields.text).substring(0, 140)}</div>` : ''}
+                        ${resolvedImg ? `<small style="color:var(--text-muted);font-family:Consolas,monospace;word-break:break-all">Img: ${escapeHtml(resolvedImg)}</small><br>` : ''}
+                        ${fields.url ? `<small style="color:var(--accent);word-break:break-all">Link: ${escapeHtml(fields.url)}</small>` : ''}
                     </div>
                     <div class="item-actions">
                         <button class="btn-warn btn-xs" onclick="editSlotAd('${slotKey}')"><i class="fas fa-pen"></i> Edit</button>
@@ -1063,13 +1399,18 @@ function renderAds() {
     // Dynamic / Floating Array Ads
     (CACHE.ads || []).forEach((a, i) => {
         let isEditing = editState.adTarget && editState.adTarget.kind === 'array' && editState.adTarget.keyOrIdx === i;
+        const fields = normalizeAdFields(a);
+        const resolvedImg = resolveMediaUrl(fields.img);
         items.push(`
-            <div class="item-row ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ads',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ads',${i})">
+            <div class="news-card ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ads',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ads',${i})">
                 <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-                <div style="flex:1;min-width:0">
-                    <span style="background:#E2E8F0;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">${escapeHtml(a.type)}</span>
+                ${renderMediaThumb(fields.img, a.type || 'Ad')}
+                <div style="flex:1;min-width:180px">
+                    <span style="background:#E2E8F0;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">${escapeHtml(a.type || 'ad')}</span>
                     <small style="color:var(--accent);margin-left:6px">→ ${escapeHtml(a.slot || 'floating')}</small><br>
-                    <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(a.text || a.img || a.image || '').substring(0, 110)}...</small>
+                    ${fields.text ? `<div style="font-size:0.86rem;margin-top:2px">${escapeHtml(fields.text).substring(0, 140)}</div>` : ''}
+                    ${resolvedImg ? `<small style="color:var(--text-muted);font-family:Consolas,monospace;word-break:break-all">Img: ${escapeHtml(resolvedImg)}</small><br>` : ''}
+                    ${fields.url ? `<small style="color:var(--accent);word-break:break-all">Link: ${escapeHtml(fields.url)}</small>` : ''}
                 </div>
                 <div class="item-actions">
                     <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ads,${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
@@ -1242,7 +1583,7 @@ function renderNews() {
     document.getElementById('newsList').innerHTML = CACHE.news.map((n, i) => `
         <div class="news-card ${editState.newsIdx === i ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'news',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'news',${i})">
             <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-            <img src="${n.img || 'https://via.placeholder.com/100x75'}">
+            ${renderMediaThumb(n.img, n.title || 'Update')}
             <div style="flex:1;min-width:0">
                 <b>${escapeHtml(n.title)}</b><br>
                 <small style="color:var(--text-muted)">${escapeHtml((n.desc || '').substring(0, 110))}</small><br>
@@ -1353,7 +1694,8 @@ function renderApps() {
     let list = document.getElementById('appsList');
     list.innerHTML = CACHE.apps.map((app, appIdx) => {
         let vers = (app.versions || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-        let iconHtml = app.iconUrl ? `<img src="${app.iconUrl}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas ${app.icon || 'fa-mobile-alt'}"></i>`;
+        let resolvedIcon = resolveMediaUrl(app.iconUrl);
+        let iconHtml = resolvedIcon ? `<img src="${escapeHtml(resolvedIcon)}" alt="${escapeHtml(app.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas ${escapeHtml(app.icon || 'fa-mobile-alt')}"></i>`;
         let isEditing = editState.appId === app.id;
 
         return `
@@ -1790,7 +2132,9 @@ async function loadFilesForCurrentPath() {
         cache: "no-store"
     });
     if (!r.ok) {
-        document.getElementById('pageButtons').innerHTML = '❌ Failed to load folder contents.';
+        let msg = '❌ Failed to load folder contents.';
+        try { const ej = await r.json(); if (ej && ej.message) msg += ` (${ej.message})`; } catch(_) {}
+        document.getElementById('pageButtons').innerHTML = msg;
         return;
     }
     let files = await r.json();
@@ -1874,6 +2218,30 @@ async function createPage() {
 </head>
 <body>
   <h1>${name}</h1>
+
+
+<div id="imgLightboxModal" onclick="if(event.target===this)closeImageLightbox()">
+  <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+    <div class="lightbox-top">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <i class="fas fa-expand" style="color:#38BDF8"></i>
+        <b id="lbTitle">Full Image Preview</b>
+        <span id="lbExtBadge" class="img-file-badge">IMAGE</span>
+      </div>
+      <button type="button" class="btn-ghost btn-xs" onclick="closeImageLightbox()"><i class="fas fa-xmark"></i> Close</button>
+    </div>
+    <div class="lightbox-stage">
+      <img id="lbImg" src="" alt="Full preview">
+    </div>
+    <div class="lightbox-meta" id="lbUrl"></div>
+    <div class="lightbox-actions">
+      <button type="button" class="btn-ghost btn-xs" onclick="copyLightboxUrl()"><i class="fas fa-copy"></i> Copy URL</button>
+      <a id="lbOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary btn-xs" style="text-decoration:none"><i class="fas fa-up-right-from-square"></i> Open Original</a>
+    </div>
+  </div>
+</div>
+<!-- /#imgLightboxModal -->
+
 </body>
 </html>`,
         css: `/* ${name} */
@@ -2078,7 +2446,7 @@ function renderAppPopups() {
             const isEditing = editAppPopupIdx === i;
             return `
                 <div class="news-card ${isEditing ? 'editing' : ''}">
-                    ${p.img ? `<img src="${escapeHtml(p.img)}" alt="">` : `<div style="width:68px;height:68px;border-radius:6px;background:#E2E8F0;display:flex;align-items:center;justify-content:center;color:#475569;flex-shrink:0"><i class="fas fa-window-maximize" style="font-size:1.4rem"></i></div>`}
+                    ${renderMediaThumb(p.img, p.title || 'Popup Ad')}
                     <div style="flex:1;min-width:0">
                         <span style="padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;background:${isActive ? '#D1FAE5' : '#FEE2E2'};color:${isActive ? '#065F46' : '#991B1B'}">${isActive ? 'ACTIVE IN APP' : 'PAUSED'}</span>
                         <b style="margin-left:6px">${escapeHtml(p.title || 'App Popup')}</b><br>
@@ -2420,33 +2788,49 @@ async function saveToSupabaseTable() {
 }
 
 async function syncFromSupabaseNow(silent = false) {
+    ensureCache(null, false);
     const sb = getAdminSupabase();
-    if (!sb) return false;
-    const { data, error } = await sb
-        .from(SB_TABLE)
-        .select("payload, updated_at")
-        .eq("id", SB_ROW_ID)
-        .maybeSingle();
-    if (error || !data || !data.payload || typeof data.payload !== "object") {
-        if (!silent) toast("No Supabase payload yet (will use Gist/defaults)", "err");
-        return false;
-    }
-    CACHE = Object.assign({
-        ticker: [], ads: [], news: [], apps: [], products: [],
-        adHeader: { text: "" }, adMiddle: { text: "" }, adFooter: { text: "" }
-    }, data.payload);
-    CACHE.ticker = CACHE.ticker || [];
-    CACHE.ads = CACHE.ads || [];
-    CACHE.news = CACHE.news || [];
-    CACHE.apps = CACHE.apps || [];
-    CACHE.products = CACHE.products || [];
-    CACHE.adHeader = CACHE.adHeader || { text: "" };
-    CACHE.adMiddle = CACHE.adMiddle || { text: "" };
-    CACHE.adFooter = CACHE.adFooter || { text: "" };
+    const stored = readStoredAdminSession();
+    const bearer = (stored && stored.access_token) ? stored.access_token : SB_KEY;
+
+    try {
+        if (sb) {
+            const { data, error } = await sb
+                .from(SB_TABLE)
+                .select("payload, updated_at")
+                .eq("id", SB_ROW_ID)
+                .maybeSingle();
+            if (!error && data && data.payload && typeof data.payload === "object") {
+                ensureCache(data.payload, true);
+                updateBadges();
+                if (!silent) toast("✅ Synced from Supabase");
+                return true;
+            }
+        }
+        const resp = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?id=eq.${encodeURIComponent(SB_ROW_ID)}&select=payload,updated_at`, {
+            headers: {
+                apikey: SB_KEY,
+                Authorization: `Bearer ${bearer}`,
+                Accept: "application/json"
+            },
+            cache: "no-store"
+        });
+        if (resp.ok) {
+            const rows = await resp.json();
+            const row = Array.isArray(rows) ? rows[0] : null;
+            if (row && row.payload && typeof row.payload === "object") {
+                ensureCache(row.payload, true);
+                updateBadges();
+                if (!silent) toast("✅ Synced from Supabase");
+                return true;
+            }
+        }
+    } catch (_) {}
+
     renderAll();
     updateBadges();
-    if (!silent) toast("✅ Synced from Supabase");
-    return true;
+    if (!silent) toast("Using local/Gist data (no Supabase row yet)", "err");
+    return false;
 }
 
 // Wrap saveToGist so saving works independently via Supabase session OR GitHub token
@@ -2469,16 +2853,223 @@ saveToGist = async function() {
 if (document.getElementById("sbAuthStatus")) {
     document.getElementById("sbAuthStatus").textContent = "Not signed in — enter your Supabase email & password below";
 }
+renderAll();
 setTimeout(() => {
     refreshSupabaseAuthUI();
     syncFromSupabaseNow(true);
 }, 150);
 window.addEventListener("load", () => {
     refreshSupabaseAuthUI();
+    renderAll();
 });
 
 loadData();
 loadFilesForCurrentPath();
+
+const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg|avif|bmp|ico)(\?|#|$)/i;
+
+function isRecognizedImageFile(pathOrUrl) {
+    const s = String(pathOrUrl || '').trim();
+    if (!s) return false;
+    if (/^data:image\//i.test(s)) return true;
+    return IMAGE_EXT_REGEX.test(s);
+}
+
+function getImageFormatLabel(pathOrUrl) {
+    const s = String(pathOrUrl || '').trim();
+    if (!s) return 'NONE';
+    const dataMatch = s.match(/^data:image\/([a-zA-Z0-9+.-]+)/i);
+    if (dataMatch) return dataMatch[1].toUpperCase();
+    const extMatch = s.match(/\.(png|jpe?g|webp|gif|svg|avif|bmp|ico)(?:\?|#|$)/i);
+    if (extMatch) {
+        const ext = extMatch[1].toUpperCase();
+        return ext === 'JPG' ? 'JPG' : ext;
+    }
+    return 'IMG';
+}
+
+function openImageLightbox(rawUrl, titleText = 'Image Preview') {
+    const resolved = resolveMediaUrl(rawUrl);
+    if (!resolved) {
+        toast('No image available to preview', 'err');
+        return;
+    }
+    const modal = document.getElementById('imgLightboxModal');
+    const img = document.getElementById('lbImg');
+    const titleEl = document.getElementById('lbTitle');
+    const badgeEl = document.getElementById('lbExtBadge');
+    const urlEl = document.getElementById('lbUrl');
+    const linkEl = document.getElementById('lbOpenTab');
+
+    titleEl.textContent = titleText || 'Image Preview';
+    badgeEl.textContent = getImageFormatLabel(resolved);
+    badgeEl.className = 'img-file-badge';
+    urlEl.textContent = resolved;
+    linkEl.href = resolved;
+
+    img.onerror = function() {
+        this.onerror = null;
+        this.src = FALLBACK_IMG_SVG;
+        badgeEl.textContent = 'FAILED';
+        badgeEl.className = 'img-file-badge broken';
+    };
+    img.src = resolved;
+    modal.classList.add('open');
+}
+
+function closeImageLightbox() {
+    const modal = document.getElementById('imgLightboxModal');
+    if (modal) modal.classList.remove('open');
+}
+
+function copyLightboxUrl() {
+    const txt = document.getElementById('lbUrl')?.textContent || '';
+    if (!txt) return;
+    navigator.clipboard?.writeText(txt).then(() => toast('Image URL copied')).catch(() => toast('Could not copy URL', 'err'));
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeImageLightbox();
+});
+
+// Upgrade renderMediaThumb so tapping any thumbnail opens the full image preview modal and shows file format
+renderMediaThumb = function(rawUrl, altText = 'Media') {
+    const resolved = resolveMediaUrl(rawUrl);
+    const safeTitle = escapeHtml(altText || 'Image Preview');
+    if (!resolved) {
+        return `<div class="thumb-placeholder" title="No image URL"><i class="fas fa-image"></i><span>No Image</span><span class="img-file-badge none">NONE</span></div>`;
+    }
+    const safeSrc = escapeHtml(resolved);
+    const fmt = getImageFormatLabel(resolved);
+    return `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="media-tap-wrap" onclick="event.stopPropagation();openImageLightbox(decodeURIComponent('${encodeURIComponent(resolved)}'), decodeURIComponent('${encodeURIComponent(altText || 'Image Preview')}'))" title="Tap to view full image">
+                <img src="${safeSrc}" alt="${safeTitle}" loading="lazy" referrerpolicy="no-referrer" style="width:96px;height:72px;object-fit:cover;border-radius:6px;background:#E2E8F0;border:1px solid var(--border);display:block" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';this.setAttribute('data-broken','1');const b=this.closest('div').parentElement?.querySelector('.img-file-badge');if(b){b.textContent='BROKEN';b.className='img-file-badge broken';}">
+            </div>
+            <span class="img-file-badge">${escapeHtml(fmt)}</span>
+        </div>`;
+};
+
+// Upgrade File Manager listing so image files are visually distinct with instant thumbnail & tap-to-view preview
+const _origLoadFilesForCurrentPath = loadFilesForCurrentPath;
+loadFilesForCurrentPath = async function() {
+    document.getElementById('currentPathDisplay').textContent = '/' + (currentPath ? currentPath + '/' : '');
+    document.getElementById('parentFolderBtn').style.display = currentPath ? 'inline-flex' : 'none';
+    document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
+        headers: GH.token ? { Authorization: getAuthHeaders().Authorization || '' } : {},
+        cache: "no-store"
+    });
+    if (!r.ok) {
+        let msg = '❌ Failed to load folder contents.';
+        try { const ej = await r.json(); if (ej && ej.message) msg += ` (${ej.message})`; } catch(_) {}
+        document.getElementById('pageButtons').innerHTML = msg;
+        return;
+    }
+    let files = await r.json();
+    files = files.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'dir' ? -1 : 1;
+    });
+    document.getElementById('pageButtons').innerHTML = files.map(f => {
+        let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
+        if (f.type === 'dir') {
+            return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">📁 ${escapeHtml(f.name)}/</span>`;
+        }
+        if (isRecognizedImageFile(f.name)) {
+            const rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${f.path}`;
+            const fmt = getImageFormatLabel(f.name);
+            return `
+                <div class="file-btn" style="background:#EFF6FF;border-color:#93C5FD;padding:5px 10px;gap:8px" onclick="openImageLightbox(decodeURIComponent('${encodeURIComponent(rawUrl)}'), decodeURIComponent('${encodeURIComponent(f.name)}'))">
+                    <img src="${escapeHtml(rawUrl)}" alt="${escapeHtml(f.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';" style="width:28px;height:28px;object-fit:cover;border-radius:4px;border:1px solid #CBD5E1">
+                    <span>🖼️ <b>${escapeHtml(f.name)}</b></span>
+                    <span class="img-file-badge">${escapeHtml(fmt)}</span>
+                    <button type="button" class="btn-ghost btn-xs" onclick="event.stopPropagation();loadPage('${f.path}',this.closest('.file-btn'))" title="Edit as text">Code</button>
+                    ${delBtn}
+                </div>`;
+        }
+        let icon = f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄';
+        return `<span class="file-btn ${f.path === currentPage ? 'active' : ''}" onclick="loadPage('${f.path}',this)">${icon} ${escapeHtml(f.name)}</span>${delBtn}`;
+    }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
+};
+
+
+
+// Global click delegation so tapping any image in Ads (or any card) opens the large lightbox reliably
+document.addEventListener('click', function (ev) {
+    const imgEl = ev.target && ev.target.closest ? ev.target.closest('#adsList img, #productsList img, #newsList img, #appsList img, #appPopupsList img') : null;
+    if (imgEl && !imgEl.closest('#imgLightboxModal')) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const card = imgEl.closest('.news-card, .item-row');
+        const label = (card && (card.querySelector('b')?.textContent || card.querySelector('h4')?.textContent)) || imgEl.alt || 'Image Preview';
+        const src = imgEl.getAttribute('data-full-src') || imgEl.currentSrc || imgEl.src;
+        if (typeof openImageLightbox === 'function') {
+            openImageLightbox(src, label.trim());
+        }
+    }
+}, true);
+
+renderMediaThumb = function(rawUrl, altText = 'Media') {
+    const resolved = resolveMediaUrl(rawUrl);
+    const safeTitle = escapeHtml(altText || 'Image Preview');
+    if (!resolved) {
+        return `<div class="thumb-placeholder" title="No image URL"><i class="fas fa-image"></i><span>No Image</span><span class="img-file-badge none">NONE</span></div>`;
+    }
+    const safeSrc = escapeHtml(resolved);
+    const fmt = getImageFormatLabel(resolved);
+    return `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="media-tap-wrap" data-full-src="${safeSrc}" data-label="${safeTitle}" onclick="event.preventDefault();event.stopPropagation();openImageLightbox(this.getAttribute('data-full-src'), this.getAttribute('data-label'));" title="Tap to view large image">
+                <img src="${safeSrc}" data-full-src="${safeSrc}" alt="${safeTitle}" loading="lazy" referrerpolicy="no-referrer" style="width:96px;height:72px;object-fit:cover;border-radius:6px;background:#E2E8F0;border:1px solid var(--border);display:block" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';this.setAttribute('data-broken','1');const b=this.closest('div').parentElement?.querySelector('.img-file-badge');if(b){b.textContent='BROKEN';b.className='img-file-badge broken';}">
+            </div>
+            <span class="img-file-badge"><i class="fas fa-file-image"></i> ${escapeHtml(fmt)}</span>
+        </div>`;
+};
+
+loadFilesForCurrentPath = async function() {
+    document.getElementById('currentPathDisplay').textContent = '/' + (currentPath ? currentPath + '/' : '');
+    document.getElementById('parentFolderBtn').style.display = currentPath ? 'inline-flex' : 'none';
+    document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
+        headers: GH.token ? { Authorization: getAuthHeaders().Authorization || '' } : {},
+        cache: "no-store"
+    });
+    if (!r.ok) {
+        let msg = '❌ Failed to load folder contents.';
+        try { const ej = await r.json(); if (ej && ej.message) msg += ` (${ej.message})`; } catch(_) {}
+        document.getElementById('pageButtons').innerHTML = msg;
+        return;
+    }
+    let files = await r.json();
+    files = files.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'dir' ? -1 : 1;
+    });
+    document.getElementById('pageButtons').innerHTML = files.map(f => {
+        let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
+        if (f.type === 'dir') {
+            return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">📁 ${escapeHtml(f.name)}/</span>`;
+        }
+        if (isRecognizedImageFile(f.name)) {
+            const rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${f.path}`;
+            const fmt = getImageFormatLabel(f.name);
+            return `
+                <div class="fm-img-chip" data-full-src="${escapeHtml(rawUrl)}" data-label="${escapeHtml(f.name)}" onclick="event.stopPropagation();openImageLightbox(this.getAttribute('data-full-src'), this.getAttribute('data-label'))" title="Tap to view large image file">
+                    <img class="fm-mini-thumb" src="${escapeHtml(rawUrl)}" data-full-src="${escapeHtml(rawUrl)}" alt="${escapeHtml(f.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';">
+                    <span><i class="fas fa-file-image" style="color:#2563EB"></i> ${escapeHtml(f.name)}</span>
+                    <span class="img-file-badge">${escapeHtml(fmt)}</span>
+                    <button type="button" class="btn-ghost btn-xs" onclick="event.stopPropagation();loadPage('${f.path}',this.closest('.fm-img-chip'))" title="Edit file">Edit</button>
+                    ${delBtn}
+                </div>`;
+        }
+        let icon = f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄';
+        return `<span class="file-btn ${f.path === currentPage ? 'active' : ''}" onclick="loadPage('${f.path}',this)">${icon} ${escapeHtml(f.name)}</span>${delBtn}`;
+    }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
+};
+
 </script>
 </body>
 </html>
