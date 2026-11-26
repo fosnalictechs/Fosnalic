@@ -164,7 +164,7 @@ button:disabled{opacity:0.45;cursor:not-allowed}
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
         <div>
             <h2 style="margin:0;font-size:1.05rem"><i class="fas fa-user-shield" style="color:#059669"></i> Independent Supabase Admin Session</h2>
-            <small id="sbAuthStatus" style="color:var(--text-muted)">Checking session...</small>
+            <small id="sbAuthStatus" style="color:var(--text-muted)">Not signed in — enter your Supabase email &amp; password below</small>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <button type="button" class="btn-ghost btn-xs" onclick="syncFromSupabaseNow()"><i class="fas fa-database"></i> Sync Supabase</button>
@@ -1157,7 +1157,7 @@ function cancelEditAd() {
     renderAds();
 }
 
-async async function saveAd() {
+async function saveAd() {
     let img = document.getElementById('adImage').value.trim();
     let url = document.getElementById('adLink').value.trim();
     let text = document.getElementById('adText').value.trim();
@@ -2211,6 +2211,7 @@ const SB_KEY = "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
 const SB_TABLE = "fosnalic_site_data";
 const SB_ROW_ID = "main";
 const SB_ADMIN_EMAIL = "possyshad@gmail.com";
+const SB_SESSION_STORAGE_KEY = "fos_sb_admin_session_v1";
 
 function getAdminSupabase() {
     if (window.supabaseClient) return window.supabaseClient;
@@ -2223,6 +2224,34 @@ function getAdminSupabase() {
     return null;
 }
 
+function readStoredAdminSession() {
+    try {
+        const raw = localStorage.getItem(SB_SESSION_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !parsed.access_token || !parsed.email) return null;
+        if (parsed.expires_at && (Date.now() / 1000) > (parsed.expires_at - 30)) return null;
+        return parsed;
+    } catch (_) {
+        return null;
+    }
+}
+
+function writeStoredAdminSession(session) {
+    try {
+        if (session && session.access_token && session.user && session.user.email) {
+            localStorage.setItem(SB_SESSION_STORAGE_KEY, JSON.stringify({
+                access_token: session.access_token,
+                refresh_token: session.refresh_token || "",
+                expires_at: session.expires_at || 0,
+                email: session.user.email
+            }));
+        } else {
+            localStorage.removeItem(SB_SESSION_STORAGE_KEY);
+        }
+    } catch (_) {}
+}
+
 function setAdminSessionCookie(active, email = "") {
     if (active) {
         document.cookie = `fos_admin_auth=1; path=/; max-age=2592000; SameSite=Lax`;
@@ -2233,46 +2262,16 @@ function setAdminSessionCookie(active, email = "") {
     }
 }
 
-let _sbAuthPollTimer = null;
-let _sbAuthPollAttempts = 0;
-
-async function refreshSupabaseAuthUI() {
-    const sb = getAdminSupabase();
+function applyAuthUiState(email) {
     const statusEl = document.getElementById("sbAuthStatus");
     const formEl = document.getElementById("sbLoginForm");
     const logoutBtn = document.getElementById("btnSbLogout");
-    if (!sb) {
-        _sbAuthPollAttempts++;
-        if (_sbAuthPollAttempts <= 25) {
-            if (statusEl) statusEl.textContent = "Loading Supabase sign-in...";
-            clearTimeout(_sbAuthPollTimer);
-            _sbAuthPollTimer = setTimeout(refreshSupabaseAuthUI, 250);
-            return;
-        }
-        setAdminSessionCookie(false);
-        if (statusEl) statusEl.textContent = "Sign in with your Supabase email & password below";
-        if (formEl) formEl.style.display = "grid";
-        if (logoutBtn) logoutBtn.style.display = "none";
-        return;
-    }
-    clearTimeout(_sbAuthPollTimer);
-    try {
-        const sessionPromise = sb.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Session check timed out")), 4000));
-        const { data } = await Promise.race([sessionPromise, timeoutPromise]);
-        const user = data && data.session ? data.session.user : null;
-        if (user && user.email) {
-            setAdminSessionCookie(true, user.email);
-            if (statusEl) statusEl.innerHTML = `<span style="color:#059669;font-weight:700">Signed in as ${escapeHtml(user.email)}</span> (session persisted; click Log Out anytime)`;
-            if (formEl) formEl.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "inline-flex";
-        } else {
-            setAdminSessionCookie(false);
-            if (statusEl) statusEl.textContent = "Not signed in to Supabase (sign in with email & password to save without revoking GitHub tokens)";
-            if (formEl) formEl.style.display = "grid";
-            if (logoutBtn) logoutBtn.style.display = "none";
-        }
-    } catch (e) {
+    if (email) {
+        setAdminSessionCookie(true, email);
+        if (statusEl) statusEl.innerHTML = `<span style="color:#059669;font-weight:700">Signed in as ${escapeHtml(email)}</span> (session active; click Log Out anytime)`;
+        if (formEl) formEl.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "inline-flex";
+    } else {
         setAdminSessionCookie(false);
         if (statusEl) statusEl.textContent = "Not signed in — enter your Supabase email & password below";
         if (formEl) formEl.style.display = "grid";
@@ -2280,17 +2279,77 @@ async function refreshSupabaseAuthUI() {
     }
 }
 
-async function loginWithSupabase() {
+let _sbAuthPollTimer = null;
+let _sbAuthPollAttempts = 0;
+
+async function refreshSupabaseAuthUI() {
+    const cached = readStoredAdminSession();
+    if (cached && cached.email) {
+        applyAuthUiState(cached.email);
+    }
+
     const sb = getAdminSupabase();
-    if (!sb) return toast("Supabase SDK not loaded yet. Refresh and retry.", "err");
+    if (!sb) {
+        _sbAuthPollAttempts++;
+        if (_sbAuthPollAttempts <= 8) {
+            _sbAuthPollTimer = setTimeout(refreshSupabaseAuthUI, 200);
+            return;
+        }
+        applyAuthUiState(cached ? cached.email : "");
+        return;
+    }
+    clearTimeout(_sbAuthPollTimer);
+    try {
+        const sessionPromise = sb.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Session check timed out")), 3000));
+        const { data } = await Promise.race([sessionPromise, timeoutPromise]);
+        const session = data && data.session ? data.session : null;
+        if (session && session.user && session.user.email) {
+            writeStoredAdminSession(session);
+            applyAuthUiState(session.user.email);
+        } else {
+            writeStoredAdminSession(null);
+            applyAuthUiState("");
+        }
+    } catch (e) {
+        applyAuthUiState(cached ? cached.email : "");
+    }
+}
+
+async function loginWithSupabase() {
     const email = (document.getElementById("sbEmail")?.value || "").trim();
     const password = (document.getElementById("sbPassword")?.value || "");
     if (!email || !password) return alert("Enter your Supabase email and password.");
 
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-        return toast("Sign-in failed: " + error.message, "err");
+    const sb = getAdminSupabase();
+    if (sb) {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) {
+            return toast("Sign-in failed: " + error.message, "err");
+        }
+        if (data && data.session) writeStoredAdminSession(data.session);
+    } else {
+        try {
+            const resp = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+                method: "POST",
+                headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+            const json = await resp.json();
+            if (!resp.ok || !json.access_token) {
+                return toast("Sign-in failed: " + (json.error_description || json.msg || "Check credentials"), "err");
+            }
+            writeStoredAdminSession({
+                access_token: json.access_token,
+                refresh_token: json.refresh_token || "",
+                expires_at: json.expires_at || (Math.floor(Date.now() / 1000) + (json.expires_in || 3600)),
+                user: { email: json.user?.email || email }
+            });
+        } catch (err) {
+            return toast("Sign-in error: " + err.message, "err");
+        }
     }
+
     if (document.getElementById("sbPassword")) document.getElementById("sbPassword").value = "";
     await refreshSupabaseAuthUI();
     toast("✅ Signed in with Supabase!");
@@ -2302,6 +2361,7 @@ async function logoutAdminSession() {
     try {
         if (sb) await sb.auth.signOut();
     } catch (_) {}
+    writeStoredAdminSession(null);
     setAdminSessionCookie(false);
     localStorage.removeItem("gh_token");
     if (document.getElementById("ghToken")) document.getElementById("ghToken").value = "";
@@ -2311,24 +2371,52 @@ async function logoutAdminSession() {
 }
 
 async function saveToSupabaseTable() {
+    if (!CACHE) return false;
     const sb = getAdminSupabase();
-    if (!sb || !CACHE) return false;
-    const { data: sessData } = await sb.auth.getSession();
-    const user = sessData && sessData.session ? sessData.session.user : null;
-    if (!user) return false;
-    const { error } = await sb
-        .from(SB_TABLE)
-        .upsert({
-            id: SB_ROW_ID,
-            payload: CACHE,
-            updated_at: new Date().toISOString(),
-            updated_by: user.email || SB_ADMIN_EMAIL
-        }, { onConflict: "id" });
-    if (error) {
-        console.warn("Supabase write skipped/failed:", error.message);
+    let token = "";
+    let userEmail = "";
+    if (sb) {
+        try {
+            const { data: sessData } = await sb.auth.getSession();
+            if (sessData && sessData.session && sessData.session.access_token) {
+                token = sessData.session.access_token;
+                userEmail = sessData.session.user?.email || SB_ADMIN_EMAIL;
+            }
+        } catch (_) {}
+    }
+    const stored = readStoredAdminSession();
+    if (!token && stored) {
+        token = stored.access_token;
+        userEmail = stored.email || SB_ADMIN_EMAIL;
+    }
+    if (!token) return false;
+
+    try {
+        const resp = await fetch(`${SB_URL}/rest/v1/${SB_TABLE}?on_conflict=id`, {
+            method: "POST",
+            headers: {
+                apikey: SB_KEY,
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Prefer: "resolution=merge-duplicates,return=minimal"
+            },
+            body: JSON.stringify([{
+                id: SB_ROW_ID,
+                payload: CACHE,
+                updated_at: new Date().toISOString(),
+                updated_by: userEmail || SB_ADMIN_EMAIL
+            }])
+        });
+        if (!resp.ok) {
+            const txt = await resp.text();
+            console.warn("Supabase write skipped/failed:", resp.status, txt);
+            return false;
+        }
+        return true;
+    } catch (e) {
+        console.warn("Supabase write error:", e);
         return false;
     }
-    return true;
 }
 
 async function syncFromSupabaseNow(silent = false) {
