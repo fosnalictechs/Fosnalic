@@ -1,6 +1,6 @@
 /*
   Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Embedder-Policy: unsafe-none
   Content-Security-Policy: frame-ancestors * 'self' https://*.netlify.app https://*.pages.dev
   Access-Control-Allow-Origin: *
   X-Robots-Tag: all
