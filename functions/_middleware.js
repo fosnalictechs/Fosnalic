@@ -292,8 +292,7 @@ export async function onRequest(context) {
           .replace(/^\s*const\s+ADMIN_EMAIL\s*=\s*["'][^"']+["'];\s*/gm, "")
           .replace(
             /^\s*const\s+supabaseClient\s*=\s*supabase\.createClient\([^;]+;\s*/gm,
-            'const supabaseClient = window.supabaseClient || (window.supabaseClient = supabase.createClient("https://lqqbvzttjstchkjfajwj.supabase.co", "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7"));
-'
+            'const supabaseClient = window.supabaseClient || (window.supabaseClient = supabase.createClient("https://lqqbvzttjstchkjfajwj.supabase.co", "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7"));\n'
           );
         if (patched !== text.text) text.replace(patched);
       },
