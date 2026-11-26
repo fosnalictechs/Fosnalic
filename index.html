@@ -283,7 +283,7 @@ async function loadAll(){
     }
   }
   renderUpdates(d);
-  function renderAd(ad,el){ if(!ad) return; let c=document.getElementById(el); if(!c) return; let txt=cleanText(ad.text||""); if(ad.text && String(ad.text).trim().startsWith('<') && !String(ad.text).includes('Test popup')){c.innerHTML=ad.text;return;} let h=''; if(ad.image) h+=`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.image}" style="max-width:100%;border-radius:8px"></a>`; if(txt) h+=`<div style="padding:8px;color:#111">${txt}</div>`; if(h) c.innerHTML=h; }
+  function renderAd(ad,el){ if(!ad) return; let c=document.getElementById(el); if(!c) return; let txt=cleanText(ad.text||""); if(ad.text && String(ad.text).trim().startsWith('<') && !String(ad.text).includes('Test popup')){c.innerHTML=ad.text;return;} let h=''; if(ad.image||ad.img) h+=`<a href="${ad.link||ad.url||'#'}" target="_blank"><img src="${ad.image||ad.img}" onerror="this.style.display='none'" style="max-width:100%;border-radius:8px"></a>`; if(txt) h+=`<div style="padding:8px;color:#111">${txt}</div>`; if(h) c.innerHTML=h; }
   renderAd(d.adHeader,'adHeaderContent'); renderAd(d.adMiddle,'adMiddleContent'); renderAd(d.adFooter,'adFooterContent');
   if(d.ads && Array.isArray(d.ads)){ renderAd(d.ads[0],'adHeaderContent'); renderAd(d.ads[1],'adMiddleContent'); renderAd(d.ads[2],'adFooterContent'); }
  }catch(e){console.log(e);}
