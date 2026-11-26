@@ -1,17 +1,20 @@
+// functions/_middleware.js
 // Inject shared auth, privacy-preserving event tracking, and the admin-only stats view.
 const PRIVATE_OR_UTILITY_PATHS = new Set([
   "/auth.html", "/dashboard.html", "/depot.html", "/my-files.html",
   "/phone.html", "/phone_sync.html", "/storage.html", "/tracker.html",
 ]);
 const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-const AUTH_LOADER = '<script src="/auth-global.js"></script>';
+const AUTH_LOADER = '<script src="/auth-global.js" defer></script>';
 const TRACKED_PAGES = new Set([
   "/", "/index.html", "/extra-help.html", "/live-chat.html", "/services.html", "/contact.html",
 ]);
-const AUTH_AREA = `<div id="authArea" style="display:inline-flex;gap:6px;align-items:center;flex-shrink:0;margin-left:auto;position:static;z-index:auto">
+
+const AUTH_AREA = `<div id="authArea" style="display:inline-flex;gap:6px;align-items:center;flex-shrink:0;margin-left:auto;position:relative;z-index:20">
   <button id="loginBtn" type="button" onclick="openAuth()" style="background:#075E54;color:white;border:none;padding:6px 12px;border-radius:20px;font-weight:700;cursor:pointer;font-size:12px;white-space:nowrap">Log In</button>
-  <div id="userArea" style="display:none;align-items:center;gap:6px"><span id="userName" style="font-weight:700;font-size:12px;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span><button type="button" onclick="doLogoutGlobal()" style="background:#eee;border:none;padding:5px 10px;border-radius:20px;cursor:pointer;font-size:11px;white-space:nowrap">Sign Out</button></div>
+  <div id="userArea" style="display:none;align-items:center;gap:6px"><span id="userName" style="font-weight:700;font-size:12px;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span><button type="button" onclick="doLogoutGlobal()" style="background:#eee;color:#111;border:none;padding:5px 10px;border-radius:20px;cursor:pointer;font-size:11px;white-space:nowrap">Sign Out</button></div>
 </div>`;
+
 const AUTH_MODAL = `<div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10001;align-items:center;justify-content:center;padding:14px;font-family:Segoe UI,sans-serif">
   <div style="background:white;border-radius:14px;padding:20px;width:100%;max-width:380px;color:#111;box-sizing:border-box"><h3 style="margin:0 0 10px;color:#075E54">Log In / Sign Up</h3>
   <div id="authMsg" role="status" style="display:none;padding:10px;border-radius:8px;font-size:13px;margin-bottom:10px;background:#FEE2E2;color:#991B1B"></div>
@@ -22,8 +25,9 @@ const AUTH_MODAL = `<div id="authModal" style="display:none;position:fixed;inset
   <button type="button" onclick="doSignupGlobal()" style="width:100%;padding:12px;background:white;color:#075E54;border:1px solid #075E54;border-radius:10px;font-weight:700;cursor:pointer">Create Account</button>
   <p onclick="closeAuth()" style="text-align:center;color:#667781;font-size:13px;cursor:pointer;margin:12px 0 0">Close ✕</p></div>
 </div>`;
+
 const TRACKING_SCRIPT = `<script>
-(() => {
+window.addEventListener('DOMContentLoaded', () => {
   const client = window.supabaseClient;
   if (!client) return;
   function fosDeviceId() {
@@ -72,8 +76,9 @@ const TRACKING_SCRIPT = `<script>
   client.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session?.user) trackLogin(session.user.email, session.user.user_metadata?.full_name || session.user.email?.split('@')[0]);
   });
-})();
+});
 </script>`;
+
 const ADMIN_STATS = `<section id="siteStatsAdmin" style="max-width:1400px;margin:20px auto;padding:0 24px;font-family:'Segoe UI',system-ui,sans-serif;color:#1a365d">
   <div style="background:#fff;border:1px solid #E2E8F0;border-left:5px solid #FF6B35;border-radius:14px;padding:22px;box-shadow:0 4px 16px rgba(15,23,42,.06)">
     <h2 style="margin:0 0 14px;color:#2A4B7C">📊 Website Stats - Admin Only</h2>
@@ -101,7 +106,7 @@ const ADMIN_STATS = `<section id="siteStatsAdmin" style="max-width:1400px;margin
   </div>
 </section>
 <script>
-(() => {
+window.addEventListener('DOMContentLoaded', () => {
   const ADMIN = 'possyshad@gmail.com';
   const client = window.supabaseClient;
   const loginPanel = document.getElementById('statsLoginPanel');
@@ -175,7 +180,7 @@ const ADMIN_STATS = `<section id="siteStatsAdmin" style="max-width:1400px;margin
   document.getElementById('statsLogout').addEventListener('click',async()=>{ await client.auth.signOut(); setView(null); });
   client.auth.getSession().then(({data})=>setView(data?.session?.user||null));
   client.auth.onAuthStateChange((_event,session)=>setView(session?.user||null));
-})();
+});
 </script>`;
 
 export async function onRequest(context) {
@@ -189,50 +194,94 @@ export async function onRequest(context) {
   const isAdminPage = pathname === "/admin.html";
   const isLivePage = TRACKED_PAGES.has(pathname);
   const source = await response.clone().text();
-  const hasHeader = /<header\b/i.test(source) || /class=["'][^"']*\bwa-top\b/i.test(source);
-  const hasNav = /<nav\b/i.test(source);
-  const hasAuthArea = /\bid=["']authArea["']/i.test(source);
-  const hasAuthModal = /\bid=["']authModal["']/i.test(source);
-  const hasAuthSdk = source.includes(SUPABASE_CDN);
-  const hasAuthLoader = source.includes("auth-global.js");
+
+  const hasHeaderNavbar = /<header[^>]*>[\s\S]*?class=["'][^"']*(?:navbar|container)/i.test(source);
+  const hasHeader = /<header/i.test(source) || /class=["'][^"']*wa-top/i.test(source);
+  const hasNav = /<nav/i.test(source);
+  const hasAuthArea = /id=["']authArea["']/i.test(source);
+  const hasAuthModal = /id=["']authModal["']/i.test(source);
 
   let rewriter = new HTMLRewriter();
-  if (isAdminPage || isLivePage) {
+
+  if (!isPrivateUtility) {
     rewriter = rewriter
       .on('script[src*="cdn.jsdelivr.net/npm/@supabase/supabase-js"]', { element(element) { element.remove(); } })
-      .on('script[src*="auth-global.js"]', { element(element) { element.remove(); } });
+      .on('script[src*="auth-global.js"]', { element(element) { element.remove(); } })
+      .on('script[src*="fosnalic-global-auth.js"]', { element(element) { element.remove(); } });
   }
+
   rewriter = rewriter
     .on("head", {
       element(element) {
-        if (isAdminPage || isLivePage) {
-          element.append(`${hasAuthSdk ? `<script src="${SUPABASE_CDN}"></script>` : `<script src="${SUPABASE_CDN}"></script>`}${hasAuthLoader ? AUTH_LOADER : AUTH_LOADER}`, { html: true });
+        if (!isPrivateUtility) {
+          element.append(`<script src="${SUPABASE_CDN}"></script>${AUTH_LOADER}`, { html: true });
         }
-        if (isLivePage) element.append('<script src="/fosnalic-remove-test-ad.js" defer></script>', { html: true });
+        if (isLivePage) {
+          element.append('<script src="/fosnalic-remove-test-ad.js" defer></script>', { html: true });
+        }
         element.append('<script src="/fosnalic-announcements.js" defer></script>', { html: true });
       },
     })
     .on("#authArea", {
-      element(element) { element.setAttribute("style", "display:inline-flex;gap:6px;align-items:center;flex-shrink:0;margin-left:auto;position:static;z-index:auto"); },
+      element(element) {
+        element.setAttribute("style", "display:inline-flex;gap:6px;align-items:center;flex-shrink:0;margin-left:auto;position:relative;z-index:20");
+      },
     })
     .on("#loginBtn", {
-      element(element) { element.setAttribute("style", "background:#075E54;color:white;border:none;padding:6px 12px;border-radius:20px;font-weight:700;cursor:pointer;font-size:12px;white-space:nowrap"); },
+      element(element) {
+        element.setAttribute("style", "background:#075E54;color:white;border:none;padding:6px 12px;border-radius:20px;font-weight:700;cursor:pointer;font-size:12px;white-space:nowrap");
+      },
     })
     .on("#userArea", {
-      element(element) { element.setAttribute("style", "display:none;align-items:center;gap:6px"); },
+      element(element) {
+        element.setAttribute("style", "display:none;align-items:center;gap:6px");
+      },
     })
     .on("#userName", {
-      element(element) { element.setAttribute("style", "font-weight:700;font-size:12px;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"); },
+      element(element) {
+        element.setAttribute("style", "font-weight:700;font-size:12px;max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis");
+      },
     });
 
   if (!isPrivateUtility && !hasAuthArea) {
-    if (hasHeader) rewriter = rewriter.on("header, .wa-top", { element(element) { element.append(AUTH_AREA, { html: true }); } });
-    else if (hasNav) rewriter = rewriter.on("nav", { element(element) { element.append(AUTH_AREA, { html: true }); } });
-    else rewriter = rewriter.on("body", { element(element) { element.prepend(`<div style="display:flex;justify-content:flex-end;padding:8px;position:static">${AUTH_AREA}</div>`, { html: true }); } });
+    if (hasHeaderNavbar) {
+      rewriter = rewriter.on("header .navbar, header .container", {
+        element(element) { element.append(AUTH_AREA, { html: true }); },
+      });
+    } else if (hasHeader) {
+      rewriter = rewriter.on("header, .wa-top", {
+        element(element) { element.append(AUTH_AREA, { html: true }); },
+      });
+    } else if (hasNav) {
+      rewriter = rewriter.on("nav", {
+        element(element) { element.append(AUTH_AREA, { html: true }); },
+      });
+    } else {
+      rewriter = rewriter.on("body", {
+        element(element) {
+          element.prepend(`<div style="display:flex;justify-content:flex-end;padding:8px;position:relative;z-index:20">${AUTH_AREA}</div>`, { html: true });
+        },
+      });
+    }
   }
-  if (!isPrivateUtility && !hasAuthModal) rewriter = rewriter.on("body", { element(element) { element.append(AUTH_MODAL, { html: true }); } });
-  if (isAdminPage) rewriter = rewriter.on("body", { element(element) { element.append(ADMIN_STATS, { html: true }); } });
-  if (isLivePage) rewriter = rewriter.on("body", { element(element) { element.append(TRACKING_SCRIPT, { html: true }); } });
+
+  if (!isPrivateUtility && !hasAuthModal) {
+    rewriter = rewriter.on("body", {
+      element(element) { element.append(AUTH_MODAL, { html: true }); },
+    });
+  }
+
+  if (isAdminPage) {
+    rewriter = rewriter.on("body", {
+      element(element) { element.append(ADMIN_STATS, { html: true }); },
+    });
+  }
+
+  if (isLivePage) {
+    rewriter = rewriter.on("body", {
+      element(element) { element.append(TRACKING_SCRIPT, { html: true }); },
+    });
+  }
 
   if (pathname === "/live-chat.html") {
     rewriter = rewriter.on("script:not([src])", {
@@ -241,8 +290,11 @@ export async function onRequest(context) {
           .replace(/^\s*const\s+SUPABASE_URL\s*=\s*["'][^"']+["'];\s*/gm, "")
           .replace(/^\s*const\s+SUPABASE_KEY\s*=\s*["'][^"']+["'];\s*/gm, "")
           .replace(/^\s*const\s+ADMIN_EMAIL\s*=\s*["'][^"']+["'];\s*/gm, "")
-          .replace(/^\s*const\s+supabaseClient\s*=\s*supabase\.createClient\([^;]+;\s*/gm, "")
-          .replace(/\bsupabaseClient\b/g, "window.supabaseClient");
+          .replace(
+            /^\s*const\s+supabaseClient\s*=\s*supabase\.createClient\([^;]+;\s*/gm,
+            'const supabaseClient = window.supabaseClient || (window.supabaseClient = supabase.createClient("https://lqqbvzttjstchkjfajwj.supabase.co", "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7"));
+'
+          );
         if (patched !== text.text) text.replace(patched);
       },
     });
