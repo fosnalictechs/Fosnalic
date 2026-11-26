@@ -5,6 +5,8 @@
 <title>FOS Depot &mdash; Unlimited Storage & Sync</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-global.js" defer></script>
 <style>
 :root {
     --bg: #0A0E1A;
@@ -101,11 +103,24 @@ button:hover { opacity: 0.9; }
 </div>
 
 <script>
-// Authentication check guard
-if (!localStorage.getItem('activeUser')) {
-    alert('Please log in first.');
-    window.location.href = 'auth.html';
-}
+// Unified Supabase authentication guard
+window.addEventListener('DOMContentLoaded', async () => {
+    const client = window.supabaseClient || (window.supabase && window.supabase.createClient(
+        "https://lqqbvzttjstchkjfajwj.supabase.co",
+        "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7",
+        { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "sb-lqqbvzttjstchkjfajwj-auth-token", storage: window.localStorage } }
+    ));
+    if (!client) { window.location.href = 'auth.html'; return; }
+    const { data } = await client.auth.getSession();
+    if (!data?.session?.user) {
+        localStorage.removeItem('activeUser');
+        window.location.href = 'auth.html';
+        return;
+    }
+    const name = data.session.user.user_metadata?.full_name || data.session.user.email.split('@')[0];
+    localStorage.setItem('activeUser', name);
+    refreshStoredKeys();
+});
 
 function updateSize(){
     const t = document.getElementById('data').value;
@@ -124,7 +139,7 @@ function refreshStoredKeys() {
     for (let i = 0; i < localStorage.length; i++) {
         let k = localStorage.key(i);
         // Filter out system or user auth keys, display depot keys
-        if (k && !k.startsWith('fos_user_') && k !== 'activeUser' && k !== 'fos_known_keys') {
+        if (k && !k.startsWith('fos_user_') && !k.startsWith('sb-') && k !== 'activeUser' && k !== 'fos_known_keys' && k !== 'fos_device_id') {
             keys.push(k);
         }
     }
