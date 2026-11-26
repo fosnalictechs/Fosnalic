@@ -112,71 +112,11 @@ button:disabled{opacity:0.45;cursor:not-allowed}
 .upload-progress-meta{display:flex;justify-content:space-between;font-size:0.8rem;font-weight:600;color:var(--primary);margin-bottom:4px}
 .upload-progress-track{width:100%;height:9px;background:var(--card-surface);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
 .upload-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--success));transition:width 0.15s ease}
-
-/* Image Preview, Lightbox & Repo Gallery Modal */
-.img-preview-box{display:flex;align-items:center;gap:12px;background:#FFFFFF;padding:10px 14px;border-radius:8px;border:1px dashed var(--border);margin:10px 0;flex-wrap:wrap}
-.img-thumb{width:76px;height:76px;border-radius:8px;border:1px solid var(--border);background:var(--card-surface);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;cursor:pointer;position:relative}
-.img-thumb img{width:100%;height:100%;object-fit:cover}
-.img-thumb:hover::after{content:'\f00e';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;inset:0;background:rgba(15,23,42,0.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.75);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal-card{background:#FFFFFF;border-radius:12px;max-width:860px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 25px -5px rgba(0,0,0,0.25)}
-.modal-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--card-surface)}
-.modal-body{padding:18px;overflow-y:auto;flex:1}
-.repo-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
-.repo-img-item{border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;cursor:pointer;background:var(--bg);transition:all 0.15s}
-.repo-img-item:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 10px rgba(37,99,235,0.15)}
-.repo-img-item img{width:100%;height:95px;object-fit:cover;border-radius:6px;background:#E2E8F0}
-.repo-img-item small{display:block;margin-top:6px;font-size:0.72rem;color:var(--text-main);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fm-image-viewer{background:#0F172A;border:1px solid var(--border);border-radius:8px;padding:20px;margin-top:16px;text-align:center;color:#E2E8F0}
-.fm-image-viewer img{max-width:100%;max-height:440px;border-radius:8px;border:1px solid #334155;background:#1E293B;object-fit:contain}
-
 </style>
 </head>
 <body>
 
 <div id="toastBox"></div>
-
-<!-- Fullscreen Image Lightbox Modal -->
-<div id="imgLightboxModal" class="modal-backdrop hidden" onclick="if(event.target===this)closeLightbox()">
-    <div class="modal-card" style="max-width:780px">
-        <div class="modal-header">
-            <b id="lightboxTitle" style="color:var(--primary)"><i class="fas fa-image"></i> Image Preview</b>
-            <div style="display:flex;gap:8px">
-                <a id="lightboxOpenRaw" href="#" target="_blank" class="btn-ghost btn-xs" style="text-decoration:none"><i class="fas fa-arrow-up-right-from-square"></i> Open Full</a>
-                <button class="btn-danger btn-xs" onclick="closeLightbox()"><i class="fas fa-times"></i> Close</button>
-            </div>
-        </div>
-        <div class="modal-body" style="text-align:center;background:#0F172A">
-            <img id="lightboxImg" src="" style="max-width:100%;max-height:68vh;border-radius:8px;object-fit:contain">
-            <div id="lightboxUrlText" style="color:#94A3B8;font-size:0.78rem;margin-top:10px;word-break:break-all"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Repo Image Gallery Picker Modal -->
-<div id="repoGalleryModal" class="modal-backdrop hidden" onclick="if(event.target===this)closeRepoGallery()">
-    <div class="modal-card">
-        <div class="modal-header">
-            <b style="color:var(--primary)"><i class="fas fa-images" style="color:var(--accent)"></i> Select Existing Image from GitHub Storage</b>
-            <div style="display:flex;gap:8px;align-items:center">
-                <select id="repoGalleryFolder" style="width:auto;margin:0;padding:5px 10px;font-size:0.82rem" onchange="loadRepoGalleryImages()">
-                    <option value="images">images/</option>
-                    <option value="images/ads">images/ads/</option>
-                    <option value="images/products">images/products/</option>
-                    <option value="images/popups">images/popups/</option>
-                    <option value="icons">icons/</option>
-                    <option value="apps">apps/</option>
-                    <option value="apps/screenshots">apps/screenshots/</option>
-                    <option value="">/ (Root)</option>
-                </select>
-                <button class="btn-danger btn-xs" onclick="closeRepoGallery()"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
-        <div class="modal-body">
-            <div id="repoGalleryGrid" class="repo-img-grid">Loading...</div>
-        </div>
-    </div>
-</div>
 
 <div class="header container-fluid">
     <h1><i class="fas fa-shield-halved"></i> FOSNALIC Techs — Control Center <span style="font-size:0.75rem;background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:12px">PRO v6.0</span></h1>
@@ -256,22 +196,14 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                 </div>
                 <div class="grid-2">
                     <input id="prodBrand" placeholder="Brand e.g. HP">
-                    <input id="prodImage" placeholder="Image link appears automatically after upload" oninput="syncPreview('prodImage','prodImgPreview')">
+                    <input id="prodImage" placeholder="Image link appears after upload">
                 </div>
                 <textarea id="prodDesc" placeholder="Product short description..."></textarea>
-                <div class="img-preview-box">
-                    <div class="img-thumb" id="prodImgPreview" onclick="openLightbox(document.getElementById('prodImage').value, 'Product Image')" title="Click to view full image">
-                        <i class="fas fa-image" style="color:var(--text-muted)"></i>
-                    </div>
-                    <div style="flex:1;min-width:220px">
-                        <b>Step 1: Upload / Change Product Image from Storage</b>
-                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                            <input type="file" id="prodFile" accept="image/*" style="margin:0;flex:1;min-width:180px" onchange="uploadProductImage()">
-                            <button type="button" class="btn-primary btn-xs" onclick="uploadProductImage()"><i class="fas fa-cloud-arrow-up"></i> Upload</button>
-                            <button type="button" class="btn-ghost btn-xs" onclick="openRepoGallery('prodImage','prodImgPreview','images/products')"><i class="fas fa-images"></i> Pick Uploaded</button>
-                        </div>
-                        <span id="prodUploadStatus" class="ok" style="font-size:0.82rem;display:block;margin-top:4px"></span>
-                    </div>
+                <div style="background:#FFFFFF;padding:14px;border-radius:6px;border:1px dashed var(--border);margin:12px 0">
+                    <b>Step 1: Upload Image</b><br>
+                    <input type="file" id="prodFile" accept="image/*" style="margin-top:6px">
+                    <button class="btn-ghost" onclick="uploadProductImage()" style="margin-top:8px"><i class="fas fa-upload"></i> Upload Image Now</button>
+                    <br><span id="prodUploadStatus" class="ok"></span>
                 </div>
                 <button id="btnSaveProduct" class="btn-ok" style="width:100%;margin-top:8px" onclick="saveProduct()"><i class="fas fa-plus-circle"></i> Step 2: Save Product</button>
             </div>
@@ -324,25 +256,16 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                     <option value="adFooter">Footer (Fixed Slot)</option>
                 </select>
             </div>
-            <div class="img-preview-box" style="margin-bottom:8px">
-                <div class="img-thumb" id="adImgPreview" onclick="openLightbox(document.getElementById('adBannerImgUrl').value, 'Ad Banner Image')" title="Click to view full image">
-                    <i class="fas fa-rectangle-ad" style="color:var(--text-muted)"></i>
-                </div>
-                <div style="flex:1;min-width:220px">
-                    <b>Upload Ad Banner Image from Storage (Optional):</b>
-                    <div class="grid-2" style="margin-top:4px">
-                        <input id="adBannerImgUrl" placeholder="Banner image URL" style="margin:0" oninput="syncPreview('adBannerImgUrl','adImgPreview')">
-                        <input id="adBannerLinkUrl" placeholder="Click destination URL (e.g. https://fosnalic.pages.dev)" style="margin:0">
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                        <input type="file" id="adBannerFile" accept="image/*" style="margin:0;flex:1;min-width:180px" onchange="uploadAdBannerImage()">
-                        <button type="button" class="btn-ghost btn-xs" onclick="insertAdImageHtml()"><i class="fas fa-code"></i> Insert Image HTML</button>
-                        <button type="button" class="btn-ghost btn-xs" onclick="openRepoGallery('adBannerImgUrl','adImgPreview','images/ads')"><i class="fas fa-images"></i> Pick Uploaded</button>
-                    </div>
-                    <span id="adUploadStatus" class="ok" style="font-size:0.82rem;display:block;margin-top:4px"></span>
-                </div>
+            <div class="grid-2" style="margin-top:8px">
+                <input id="adImage" placeholder="Ad Image URL (https://... or upload below)">
+                <input id="adLink" placeholder="Click Destination URL (optional https://...)">
             </div>
-            <textarea id="adText" style="min-height:110px;font-family:Consolas,monospace;font-size:0.85rem" placeholder="Paste Ad HTML or <script> snippet (or leave blank when using an uploaded image above)..."></textarea>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+                <input type="file" id="adFile" accept="image/*" style="flex:1">
+                <button class="btn-ghost" type="button" onclick="uploadAdImage()"><i class="fas fa-upload"></i> Upload Ad Image</button>
+                <span id="adUploadStatus" class="ok"></span>
+            </div>
+            <textarea id="adText" style="min-height:95px;margin-top:8px;font-family:Consolas,monospace;font-size:0.85rem" placeholder="Ad caption text or custom HTML / <script> snippet..."></textarea>
             <div style="display:flex; gap:10px; margin-top:12px;">
                 <button id="btnSaveAd" class="btn-primary" style="flex:1" onclick="saveAd()"><i class="fas fa-floppy-disk"></i> Save Ad</button>
                 <button class="btn-danger" onclick="clearAllBanners()"><i class="fas fa-trash"></i> Clear All Ads</button>
@@ -364,22 +287,13 @@ button:disabled{opacity:0.45;cursor:not-allowed}
             <textarea id="newsDesc" placeholder="Description..."></textarea>
             <div class="grid-2">
                 <input id="newsTag" placeholder="Tag e.g. UPDATE">
-                <input id="newsImg" placeholder="Image URL (auto-filled on upload)" oninput="syncPreview('newsImg','newsImgPreview')">
+                <input id="newsImg" placeholder="Image URL">
             </div>
-            <div class="img-preview-box">
-                <div class="img-thumb" id="newsImgPreview" onclick="openLightbox(document.getElementById('newsImg').value, 'Update Image')" title="Click to view full image">
-                    <i class="fas fa-image" style="color:var(--text-muted)"></i>
-                </div>
-                <div style="flex:1;min-width:220px">
-                    <b>Upload / Change Update Image from Storage:</b>
-                    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                        <input type="file" id="newsFile" accept="image/*" style="margin:0;flex:1;min-width:180px" onchange="uploadImage()">
-                        <button type="button" class="btn-primary btn-xs" onclick="uploadImage()"><i class="fas fa-cloud-arrow-up"></i> Upload</button>
-                        <button type="button" class="btn-ghost btn-xs" onclick="openRepoGallery('newsImg','newsImgPreview','images')"><i class="fas fa-images"></i> Pick Uploaded</button>
-                    </div>
-                    <span id="newsUploadStatus" class="ok" style="font-size:0.82rem;display:block;margin-top:4px"></span>
-                </div>
+            <div style="display:flex;gap:10px;align-items:center;margin:10px 0">
+                <input type="file" id="newsFile" accept="image/*">
+                <button class="btn-ghost" onclick="uploadImage()"><i class="fas fa-upload"></i> Upload Image</button>
             </div>
+            <span id="newsUploadStatus" class="ok"></span>
             <button id="btnSaveNews" class="btn-dark" style="width:100%;margin-top:12px" onclick="saveNews()"><i class="fas fa-floppy-disk"></i> Save Update</button>
             <div id="newsList" style="margin-top:16px"></div>
         </div>
@@ -401,30 +315,16 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                     <input id="appIcon" placeholder="Icon (e.g. fa-store)">
                 </div>
                 <textarea id="appDesc" placeholder="App description..."></textarea>
-                <div class="img-preview-box">
-                    <div class="app-icon-preview" id="iconPreview" style="cursor:pointer" onclick="openLightbox(document.getElementById('appIconUrl').value, 'App Icon')" title="Click to view full icon"><i class="fas fa-image" style="color:var(--text-muted)"></i></div>
-                    <div style="flex:1;min-width:220px">
-                        <b>App Icon Image (Upload from Storage or Pick):</b>
-                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                            <input type="file" id="appIconFile" accept="image/*" style="margin:0;flex:1;min-width:170px" onchange="uploadAppIcon()">
-                            <button type="button" class="btn-primary btn-xs" onclick="uploadAppIcon()"><i class="fas fa-cloud-arrow-up"></i> Upload</button>
-                            <button type="button" class="btn-ghost btn-xs" onclick="openRepoGallery('appIconUrl','iconPreview','icons')"><i class="fas fa-images"></i> Pick Uploaded</button>
+                <div style="background:#FFFFFF;padding:14px;border-radius:6px;margin:12px 0;border:1px dashed var(--border);display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+                    <div class="app-icon-preview" id="iconPreview"><i class="fas fa-image" style="color:var(--text-muted)"></i></div>
+                    <div style="flex:1">
+                        <b>App Icon Image:</b><br>
+                        <div style="display:flex;gap:8px;margin-top:8px">
+                            <input type="file" id="appIconFile" accept="image/*">
+                            <button class="btn-ghost" onclick="uploadAppIcon()"><i class="fas fa-upload"></i> Upload Icon</button>
                         </div>
-                        <input id="appIconUrl" placeholder="Icon URL (auto-filled on upload)" style="margin-top:6px" oninput="syncPreview('appIconUrl','iconPreview')">
-                        <span id="appIconStatus" class="ok" style="font-size:.8rem;display:block"></span>
-                    </div>
-                </div>
-
-                <div class="img-preview-box">
-                    <div style="flex:1;min-width:220px">
-                        <b>App Screenshots / Promo Images (Upload Multiple from Storage):</b>
-                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                            <input type="file" id="appScreensFile" accept="image/*" multiple style="margin:0;flex:1;min-width:180px" onchange="uploadAppScreenshots()">
-                            <button type="button" class="btn-primary btn-xs" onclick="uploadAppScreenshots()"><i class="fas fa-images"></i> Upload Screenshots</button>
-                            <button type="button" class="btn-ghost btn-xs" onclick="openRepoGalleryForAppScreen()"><i class="fas fa-folder-open"></i> Add from Repo</button>
-                        </div>
-                        <span id="appScreensStatus" class="ok" style="font-size:.8rem;display:block;margin-top:4px"></span>
-                        <div id="appScreensPreviewGrid" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"></div>
+                        <input id="appIconUrl" type="hidden">
+                        <span id="appIconStatus" class="ok" style="font-size:.8rem"></span>
                     </div>
                 </div>
                 <button id="btnSaveApp" class="btn-primary" style="width:100%" onclick="saveApp()"><i class="fas fa-plus-circle"></i> Create App</button>
@@ -446,7 +346,7 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                 <div style="background:#FFFFFF;padding:14px;border-radius:6px;margin:12px 0;border:1px dashed #D97706">
                     <b>Upload APK Directly:</b>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <input type="file" id="apkFile" accept=".apk,.aab,.zip,application/vnd.android.package-archive" onchange="uploadApkDirect()">
+                        <input type="file" id="apkFile" accept=".apk,.aab,.zip">
                         <button id="btnUploadApk" class="btn-primary" onclick="uploadApkDirect()"><i class="fas fa-upload"></i> Upload APK</button>
                     </div>
                     <div id="apkProgressWrap" class="upload-progress-wrap">
@@ -511,25 +411,17 @@ button:disabled{opacity:0.45;cursor:not-allowed}
             </div>
             <span id="anyFileStatus" class="ok"></span>
 
-            <!-- Visual Image Viewer & Direct Replacer when an image is clicked in File Manager -->
-            <div id="fmImageViewer" class="fm-image-viewer hidden">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-                    <span id="fmImageTitle" style="color:#38BDF8;font-weight:700"><i class="fas fa-image"></i> Image</span>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap">
-                        <button class="btn-ghost btn-xs" onclick="copyCurrentImageUrl()"><i class="fas fa-copy"></i> Copy URL</button>
-                        <a id="fmImageRawLink" href="#" target="_blank" class="btn-primary btn-xs" style="text-decoration:none"><i class="fas fa-expand"></i> Full Screen</a>
-                        <button class="btn-danger btn-xs" onclick="deleteCurrentFile()"><i class="fas fa-trash-can"></i> Delete Image</button>
-                    </div>
+            <div style="background:#EFF6FF;padding:16px;border-radius:8px;margin-top:16px;border:1px solid #BFDBFE">
+                <b style="color:var(--primary)"><i class="fas fa-layer-group"></i> Bulk Replace / Upload Multiple Files at Once</b>
+                <p style="font-size:0.82rem;color:var(--text-muted);margin:4px 0 10px">Select multiple files (or an entire folder) to upload and overwrite existing files in the current GitHub path automatically. Note: files inside <code>functions/</code> should be uploaded while inside the <code>functions</code> folder.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                    <input type="file" id="bulkFiles" multiple style="flex:1;min-width:220px;background:#fff">
+                    <button class="btn-primary" id="btnBulkUpload" onclick="uploadBulkFiles()"><i class="fas fa-cloud-arrow-up"></i> Replace / Upload Selected Files</button>
                 </div>
-                <img id="fmImagePreviewEl" src="" alt="Preview" onclick="openLightbox(this.src, currentPage)" style="cursor:zoom-in">
-                <div style="margin-top:14px;background:#1E293B;padding:12px;border-radius:8px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap">
-                    <b style="font-size:0.85rem;color:#E2E8F0"><i class="fas fa-arrows-rotate"></i> Replace This Image from Storage:</b>
-                    <input type="file" id="fmReplaceImgFile" accept="image/*" style="width:auto;margin:0;background:#0F172A;color:#E2E8F0;border-color:#334155" onchange="replaceCurrentRepoImage()">
-                    <button class="btn-ok btn-xs" onclick="replaceCurrentRepoImage()"><i class="fas fa-upload"></i> Overwrite Image</button>
-                </div>
+                <div id="bulkUploadLog" style="margin-top:10px;font-size:0.82rem;font-family:Consolas,monospace;max-height:180px;overflow-y:auto;color:var(--primary)"></div>
             </div>
 
-            <div id="fmCodeEditorWrap" class="editor-container">
+            <div class="editor-container">
                 <div class="editor-toolbar">
                     <span id="activeEditingFile"><i class="fas fa-file-code"></i> No file open</span>
                     <span id="pageStatus" class="ok" style="font-size:0.8rem;">Ready</span>
@@ -537,7 +429,7 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                 <textarea id="pageEditor" class="code-textarea" placeholder="Select a file above to view or edit code here..."></textarea>
             </div>
             
-            <div id="fmCodeActions" style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+            <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
                 <button class="btn-dark" style="flex:1" onclick="savePageToGitHub()"><i class="fas fa-floppy-disk"></i> Save File</button>
                 <button class="btn-danger" onclick="deleteCurrentFile()"><i class="fas fa-trash-can"></i> Delete File</button>
             </div>
@@ -565,25 +457,11 @@ button:disabled{opacity:0.45;cursor:not-allowed}
                     <input id="appPopupUrl" placeholder="Click URL e.g. https://fosnalic.pages.dev">
                 </div>
                 <div class="grid-2">
-                    <input id="appPopupImg" placeholder="Popup Image URL (auto-filled on upload)" oninput="syncPreview('appPopupImg','appPopupImgPreview')">
+                    <input id="appPopupImg" placeholder="Popup Image URL (optional)">
                     <select id="appPopupEnabled">
                         <option value="true">Status: Active (Show in App)</option>
                         <option value="false">Status: Paused (Hide in App)</option>
                     </select>
-                </div>
-                <div class="img-preview-box">
-                    <div class="img-thumb" id="appPopupImgPreview" onclick="openLightbox(document.getElementById('appPopupImg').value, 'Popup Ad Image')" title="Click to view full image">
-                        <i class="fas fa-image" style="color:var(--text-muted)"></i>
-                    </div>
-                    <div style="flex:1;min-width:220px">
-                        <b>Upload / Change Popup Image from Storage:</b>
-                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center">
-                            <input type="file" id="appPopupFile" accept="image/*" style="margin:0;flex:1;min-width:180px" onchange="uploadAppPopupImage()">
-                            <button type="button" class="btn-primary btn-xs" onclick="uploadAppPopupImage()"><i class="fas fa-cloud-arrow-up"></i> Upload</button>
-                            <button type="button" class="btn-ghost btn-xs" onclick="openRepoGallery('appPopupImg','appPopupImgPreview','images/popups')"><i class="fas fa-images"></i> Pick Uploaded</button>
-                        </div>
-                        <span id="appPopupUploadStatus" class="ok" style="font-size:0.82rem;display:block;margin-top:4px"></span>
-                    </div>
                 </div>
                 <textarea id="appPopupText" style="min-height:85px" placeholder="Popup message shown to the user..."></textarea>
                 <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
@@ -617,9 +495,9 @@ let GH = {
     owner: localStorage.getItem('gh_owner') || 'fosnalictechs',
     repo: localStorage.getItem('gh_repo') || 'fosnalic',
     branch: localStorage.getItem('gh_branch') || 'main',
-    token: (localStorage.getItem('gh_token') || '').replace(/\s+/g, '')
+    token: localStorage.getItem('gh_token') || ''
 };
-let GIST_ID = (localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162").trim();
+let GIST_ID = localStorage.getItem('fos_gist_id') || "0f719dd44c5c9bce109b0bce767f9162";
 let CACHE = null;
 
 // Undo / Redo History Stacks
@@ -773,14 +651,12 @@ function showTab(id, el) {
     if (el) el.classList.add('active');
 }
 
-function getAuthHeaders(extra = {}) {
-    const t = (GH.token || '').replace(/\s+/g, '');
-    const headers = { ...extra };
-    if (t) {
-        const scheme = t.startsWith('github_pat_') ? 'Bearer' : 'token';
-        headers.Authorization = `${scheme} ${t}`;
-    }
-    return headers;
+function getAuthHeaders() {
+    const t = (GH.token || '').trim();
+    if (!t) return {};
+    // Fine-grained PATs use Bearer; classic ghp_ tokens accept token or Bearer
+    const scheme = t.startsWith('github_pat_') ? 'Bearer' : 'token';
+    return { Authorization: `${scheme} ${t}` };
 }
 
 function saveConfig() {
@@ -792,7 +668,7 @@ function saveConfig() {
         GIST_ID = inputGist;
         localStorage.setItem('fos_gist_id', GIST_ID);
     }
-    GH.token = (document.getElementById('ghToken').value || '').replace(/\s+/g, '');
+    GH.token = document.getElementById('ghToken').value.trim();
     
     localStorage.setItem('gh_owner', GH.owner);
     localStorage.setItem('gh_repo', GH.repo);
@@ -810,7 +686,7 @@ async function createNewGist() {
     let init = { ticker: ["Welcome to FOSNALIC Techs"], ads: [], news: [], apps: [], products: [], adHeader: { text: "" }, adMiddle: { text: "" }, adFooter: { text: "" } };
     let r = await fetch('https://api.github.com/gists', {
         method: 'POST',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body: JSON.stringify({ description: "fosnalic-data", public: true, files: { 'fosnalic-data.json': { content: JSON.stringify(init, null, 2) } } })
     });
     let j = await r.json();
@@ -867,32 +743,25 @@ async function saveToGist() {
     let body = JSON.stringify({ files: { 'fosnalic-data.json': { content: JSON.stringify(CACHE, null, 2) } } });
     let r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
         method: 'PATCH',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body
     });
     if (!r.ok && r.status === 404) {
         await createNewGist();
         return saveToGist();
     }
-    if (!r.ok) {
-        let errMsg = `HTTP ${r.status}`;
-        try { const ej = await r.json(); if (ej.message) errMsg = ej.message; } catch (_) {}
-        toast(`Failed to save to Gist: ${errMsg}`, 'err');
-        return false;
-    }
     updateBadges();
-    return true;
+    return r.ok;
 }
 
 function updateBadges() {
     if (!CACHE) return;
     document.getElementById('cnt-products').textContent = CACHE.products.length;
     document.getElementById('cnt-ticker').textContent = CACHE.ticker.length;
-    let slotCount = ((CACHE.adHeader?.text || CACHE.adHeader?.img) ? 1 : 0) + ((CACHE.adMiddle?.text || CACHE.adMiddle?.img) ? 1 : 0) + ((CACHE.adFooter?.text || CACHE.adFooter?.img) ? 1 : 0);
+    let slotCount = (CACHE.adHeader?.text ? 1 : 0) + (CACHE.adMiddle?.text ? 1 : 0) + (CACHE.adFooter?.text ? 1 : 0);
     document.getElementById('cnt-ads').textContent = CACHE.ads.length + slotCount;
     document.getElementById('cnt-news').textContent = CACHE.news.length;
     document.getElementById('cnt-apps').textContent = CACHE.apps.length;
-    updateAppAdsBadge();
 }
 
 function renderAll() {
@@ -909,7 +778,7 @@ function renderAll() {
 function renderProducts() {
     let list = document.getElementById('productsList');
     let query = (document.getElementById('prodSearch')?.value || '').toLowerCase();
-    if (!CACHE || !CACHE.products || CACHE.products.length === 0) {
+    if (!CACHE.products || CACHE.products.length === 0) {
         list.innerHTML = '<i style="color:var(--text-muted)">No products yet.</i>';
         return;
     }
@@ -920,7 +789,7 @@ function renderProducts() {
         return `
         <div class="news-card ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'products',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'products',${i})">
             <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-            <img src="${p.image || 'https://via.placeholder.com/100x75'}" style="cursor:zoom-in" onclick="openLightbox('${escapeHtml(p.image || '')}', '${escapeHtml(p.title || 'Product')}')">
+            <img src="${p.image || 'https://via.placeholder.com/100x75'}">
             <div style="flex:1;min-width:0">
                 <b>${escapeHtml(p.title)}</b> — <span style="color:var(--accent);font-weight:700">${escapeHtml(p.priceDisplay || p.price)}</span><br>
                 <small style="color:var(--text-muted)">${escapeHtml((p.description || '').substring(0, 90))}</small><br>
@@ -946,7 +815,6 @@ function editProduct(i) {
     document.getElementById('prodBrand').value = p.brand || '';
     document.getElementById('prodImage').value = p.image || '';
     document.getElementById('prodDesc').value = p.description || '';
-    syncPreview('prodImage', 'prodImgPreview');
 
     document.getElementById('prodEditBanner').classList.remove('hidden');
     document.getElementById('prodEditName').textContent = p.title;
@@ -965,7 +833,6 @@ function cancelEditProduct() {
     document.getElementById('prodDesc').value = '';
     document.getElementById('prodFile').value = '';
     document.getElementById('prodUploadStatus').textContent = '';
-    syncPreview('prodImage', 'prodImgPreview');
 
     document.getElementById('prodEditBanner').classList.add('hidden');
     document.getElementById('prodFormHeading').textContent = 'Add New Product';
@@ -992,8 +859,6 @@ function makeGoogleReady(product, existingItem = null) {
 }
 
 async function saveProduct() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
     let rawPrice = document.getElementById('prodPrice').value.trim();
     let p = {
         title: document.getElementById('prodTitle').value.trim(),
@@ -1011,14 +876,13 @@ async function saveProduct() {
         let existing = CACHE.products[editState.productIdx];
         CACHE.products[editState.productIdx] = makeGoogleReady(p, existing);
         cancelEditProduct();
-        const ok = await saveToGist();
-        if (ok) toast('✅ Product updated!');
+        toast('✅ Product updated!');
     } else {
         CACHE.products.unshift(makeGoogleReady(p));
         cancelEditProduct();
-        const ok = await saveToGist();
-        if (ok) toast('✅ Product saved!');
+        toast('✅ Product saved!');
     }
+    await saveToGist();
     renderProducts();
 }
 
@@ -1053,13 +917,33 @@ async function sortProducts() {
 async function uploadProductImage() {
     let file = document.getElementById('prodFile').files[0];
     if (!file) return alert('Choose image first');
-    await uploadImageFileToRepo(file, 'images/products', 'prodImage', 'prodImgPreview', 'prodUploadStatus');
+    if (!GH.token) return alert('Add GitHub token first');
+    
+    document.getElementById('prodUploadStatus').textContent = 'Uploading...';
+    let reader = new FileReader();
+    reader.onload = async function() {
+        let b64 = reader.result.split(',')[1];
+        let path = `images/products/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+        let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+        });
+        let j = await r.json();
+        if (r.ok) {
+            let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
+            document.getElementById('prodImage').value = rawUrl;
+            document.getElementById('prodUploadStatus').textContent = '✅ Uploaded!';
+        } else {
+            document.getElementById('prodUploadStatus').textContent = `❌ ${j.message}`;
+        }
+    };
+    reader.readAsDataURL(file);
 }
 
 // ==================== 2. TICKER BAR MANAGER ====================
 function renderTicker() {
     let list = document.getElementById('tickerList');
-    if (!CACHE) return;
     list.innerHTML = CACHE.ticker.map((x, i) => `
         <div class="item-row ${editState.tickerIdx === i ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ticker',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ticker',${i})">
             <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
@@ -1091,22 +975,19 @@ function cancelEditTicker() {
 }
 
 async function saveTicker() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
     let v = document.getElementById('tickerInput').value.trim();
     if (!v) return;
     pushHistory();
     if (editState.tickerIdx !== null) {
         CACHE.ticker[editState.tickerIdx] = v;
         cancelEditTicker();
-        const ok = await saveToGist();
-        if (ok) toast('✅ Ticker updated');
+        toast('✅ Ticker updated');
     } else {
         CACHE.ticker.push(v);
         document.getElementById('tickerInput').value = '';
-        const ok = await saveToGist();
-        if (ok) toast('✅ Ticker added');
+        toast('✅ Ticker added');
     }
+    await saveToGist();
     renderTicker();
 }
 
@@ -1135,54 +1016,20 @@ async function fixTickerNow() {
     toast('✅ Ticker cleaned');
 }
 
-// ==================== 3. ADS MANAGER (ALL SLOTS + IMAGE ADS + EDIT + SORT) ====================
-function buildAdImageHtml(imgUrl, linkUrl = 'https://fosnalic.pages.dev') {
-    const safeImg = String(imgUrl || '').trim();
-    const safeLink = String(linkUrl || 'https://fosnalic.pages.dev').trim() || 'https://fosnalic.pages.dev';
-    if (!safeImg) return '';
-    return `<a href="${escapeHtml(safeLink)}" target="_blank" rel="noopener"><img src="${escapeHtml(safeImg)}" alt="Fosnalic Banner" style="max-width:100%;height:auto;border-radius:8px;display:block;margin:0 auto;"></a>`;
-}
-
-function isAutoGeneratedAdImgHtml(htmlStr) {
-    const s = String(htmlStr || '').trim();
-    return /^<a\b[^>]*>\s*<img\b[^>]*>\s*<\/a>$/i.test(s);
-}
-
-function cancelEditAd() {
-    editState.adTarget = null;
-    document.getElementById('adText').value = '';
-    if (document.getElementById('adBannerImgUrl')) document.getElementById('adBannerImgUrl').value = '';
-    if (document.getElementById('adBannerLinkUrl')) document.getElementById('adBannerLinkUrl').value = '';
-    if (document.getElementById('adBannerFile')) document.getElementById('adBannerFile').value = '';
-    if (document.getElementById('adUploadStatus')) document.getElementById('adUploadStatus').textContent = '';
-    syncPreview('adBannerImgUrl', 'adImgPreview');
-    document.getElementById('adEditBanner').classList.add('hidden');
-    document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-floppy-disk"></i> Save Ad';
-    renderAds();
-}
-
+// ==================== 3. ADS MANAGER (ALL SLOTS + EDIT + SORT) ====================
 function renderAds() {
     let items = [];
-    if (!CACHE) {
-        document.getElementById('adsList').innerHTML = '<i style="color:var(--text-muted)">Connect to load ads.</i>';
-        return;
-    }
 
     // Fixed Slots
     ['adHeader', 'adMiddle', 'adFooter'].forEach(slotKey => {
-        const slotData = CACHE[slotKey];
-        if (slotData && (slotData.text || slotData.img)) {
+        if (CACHE[slotKey] && (CACHE[slotKey].text || CACHE[slotKey].img || CACHE[slotKey].image)) {
             let isEditing = editState.adTarget && editState.adTarget.kind === 'slot' && editState.adTarget.keyOrIdx === slotKey;
-            const thumbHtml = slotData.img
-                ? `<img src="${escapeHtml(slotData.img)}" style="width:76px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in;flex-shrink:0" onclick="openLightbox('${escapeHtml(slotData.img)}','${escapeHtml(slotKey)} Image')">`
-                : '';
             items.push(`
                 <div class="item-row ${isEditing ? 'editing' : ''}">
-                    ${thumbHtml}
                     <div style="flex:1;min-width:0">
                         <span style="background:#DBEAFE;color:var(--accent);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">FIXED SLOT</span>
                         <b style="margin-left:6px">${slotKey}</b><br>
-                        <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(slotData.text || slotData.img || '').substring(0, 110)}</small>
+                        <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(CACHE[slotKey].text || CACHE[slotKey].img || CACHE[slotKey].image || '').substring(0, 110)}...</small>
                     </div>
                     <div class="item-actions">
                         <button class="btn-warn btn-xs" onclick="editSlotAd('${slotKey}')"><i class="fas fa-pen"></i> Edit</button>
@@ -1196,17 +1043,13 @@ function renderAds() {
     // Dynamic / Floating Array Ads
     (CACHE.ads || []).forEach((a, i) => {
         let isEditing = editState.adTarget && editState.adTarget.kind === 'array' && editState.adTarget.keyOrIdx === i;
-        const thumbHtml = a.img
-            ? `<img src="${escapeHtml(a.img)}" style="width:76px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in;flex-shrink:0" onclick="openLightbox('${escapeHtml(a.img)}','${escapeHtml(a.type || 'Ad')} #${i+1}')">`
-            : '';
         items.push(`
             <div class="item-row ${isEditing ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'ads',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'ads',${i})">
                 <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-                ${thumbHtml}
                 <div style="flex:1;min-width:0">
                     <span style="background:#E2E8F0;color:var(--primary);padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700">${escapeHtml(a.type)}</span>
                     <small style="color:var(--accent);margin-left:6px">→ ${escapeHtml(a.slot || 'floating')}</small><br>
-                    <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(a.text || a.img || '').substring(0, 110)}</small>
+                    <small style="color:var(--text-muted);font-family:Consolas,monospace">${escapeHtml(a.text || a.img || a.image || '').substring(0, 110)}...</small>
                 </div>
                 <div class="item-actions">
                     <button class="btn-ghost btn-xs" onclick="moveArrayItem(CACHE.ads,${i},-1)" ${i === 0 ? 'disabled' : ''}><i class="fas fa-arrow-up"></i></button>
@@ -1221,14 +1064,40 @@ function renderAds() {
     document.getElementById('adsList').innerHTML = items.join('') || '<i style="color:var(--text-muted)">No ads saved yet.</i>';
 }
 
+async function uploadAdImage() {
+    let file = document.getElementById('adFile').files[0];
+    if (!file) return alert('Choose an ad image first');
+    if (!GH.token) return alert('Connect your GitHub token first');
+
+    document.getElementById('adUploadStatus').textContent = 'Uploading...';
+    let reader = new FileReader();
+    reader.onload = async function() {
+        let b64 = reader.result.split(',')[1];
+        let path = `images/ads/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+        let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+        });
+        let j = await r.json();
+        if (r.ok) {
+            let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
+            document.getElementById('adImage').value = rawUrl;
+            document.getElementById('adUploadStatus').textContent = '✅ Uploaded!';
+        } else {
+            document.getElementById('adUploadStatus').textContent = `❌ ${j.message}`;
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
 function editSlotAd(slotKey) {
     editState.adTarget = { kind: 'slot', keyOrIdx: slotKey };
     document.getElementById('adSlot').value = slotKey;
     document.getElementById('adType').value = CACHE[slotKey].type || 'banner';
+    document.getElementById('adImage').value = CACHE[slotKey].img || CACHE[slotKey].image || '';
+    document.getElementById('adLink').value = CACHE[slotKey].url || CACHE[slotKey].link || '';
     document.getElementById('adText').value = CACHE[slotKey].text || '';
-    if(document.getElementById('adBannerImgUrl')) document.getElementById('adBannerImgUrl').value = CACHE[slotKey].img || '';
-    if(document.getElementById('adBannerLinkUrl')) document.getElementById('adBannerLinkUrl').value = CACHE[slotKey].url || '';
-    syncPreview('adBannerImgUrl','adImgPreview');
     document.getElementById('adEditBanner').classList.remove('hidden');
     document.getElementById('adEditLabel').textContent = slotKey;
     document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-check-circle"></i> Update Ad';
@@ -1240,50 +1109,53 @@ function editArrayAd(i) {
     editState.adTarget = { kind: 'array', keyOrIdx: i };
     document.getElementById('adType').value = a.type || 'floating-br';
     document.getElementById('adSlot').value = a.slot || 'floating';
+    document.getElementById('adImage').value = a.img || a.image || '';
+    document.getElementById('adLink').value = a.url || a.link || '';
     document.getElementById('adText').value = a.text || '';
-    if(document.getElementById('adBannerImgUrl')) document.getElementById('adBannerImgUrl').value = a.img || '';
-    if(document.getElementById('adBannerLinkUrl')) document.getElementById('adBannerLinkUrl').value = a.url || '';
-    syncPreview('adBannerImgUrl','adImgPreview');
     document.getElementById('adEditBanner').classList.remove('hidden');
     document.getElementById('adEditLabel').textContent = `${a.type} #${i + 1}`;
     document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-check-circle"></i> Update Ad';
     renderAds();
 }
 
+function cancelEditAd() {
+    editState.adTarget = null;
+    document.getElementById('adImage').value = '';
+    document.getElementById('adLink').value = '';
+    document.getElementById('adText').value = '';
+    document.getElementById('adUploadStatus').textContent = '';
+    document.getElementById('adEditBanner').classList.add('hidden');
+    document.getElementById('btnSaveAd').innerHTML = '<i class="fas fa-floppy-disk"></i> Save Ad';
+    renderAds();
+}
+
 async function saveAd() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
-
-    const imgVal = document.getElementById('adBannerImgUrl')?.value.trim() || '';
-    const linkVal = document.getElementById('adBannerLinkUrl')?.value.trim() || 'https://fosnalic.pages.dev';
-    let textVal = document.getElementById('adText').value.trim();
-
-    // Auto-generate or refresh image ad HTML if an image is provided and text is empty or previously auto-generated
-    if (imgVal && (!textVal || isAutoGeneratedAdImgHtml(textVal))) {
-        textVal = buildAdImageHtml(imgVal, linkVal);
-        document.getElementById('adText').value = textVal;
-    }
-
+    let img = document.getElementById('adImage').value.trim();
+    let url = document.getElementById('adLink').value.trim();
+    let text = document.getElementById('adText').value.trim();
     let ad = {
         type: document.getElementById('adType').value,
         slot: document.getElementById('adSlot').value,
-        text: textVal,
-        img: imgVal,
-        url: linkVal
+        text: text
     };
-    if (!ad.text && !ad.img) return alert('Enter ad HTML or upload/paste an image first');
+    if (img) { ad.img = img; ad.image = img; }
+    if (url) { ad.url = url; ad.link = url; }
+    if (!ad.text && !ad.img) return alert('Enter ad text/HTML or upload/paste an Ad Image URL');
 
     pushHistory();
     if (editState.adTarget) {
         if (editState.adTarget.kind === 'array') {
             CACHE.ads.splice(editState.adTarget.keyOrIdx, 1);
         } else if (editState.adTarget.kind === 'slot' && editState.adTarget.keyOrIdx !== ad.slot) {
-            CACHE[editState.adTarget.keyOrIdx] = { text: "", img: "", url: "" };
+            CACHE[editState.adTarget.keyOrIdx] = { text: "" };
         }
     }
 
     if (['adHeader', 'adMiddle', 'adFooter'].includes(ad.slot)) {
-        CACHE[ad.slot] = { type: ad.type, text: ad.text, img: ad.img, url: ad.url };
+        let slotObj = { type: ad.type, text: ad.text };
+        if (img) { slotObj.img = img; slotObj.image = img; }
+        if (url) { slotObj.url = url; slotObj.link = url; }
+        CACHE[ad.slot] = slotObj;
     } else {
         if (editState.adTarget && editState.adTarget.kind === 'array') {
             CACHE.ads.splice(editState.adTarget.keyOrIdx, 0, ad);
@@ -1293,15 +1165,15 @@ async function saveAd() {
     }
 
     cancelEditAd();
-    const ok = await saveToGist();
+    await saveToGist();
     renderAds();
-    if (ok) toast('✅ Ad saved & synced!');
+    toast('✅ Ad saved & synced!');
 }
 
 async function clearSlotAd(slotKey) {
     pushHistory();
     if (editState.adTarget?.keyOrIdx === slotKey) cancelEditAd();
-    CACHE[slotKey] = { text: "", img: "", url: "" };
+    CACHE[slotKey] = { text: "" };
     await saveToGist();
     renderAds();
     toast('Fixed slot ad cleared');
@@ -1329,9 +1201,9 @@ async function clearAllBanners() {
     pushHistory();
     cancelEditAd();
     CACHE.ads = [];
-    CACHE.adHeader = { text: "", img: "", url: "" };
-    CACHE.adMiddle = { text: "", img: "", url: "" };
-    CACHE.adFooter = { text: "", img: "", url: "" };
+    CACHE.adHeader = { text: "" };
+    CACHE.adMiddle = { text: "" };
+    CACHE.adFooter = { text: "" };
     await saveToGist();
     renderAds();
     toast('All ads cleared');
@@ -1339,11 +1211,10 @@ async function clearAllBanners() {
 
 // ==================== 4. UPDATES / NEWS MANAGER ====================
 function renderNews() {
-    if (!CACHE) return;
     document.getElementById('newsList').innerHTML = CACHE.news.map((n, i) => `
         <div class="news-card ${editState.newsIdx === i ? 'editing' : ''}" draggable="true" ondragstart="dragStart(event,'news',${i})" ondragover="dragOver(event)" ondrop="dropItem(event,'news',${i})">
             <span class="drag-handle" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>
-            <img src="${n.img || 'https://via.placeholder.com/100x75'}" style="cursor:zoom-in" onclick="openLightbox('${escapeHtml(n.img || '')}', '${escapeHtml(n.title || 'Update')}')">
+            <img src="${n.img || 'https://via.placeholder.com/100x75'}">
             <div style="flex:1;min-width:0">
                 <b>${escapeHtml(n.title)}</b><br>
                 <small style="color:var(--text-muted)">${escapeHtml((n.desc || '').substring(0, 110))}</small><br>
@@ -1366,7 +1237,6 @@ function editNews(i) {
     document.getElementById('newsDesc').value = n.desc || '';
     document.getElementById('newsTag').value = n.tag || '';
     document.getElementById('newsImg').value = n.img || '';
-    syncPreview('newsImg', 'newsImgPreview');
     document.getElementById('newsEditBanner').classList.remove('hidden');
     document.getElementById('newsEditTitle').textContent = n.title;
     document.getElementById('btnSaveNews').innerHTML = '<i class="fas fa-check-circle"></i> Update Post';
@@ -1379,17 +1249,12 @@ function cancelEditNews() {
     document.getElementById('newsDesc').value = '';
     document.getElementById('newsTag').value = '';
     document.getElementById('newsImg').value = '';
-    if (document.getElementById('newsFile')) document.getElementById('newsFile').value = '';
-    if (document.getElementById('newsUploadStatus')) document.getElementById('newsUploadStatus').textContent = '';
-    syncPreview('newsImg', 'newsImgPreview');
     document.getElementById('newsEditBanner').classList.add('hidden');
     document.getElementById('btnSaveNews').innerHTML = '<i class="fas fa-floppy-disk"></i> Save Update';
     renderNews();
 }
 
 async function saveNews() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
     let n = {
         title: document.getElementById('newsTitle').value.trim(),
         desc: document.getElementById('newsDesc').value.trim(),
@@ -1402,14 +1267,13 @@ async function saveNews() {
     if (editState.newsIdx !== null) {
         CACHE.news[editState.newsIdx] = n;
         cancelEditNews();
-        const ok = await saveToGist();
-        if (ok) toast('✅ Update modified');
+        toast('✅ Update modified');
     } else {
         CACHE.news.unshift(n);
         cancelEditNews();
-        const ok = await saveToGist();
-        if (ok) toast('✅ Update published');
+        toast('✅ Update published');
     }
+    await saveToGist();
     renderNews();
 }
 
@@ -1434,46 +1298,35 @@ async function sortNewsAZ() {
 async function uploadImage() {
     let file = document.getElementById('newsFile').files[0];
     if (!file) return alert('Choose image');
-    await uploadImageFileToRepo(file, 'images', 'newsImg', 'newsImgPreview', 'newsUploadStatus');
+    document.getElementById('newsUploadStatus').textContent = 'Uploading...';
+    let reader = new FileReader();
+    reader.onload = async function() {
+        let b64 = reader.result.split(',')[1];
+        let path = `images/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+        let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+        });
+        let j = await r.json();
+        if (r.ok) {
+            let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
+            document.getElementById('newsImg').value = rawUrl;
+            document.getElementById('newsUploadStatus').textContent = '✅ Uploaded';
+        } else {
+            document.getElementById('newsUploadStatus').textContent = `❌ ${j.message}`;
+        }
+    };
+    reader.readAsDataURL(file);
 }
 
 // ==================== 5. MY APPS & VERSIONS MANAGER ====================
-let currentAppScreenshots = [];
-
-function renderAppScreenshotsFormPreview() {
-    const grid = document.getElementById('appScreensPreviewGrid');
-    if (!grid) return;
-    if (!currentAppScreenshots.length) {
-        grid.innerHTML = '<small style="color:var(--text-muted)">No screenshots added yet.</small>';
-        return;
-    }
-    grid.innerHTML = currentAppScreenshots.map((url, idx) => `
-        <div style="position:relative;width:68px;height:68px;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:#fff">
-            <img src="${escapeHtml(url)}" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in" onclick="openLightbox('${escapeHtml(url)}','App Screenshot #${idx+1}')">
-            <button type="button" onclick="removeFormAppScreenshot(${idx})" style="position:absolute;top:2px;right:2px;padding:1px 5px;font-size:0.65rem;background:var(--danger);color:#fff;border-radius:4px" title="Remove">×</button>
-        </div>
-    `).join('');
-}
-
-function removeFormAppScreenshot(idx) {
-    currentAppScreenshots.splice(idx, 1);
-    renderAppScreenshotsFormPreview();
-}
-
 function renderApps() {
     let list = document.getElementById('appsList');
-    if (!CACHE) return;
     list.innerHTML = CACHE.apps.map((app, appIdx) => {
         let vers = (app.versions || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-        let iconHtml = app.iconUrl ? `<img src="${app.iconUrl}" style="width:100%;height:100%;object-fit:cover;cursor:zoom-in" onclick="openLightbox('${escapeHtml(app.iconUrl)}','${escapeHtml(app.name)} Icon')">` : `<i class="fas ${app.icon || 'fa-mobile-alt'}"></i>`;
+        let iconHtml = app.iconUrl ? `<img src="${app.iconUrl}" style="width:100%;height:100%;object-fit:cover">` : `<i class="fas ${app.icon || 'fa-mobile-alt'}"></i>`;
         let isEditing = editState.appId === app.id;
-        let screens = Array.isArray(app.screenshots) ? app.screenshots : [];
-        let screensHtml = screens.length ? `
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)">
-                ${screens.map((sUrl, sIdx) => `
-                    <img src="${escapeHtml(sUrl)}" style="width:54px;height:54px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:zoom-in" onclick="openLightbox('${escapeHtml(sUrl)}','${escapeHtml(app.name)} Screenshot #${sIdx+1}')" title="Click to view image">
-                `).join('')}
-            </div>` : '';
 
         return `
             <div style="border:${isEditing ? '2px solid var(--warning)' : '1px solid var(--border)'};border-radius:8px;padding:16px;margin:14px 0;background:${isEditing ? '#FFFBEB' : 'var(--card-surface)'}">
@@ -1491,7 +1344,6 @@ function renderApps() {
                         <button class="btn-danger btn-xs" onclick="deleteApp('${app.id}')"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
-                ${screensHtml}
                 <div style="margin-top:12px">
                     ${vers.map((v, i) => `
                         <div class="item-row" style="background:#FFFFFF">
@@ -1522,15 +1374,12 @@ function editApp(appId) {
     document.getElementById('appDesc').value = app.desc || '';
     document.getElementById('appIconUrl').value = app.iconUrl || '';
     document.getElementById('iconPreview').innerHTML = app.iconUrl ? `<img src="${app.iconUrl}">` : `<i class="fas ${app.icon || 'fa-image'}"></i>`;
-    currentAppScreenshots = Array.isArray(app.screenshots) ? [...app.screenshots] : [];
-    renderAppScreenshotsFormPreview();
 
     document.getElementById('appEditBanner').classList.remove('hidden');
     document.getElementById('appEditName').textContent = app.name;
     document.getElementById('appFormHeading').textContent = 'Edit Application';
     document.getElementById('btnSaveApp').innerHTML = '<i class="fas fa-check-circle"></i> Update App Details';
     renderApps();
-    document.getElementById('tab-apps').scrollIntoView({ behavior: 'smooth' });
 }
 
 function cancelEditApp() {
@@ -1540,10 +1389,6 @@ function cancelEditApp() {
     document.getElementById('appIcon').value = '';
     document.getElementById('appIconUrl').value = '';
     document.getElementById('appIconFile').value = '';
-    if (document.getElementById('appScreensFile')) document.getElementById('appScreensFile').value = '';
-    if (document.getElementById('appScreensStatus')) document.getElementById('appScreensStatus').textContent = '';
-    currentAppScreenshots = [];
-    renderAppScreenshotsFormPreview();
     document.getElementById('iconPreview').innerHTML = '<i class="fas fa-image" style="color:var(--text-muted)"></i>';
     document.getElementById('appIconStatus').textContent = '';
 
@@ -1554,8 +1399,6 @@ function cancelEditApp() {
 }
 
 async function saveApp() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
     let name = document.getElementById('appName').value.trim();
     if (!name) return alert('App name required');
     let descInput = document.getElementById('appDesc').value.trim();
@@ -1568,10 +1411,8 @@ async function saveApp() {
             app.desc = descInput || `New version of ${name}.`;
             app.icon = document.getElementById('appIcon').value || 'fa-mobile-alt';
             app.iconUrl = document.getElementById('appIconUrl').value.trim();
-            app.screenshots = [...currentAppScreenshots];
         }
         cancelEditApp();
-        await saveToGist();
         toast('✅ App updated');
     } else {
         CACHE.apps.push({
@@ -1580,13 +1421,12 @@ async function saveApp() {
             desc: descInput || `New version of ${name}.`,
             icon: document.getElementById('appIcon').value || 'fa-mobile-alt',
             iconUrl: document.getElementById('appIconUrl').value.trim(),
-            screenshots: [...currentAppScreenshots],
             versions: []
         });
         cancelEditApp();
-        await saveToGist();
         toast('✅ App created');
     }
+    await saveToGist();
     renderApps();
 }
 
@@ -1691,33 +1531,28 @@ async function deleteApp(id) {
 async function uploadAppIcon() {
     let file = document.getElementById('appIconFile').files[0];
     if (!file) return alert('Choose icon');
-    await uploadImageFileToRepo(file, 'icons', 'appIconUrl', 'iconPreview', 'appIconStatus');
-}
-
-async function uploadAppScreenshots() {
-    const input = document.getElementById('appScreensFile');
-    const files = Array.from(input.files || []);
-    if (!files.length) return alert('Choose one or more screenshot images');
     if (!GH.token) return alert('GitHub token required');
-    const statusEl = document.getElementById('appScreensStatus');
-    statusEl.className = 'ok';
-
-    for (let idx = 0; idx < files.length; idx++) {
-        const f = files[idx];
-        statusEl.textContent = `Uploading screenshot ${idx + 1} of ${files.length} (${f.name})...`;
-        try {
-            const url = await uploadSingleBinaryToRepo(f, 'apps/screenshots');
-            currentAppScreenshots.push(url);
-            renderAppScreenshotsFormPreview();
-        } catch (err) {
-            statusEl.className = 'err';
-            statusEl.textContent = `❌ Failed on ${f.name}: ${err.message}`;
-            return;
+    document.getElementById('appIconStatus').textContent = 'Uploading...';
+    let reader = new FileReader();
+    reader.onload = async function() {
+        let b64 = reader.result.split(',')[1];
+        let path = `icons/${Date.now()}_${file.name.replace(/\s/g, '_')}`;
+        let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+        });
+        let j = await r.json();
+        if (r.ok) {
+            let rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
+            document.getElementById('appIconUrl').value = rawUrl;
+            document.getElementById('iconPreview').innerHTML = `<img src="${rawUrl}">`;
+            document.getElementById('appIconStatus').textContent = '✅ Icon uploaded';
+        } else {
+            document.getElementById('appIconStatus').textContent = `❌ ${j.message}`;
         }
-    }
-    input.value = '';
-    statusEl.textContent = `✅ Uploaded ${files.length} screenshot(s)!`;
-    toast(`✅ Uploaded ${files.length} screenshot(s)`);
+    };
+    reader.readAsDataURL(file);
 }
 
 function setApkProgress(pct, label) {
@@ -1732,13 +1567,29 @@ function setApkProgress(pct, label) {
     if (label) lblEl.textContent = label;
 }
 
+function arrayBufferToBase64(buffer, onChunk) {
+    const bytes = new Uint8Array(buffer);
+    const chunkSize = 0x8000;
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+        const slice = bytes.subarray(i, i + chunkSize);
+        binary += String.fromCharCode.apply(null, slice);
+        if (onChunk && (i % (chunkSize * 16) === 0 || i + chunkSize >= bytes.length)) {
+            onChunk(Math.min(100, Math.round(((i + slice.length) / bytes.length) * 100)));
+        }
+    }
+    return btoa(binary);
+}
+
 async function ghApiJson(endpoint, method = 'GET', bodyObj = null, allow404 = false) {
+    const authVal = getAuthHeaders().Authorization;
     const opts = {
         method,
-        headers: getAuthHeaders({
+        headers: {
+            'Authorization': authVal,
             'Accept': 'application/vnd.github+json',
             'Content-Type': 'application/json'
-        })
+        }
     };
     if (bodyObj) opts.body = JSON.stringify(bodyObj);
     const res = await fetch(`https://api.github.com${endpoint}`, opts);
@@ -1792,9 +1643,11 @@ async function uploadApkDirect() {
         const ownerEnc = encodeURIComponent(GH.owner);
         const repoEnc = encodeURIComponent(GH.repo);
 
+        // 1. Get or create the dedicated 'apk-releases' GitHub Release
         const release = await getOrCreateApkRelease(ownerEnc, repoEnc, GH.branch);
         setApkProgress(15, `Connected to Release #${release.id}. Starting binary stream...`);
 
+        // 2. Stream raw binary APK directly to uploads.github.com (no Base64 overhead, supports up to 2 GB)
         const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
         const uploadUrl = `https://uploads.github.com/repos/${ownerEnc}/${repoEnc}/releases/${release.id}/assets?name=${encodeURIComponent(safeName)}`;
         const authVal = getAuthHeaders().Authorization;
@@ -1802,9 +1655,10 @@ async function uploadApkDirect() {
         const assetResult = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open('POST', uploadUrl, true);
-            xhr.timeout = 300000;
-            if (authVal) xhr.setRequestHeader('Authorization', authVal);
+            xhr.timeout = 300000; // 5 minutes
+            xhr.setRequestHeader('Authorization', authVal);
             xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+            // Use application/octet-stream to avoid empty file.type issues on Android pickers
             xhr.setRequestHeader('Content-Type', 'application/octet-stream');
 
             xhr.upload.onprogress = (e) => {
@@ -1830,7 +1684,7 @@ async function uploadApkDirect() {
                 const originInfo = window.location.protocol === 'file:' ? ' (opened via file:// — try serving over http://localhost or HTTPS)' : '';
                 reject(new Error(`Browser/network blocked POST to uploads.github.com${originInfo}. Check ad-blockers, Private DNS/VPN, or token Contents/Releases write permission.`));
             };
-            xhr.send(file);
+            xhr.send(file); // Raw File stream — zero Base64 bloat!
         });
 
         if (assetResult.status < 200 || assetResult.status >= 300 || !assetResult.data.browser_download_url) {
@@ -1879,7 +1733,7 @@ async function dropItem(e, listKey, dropIndex) {
 // ==================== 6. FILE MANAGER ====================
 async function getFileSha(p) {
     let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${p}?ref=${GH.branch}&t=${Date.now()}`, {
-        headers: getAuthHeaders(),
+        headers: { Authorization: getAuthHeaders().Authorization || '' },
         cache: "no-store"
     });
     if (!r.ok) {
@@ -1904,7 +1758,7 @@ async function loadFilesForCurrentPath() {
     document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
     
     let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
-        headers: getAuthHeaders(),
+        headers: GH.token ? { Authorization: getAuthHeaders().Authorization || '' } : {},
         cache: "no-store"
     });
     if (!r.ok) {
@@ -1917,8 +1771,7 @@ async function loadFilesForCurrentPath() {
         return a.type === 'dir' ? -1 : 1;
     });
     document.getElementById('pageButtons').innerHTML = files.map(f => {
-        let isImg = isImageFilename(f.name);
-        let icon = f.type === 'dir' ? '📁' : (isImg ? '🖼️' : f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄');
+        let icon = f.type === 'dir' ? '📁' : (f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄');
         let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
         if (f.type === 'dir') {
             return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">${icon} ${f.name}/</span>`;
@@ -1946,7 +1799,7 @@ async function createFolder() {
     let targetPath = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
     let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${targetPath}`, {
         method: 'PUT',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Create folder ${folderName}`, content: btoa(''), branch: GH.branch })
     });
     if (r.ok) {
@@ -1959,37 +1812,10 @@ async function createFolder() {
     }
 }
 
-function isImageFilename(name) {
-    return /\.(png|jpe?g|gif|webp|svg|ico|bmp|avif)$/i.test(name || '');
-}
-
 async function loadPage(path, btn) {
     currentPage = path;
     document.querySelectorAll('.file-btn').forEach(x => x.classList.remove('active'));
     if (btn) btn.classList.add('active');
-
-    const imgViewer = document.getElementById('fmImageViewer');
-    const codeWrap = document.getElementById('fmCodeEditorWrap');
-    const codeActions = document.getElementById('fmCodeActions');
-
-    if (isImageFilename(path)) {
-        imgViewer.classList.remove('hidden');
-        codeWrap.classList.add('hidden');
-        codeActions.classList.add('hidden');
-
-        const rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}?t=${Date.now()}`;
-        document.getElementById('fmImageTitle').innerHTML = `<i class="fas fa-image"></i> ${escapeHtml(path)}`;
-        document.getElementById('fmImagePreviewEl').src = rawUrl;
-        document.getElementById('fmImageRawLink').href = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
-        let d = await getFileSha(path);
-        currentSha = d ? d.sha : null;
-        return;
-    }
-
-    imgViewer.classList.add('hidden');
-    codeWrap.classList.remove('hidden');
-    codeActions.classList.remove('hidden');
-
     document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code" style="color:var(--accent);"></i> Editing: <b>${path}</b>`;
     document.getElementById('pageStatus').textContent = 'Loading...';
     let d = await getFileSha(path);
@@ -2001,42 +1827,6 @@ async function loadPage(path, btn) {
         document.getElementById('pageEditor').value = '';
         currentSha = null;
         document.getElementById('pageStatus').textContent = 'New file';
-    }
-}
-
-function copyCurrentImageUrl() {
-    if (!currentPage) return;
-    const cleanUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${currentPage}`;
-    navigator.clipboard.writeText(cleanUrl);
-    toast('📋 Raw Image URL copied!');
-}
-
-async function replaceCurrentRepoImage() {
-    const file = document.getElementById('fmReplaceImgFile').files[0];
-    if (!file) return alert('Choose an image file from storage first');
-    if (!currentPage) return;
-    if (!GH.token) return alert('GitHub token required');
-
-    toast('Replacing image on GitHub...');
-    try {
-        const b64 = await fileToBase64(file);
-        const latest = await getFileSha(currentPage);
-        const body = { message: `Replace image ${currentPage}`, content: b64, branch: GH.branch };
-        if (latest && latest.sha) body.sha = latest.sha;
-
-        const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`, {
-            method: 'PUT',
-            headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify(body)
-        });
-        const j = await r.json();
-        if (!r.ok) throw new Error(j.message || 'Upload failed');
-        currentSha = j.content.sha;
-        document.getElementById('fmReplaceImgFile').value = '';
-        document.getElementById('fmImagePreviewEl').src = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${currentPage}?t=${Date.now()}`;
-        toast('✅ Image replaced successfully!');
-    } catch (err) {
-        toast(`❌ ${err.message}`, 'err');
     }
 }
 
@@ -2087,7 +1877,7 @@ async function savePageToGitHub() {
     if (currentSha) body.sha = currentSha;
     let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPage}`, {
         method: 'PUT',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     });
     let j = await r.json();
@@ -2108,7 +1898,7 @@ async function deleteFile(path) {
     if (!d || !d.sha) return alert('File not found');
     let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
         method: 'DELETE',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+        headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: `Delete ${path}`, sha: d.sha, branch: GH.branch })
     });
     let j = await r.json();
@@ -2125,9 +1915,6 @@ async function deleteCurrentFile() {
     await deleteFile(currentPage);
     document.getElementById('pageEditor').value = '';
     document.getElementById('activeEditingFile').innerHTML = `<i class="fas fa-file-code"></i> No file open`;
-    document.getElementById('fmImageViewer').classList.add('hidden');
-    document.getElementById('fmCodeEditorWrap').classList.remove('hidden');
-    document.getElementById('fmCodeActions').classList.remove('hidden');
     currentPage = '';
 }
 
@@ -2144,7 +1931,7 @@ async function uploadAnyFile() {
         if (existing && existing.sha) body.sha = existing.sha;
         let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
             method: 'PUT',
-            headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
         let j = await r.json();
@@ -2156,6 +1943,71 @@ async function uploadAnyFile() {
         }
     };
     reader.readAsDataURL(file);
+}
+
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = () => reject(new Error('Failed to read ' + file.name));
+        reader.readAsDataURL(file);
+    });
+}
+
+async function uploadBulkFiles() {
+    const input = document.getElementById('bulkFiles');
+    const files = Array.from(input?.files || []);
+    if (!files.length) return alert('Select one or more files first.');
+    if (!GH.token) return alert('Connect your GitHub token at the top first.');
+
+    const btn = document.getElementById('btnBulkUpload');
+    const logEl = document.getElementById('bulkUploadLog');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    logEl.innerHTML = `Starting batch upload of ${files.length} file(s)...<br>`;
+
+    let okCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const targetPath = currentPath ? `${currentPath}/${file.name}` : file.name;
+        try {
+            const b64 = await readFileAsBase64(file);
+            const existing = await getFileSha(targetPath);
+            const body = {
+                message: `${existing && existing.sha ? 'Replace' : 'Upload'} ${targetPath}`,
+                content: b64,
+                branch: GH.branch
+            };
+            if (existing && existing.sha) body.sha = existing.sha;
+
+            const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${targetPath}`, {
+                method: 'PUT',
+                headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const j = await r.json();
+            if (r.ok) {
+                okCount++;
+                logEl.innerHTML += `<div style="color:#059669">[${i + 1}/${files.length}] ✅ ${escapeHtml(targetPath)}</div>`;
+            } else {
+                failCount++;
+                logEl.innerHTML += `<div style="color:#DC2626">[${i + 1}/${files.length}] ❌ ${escapeHtml(targetPath)}: ${escapeHtml(j.message || 'Error')}</div>`;
+            }
+        } catch (err) {
+            failCount++;
+            logEl.innerHTML += `<div style="color:#DC2626">[${i + 1}/${files.length}] ❌ ${escapeHtml(targetPath)}: ${escapeHtml(err.message)}</div>`;
+        }
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-cloud-arrow-up"></i> Replace / Upload Selected Files';
+    input.value = '';
+    logEl.innerHTML += `<b>Done: ${okCount} replaced/uploaded, ${failCount} failed.</b>`;
+    toast(`✅ Batch complete: ${okCount}/${files.length} files updated`);
+    loadFilesForCurrentPath();
 }
 
 
@@ -2198,7 +2050,7 @@ function renderAppPopups() {
             const isEditing = editAppPopupIdx === i;
             return `
                 <div class="news-card ${isEditing ? 'editing' : ''}">
-                    ${p.img ? `<img src="${escapeHtml(p.img)}" alt="" style="cursor:zoom-in" onclick="openLightbox('${escapeHtml(p.img)}','${escapeHtml(p.title || 'Popup Image')}')">` : `<div style="width:68px;height:68px;border-radius:6px;background:#E2E8F0;display:flex;align-items:center;justify-content:center;color:#475569;flex-shrink:0"><i class="fas fa-window-maximize" style="font-size:1.4rem"></i></div>`}
+                    ${p.img ? `<img src="${escapeHtml(p.img)}" alt="">` : `<div style="width:68px;height:68px;border-radius:6px;background:#E2E8F0;display:flex;align-items:center;justify-content:center;color:#475569;flex-shrink:0"><i class="fas fa-window-maximize" style="font-size:1.4rem"></i></div>`}
                     <div style="flex:1;min-width:0">
                         <span style="padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;background:${isActive ? '#D1FAE5' : '#FEE2E2'};color:${isActive ? '#065F46' : '#991B1B'}">${isActive ? 'ACTIVE IN APP' : 'PAUSED'}</span>
                         <b style="margin-left:6px">${escapeHtml(p.title || 'App Popup')}</b><br>
@@ -2239,7 +2091,6 @@ function editAppPopup(i) {
     document.getElementById('appPopupTitle').value = p.title || '';
     document.getElementById('appPopupUrl').value = p.url || 'https://fosnalic.pages.dev';
     document.getElementById('appPopupImg').value = p.img || '';
-    syncPreview('appPopupImg', 'appPopupImgPreview');
     document.getElementById('appPopupEnabled').value = String(p.enabled !== false);
     document.getElementById('appPopupText').value = p.text || '';
     document.getElementById('appPopupEditBanner').classList.remove('hidden');
@@ -2253,9 +2104,6 @@ function cancelEditAppPopup() {
     document.getElementById('appPopupTitle').value = '';
     document.getElementById('appPopupUrl').value = '';
     document.getElementById('appPopupImg').value = '';
-    if (document.getElementById('appPopupFile')) document.getElementById('appPopupFile').value = '';
-    if (document.getElementById('appPopupUploadStatus')) document.getElementById('appPopupUploadStatus').textContent = '';
-    syncPreview('appPopupImg', 'appPopupImgPreview');
     document.getElementById('appPopupEnabled').value = 'true';
     document.getElementById('appPopupText').value = '';
     document.getElementById('appPopupEditBanner').classList.add('hidden');
@@ -2264,8 +2112,7 @@ function cancelEditAppPopup() {
 }
 
 async function saveAppPopup() {
-    if (!CACHE) await loadData();
-    if (!CACHE) return toast('Connect to GitHub Gist first', 'err');
+    if (!CACHE) return;
     ensureAppPopupConfig();
     const title = document.getElementById('appPopupTitle').value.trim();
     const text = document.getElementById('appPopupText').value.trim();
@@ -2280,14 +2127,13 @@ async function saveAppPopup() {
     if (editAppPopupIdx !== null) {
         CACHE.englishAppConfig.popups[editAppPopupIdx] = item;
         cancelEditAppPopup();
-        const ok = await saveToGist();
-        if (ok) toast('✅ App popup ad updated');
+        toast('✅ App popup ad updated');
     } else {
         CACHE.englishAppConfig.popups.unshift(item);
         cancelEditAppPopup();
-        const ok = await saveToGist();
-        if (ok) toast('✅ App popup ad added');
+        toast('✅ App popup ad added');
     }
+    await saveToGist();
     renderAppPopups();
 }
 
@@ -2329,189 +2175,6 @@ async function enableAllAppPopups() {
     await saveToGist();
     renderAppPopups();
     toast('All app popup ads activated');
-}
-
-
-// ==================== UNIFIED IMAGE UPLOAD, VIEWER & REPO GALLERY ====================
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = () => reject(new Error('Failed to read file from storage'));
-        reader.readAsDataURL(file);
-    });
-}
-
-function syncPreview(inputId, previewBoxId) {
-    const inputEl = document.getElementById(inputId);
-    const boxEl = document.getElementById(previewBoxId);
-    if (!inputEl || !boxEl) return;
-    const url = inputEl.value.trim();
-    if (url) {
-        boxEl.innerHTML = `<img src="${escapeHtml(url)}" onerror="this.parentElement.innerHTML='<i class=\'fas fa-triangle-exclamation\' style=\'color:var(--danger)\'></i>'">`;
-    } else {
-        boxEl.innerHTML = `<i class="fas fa-image" style="color:var(--text-muted)"></i>`;
-    }
-}
-
-async function uploadSingleBinaryToRepo(file, folder) {
-    if (!GH.token) throw new Error('GitHub token required');
-    const b64 = await fileToBase64(file);
-    const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const path = folder ? `${folder}/${Date.now()}_${cleanName}` : `${Date.now()}_${cleanName}`;
-    const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
-        method: 'PUT',
-        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
-    });
-    const j = await r.json();
-    if (!r.ok) throw new Error(j.message || `HTTP ${r.status}`);
-    return `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
-}
-
-async function uploadImageFileToRepo(file, folder, urlInputId, previewBoxId, statusSpanId) {
-    const statusEl = document.getElementById(statusSpanId);
-    if (!GH.token) {
-        alert('Add GitHub token first');
-        return null;
-    }
-    if (statusEl) {
-        statusEl.className = 'ok';
-        statusEl.textContent = `Uploading ${file.name}...`;
-    }
-    try {
-        const rawUrl = await uploadSingleBinaryToRepo(file, folder);
-        const urlInput = document.getElementById(urlInputId);
-        if (urlInput) urlInput.value = rawUrl;
-        if (previewBoxId) syncPreview(urlInputId, previewBoxId);
-        if (statusEl) {
-            statusEl.className = 'ok';
-            statusEl.textContent = '✅ Uploaded & preview updated!';
-        }
-        toast('✅ Image uploaded!');
-        return rawUrl;
-    } catch (err) {
-        if (statusEl) {
-            statusEl.className = 'err';
-            statusEl.textContent = `❌ ${err.message}`;
-        }
-        toast(`Upload error: ${err.message}`, 'err');
-        return null;
-    }
-}
-
-async function uploadAppPopupImage() {
-    const file = document.getElementById('appPopupFile').files[0];
-    if (!file) return alert('Choose popup image first');
-    await uploadImageFileToRepo(file, 'images/popups', 'appPopupImg', 'appPopupImgPreview', 'appPopupUploadStatus');
-}
-
-async function uploadAdBannerImage() {
-    const file = document.getElementById('adBannerFile').files[0];
-    if (!file) return alert('Choose banner image first');
-    const url = await uploadImageFileToRepo(file, 'images/ads', 'adBannerImgUrl', 'adImgPreview', 'adUploadStatus');
-    if (url) {
-        const currentText = document.getElementById('adText').value.trim();
-        if (!currentText || isAutoGeneratedAdImgHtml(currentText)) {
-            insertAdImageHtml();
-        }
-    }
-}
-
-function insertAdImageHtml() {
-    const imgUrl = document.getElementById('adBannerImgUrl').value.trim();
-    const linkUrl = document.getElementById('adBannerLinkUrl').value.trim() || 'https://fosnalic.pages.dev';
-    if (!imgUrl) return alert('Upload or paste a banner image URL first');
-    document.getElementById('adText').value = buildAdImageHtml(imgUrl, linkUrl);
-    toast('✅ Banner HTML inserted');
-}
-
-function openLightbox(url, title = 'Image Preview') {
-    if (!url || url.includes('via.placeholder.com')) return;
-    document.getElementById('lightboxTitle').innerHTML = `<i class="fas fa-image"></i> ${escapeHtml(title)}`;
-    document.getElementById('lightboxImg').src = url;
-    document.getElementById('lightboxOpenRaw').href = url;
-    document.getElementById('lightboxUrlText').textContent = url;
-    document.getElementById('imgLightboxModal').classList.remove('hidden');
-}
-
-function closeLightbox() {
-    document.getElementById('imgLightboxModal').classList.add('hidden');
-    document.getElementById('lightboxImg').src = '';
-}
-
-let galleryTargetConfig = null;
-
-function openRepoGallery(inputId, previewId, defaultFolder = 'images') {
-    galleryTargetConfig = { inputId, previewId, mode: 'single' };
-    document.getElementById('repoGalleryFolder').value = defaultFolder;
-    document.getElementById('repoGalleryModal').classList.remove('hidden');
-    loadRepoGalleryImages();
-}
-
-function openRepoGalleryForAppScreen() {
-    galleryTargetConfig = { mode: 'appScreen' };
-    document.getElementById('repoGalleryFolder').value = 'images';
-    document.getElementById('repoGalleryModal').classList.remove('hidden');
-    loadRepoGalleryImages();
-}
-
-function closeRepoGallery() {
-    document.getElementById('repoGalleryModal').classList.add('hidden');
-    galleryTargetConfig = null;
-}
-
-async function loadRepoGalleryImages() {
-    const folder = document.getElementById('repoGalleryFolder').value;
-    const grid = document.getElementById('repoGalleryGrid');
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px"><i class="fas fa-spinner fa-spin"></i> Loading images from GitHub...</div>';
-    try {
-        const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${folder}?ref=${GH.branch}&t=${Date.now()}`, {
-            headers: getAuthHeaders(),
-            cache: 'no-store'
-        });
-        if (!r.ok) {
-            grid.innerHTML = `<div style="grid-column:1/-1;color:var(--text-muted);text-align:center;padding:24px">No files found in <b>/${escapeHtml(folder)}</b> yet.</div>`;
-            return;
-        }
-        const items = await r.json();
-        const imgs = (Array.isArray(items) ? items : []).filter(f => f.type === 'file' && isImageFilename(f.name));
-        if (!imgs.length) {
-            grid.innerHTML = `<div style="grid-column:1/-1;color:var(--text-muted);text-align:center;padding:24px">No images in <b>/${escapeHtml(folder)}</b>. Try switching folder above.</div>`;
-            return;
-        }
-        grid.innerHTML = imgs.map(f => {
-            const rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${f.path}`;
-            return `
-                <div class="repo-img-item" onclick="selectRepoGalleryImage('${escapeHtml(rawUrl)}')">
-                    <img src="${escapeHtml(rawUrl)}" loading="lazy" alt="${escapeHtml(f.name)}">
-                    <small title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</small>
-                </div>
-            `;
-        }).join('');
-    } catch (err) {
-        grid.innerHTML = `<div style="grid-column:1/-1;color:var(--danger);padding:20px">Error loading images: ${escapeHtml(err.message)}</div>`;
-    }
-}
-
-function selectRepoGalleryImage(rawUrl) {
-    if (!galleryTargetConfig) return;
-    if (galleryTargetConfig.mode === 'appScreen') {
-        currentAppScreenshots.push(rawUrl);
-        renderAppScreenshotsFormPreview();
-        toast('✅ Screenshot added from storage');
-    } else {
-        const { inputId, previewId } = galleryTargetConfig;
-        const inp = document.getElementById(inputId);
-        if (inp) inp.value = rawUrl;
-        if (previewId) syncPreview(inputId, previewId);
-        if (inputId === 'adBannerImgUrl') {
-            const curText = document.getElementById('adText').value.trim();
-            if (!curText || isAutoGeneratedAdImgHtml(curText)) insertAdImageHtml();
-        }
-        toast('✅ Image selected from storage');
-    }
-    closeRepoGallery();
 }
 
 loadData();
