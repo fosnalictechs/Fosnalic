@@ -259,6 +259,23 @@ async function loadAll(){
  try{
   let d={ticker:[],news:[],ads:[]};
   try{
+    const sbUrl="https://lqqbvzttjstchkjfajwj.supabase.co";
+    const sbKey="sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7";
+    const rSb=await fetch(`${sbUrl}/rest/v1/fosnalic_site_data?id=eq.main&select=payload`,{
+      headers:{apikey:sbKey,Authorization:`Bearer ${sbKey}`},
+      cache:"no-store"
+    });
+    if(rSb.ok){
+      const rows=await rSb.json();
+      if(Array.isArray(rows) && rows[0] && rows[0].payload && typeof rows[0].payload==="object"){
+        const p=rows[0].payload;
+        if((p.ticker && p.ticker.length) || (p.ads && p.ads.length) || findNews(p).length || p.adHeader || p.adMiddle || p.adFooter){
+          d=Object.assign(d,p);
+        }
+      }
+    }
+  }catch(e){console.log(e);}
+  try{
     let rDepot=await fetch(DEPOT_API+"?t="+Date.now(),{cache:"no-store"});
     if(rDepot.ok){ let depotData=await rDepot.json(); if(depotData && (depotData.ticker?.length || findNews(depotData).length)) d=depotData; }
   }catch(e){}
