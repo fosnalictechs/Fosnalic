@@ -5,6 +5,8 @@
 <title>MathX Pro &mdash; Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-global.js" defer></script>
 <style>
 :root {
     --bg: #0A0E1A;
@@ -46,7 +48,7 @@ header h1 span{color:var(--orange-accent)}
         <h1>MathX Pro &mdash; <span>Dashboard</span></h1>
         <div class="user-badge">
             <i class="fas fa-user-circle" style="color:var(--orange-accent);"></i>
-            <span id="welcomeUser">User</span>
+            <span id="welcomeUser">Loading...</span>
             <button onclick="logout()" class="btn btn-logout">Logout</button>
         </div>
     </div>
@@ -78,16 +80,41 @@ header h1 span{color:var(--orange-accent)}
 </div>
 
 <script>
-const activeUser = localStorage.getItem('activeUser');
-if (!activeUser) {
-    alert('Please log in first.');
-    window.location.href = 'auth.html';
-} else {
-    document.getElementById('welcomeUser').textContent = activeUser;
+function getClient() {
+    if (window.supabaseClient) return window.supabaseClient;
+    if (window.supabase) {
+        window.supabaseClient = window.supabase.createClient(
+            "https://lqqbvzttjstchkjfajwj.supabase.co",
+            "sb_publishable_OD5wXFcYixFPoaQuRXcMoA_DIBcjRM7",
+            { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "sb-lqqbvzttjstchkjfajwj-auth-token", storage: window.localStorage } }
+        );
+        return window.supabaseClient;
+    }
+    return null;
 }
 
-function logout() {
-    if(confirm('Log out of session?')) {
+window.addEventListener('DOMContentLoaded', async () => {
+    const client = getClient();
+    if (!client) {
+        window.location.href = 'auth.html';
+        return;
+    }
+    const { data } = await client.auth.getSession();
+    const user = data?.session?.user;
+    if (!user) {
+        localStorage.removeItem('activeUser');
+        window.location.href = 'auth.html';
+        return;
+    }
+    const displayName = user.user_metadata?.full_name || user.email.split('@')[0];
+    localStorage.setItem('activeUser', displayName);
+    document.getElementById('welcomeUser').textContent = displayName;
+});
+
+async function logout() {
+    if (confirm('Log out of session?')) {
+        const client = getClient();
+        if (client) await client.auth.signOut();
         localStorage.removeItem('activeUser');
         window.location.href = 'auth.html';
     }
