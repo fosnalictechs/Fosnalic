@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://fosnalic.pages.dev/</loc><lastmod>2026-11-15</lastmod><priority>1.0</priority></url>
-  <url><loc>https://fosnalic.pages.dev/about.html</loc><lastmod>2026-11-15</lastmod><priority>0.8</priority></url>
-  <url><loc>https://fosnalic.pages.dev/academy.html</loc><lastmod>2026-11-15</lastmod><priority>0.8</priority></url>
-  <url><loc>https://fosnalic.pages.dev/contact.html</loc><lastmod>2026-11-15</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fosnalic.pages.dev/dashboard.html</loc><lastmod>2026-11-15</lastmod><priority>0.6</priority></url>
-  <url><loc>https://fosnalic.pages.dev/products.html</loc><lastmod>2026-11-15</lastmod><priority>0.8</priority></url>
-  <url><loc>https://fosnalic.pages.dev/services.html</loc><lastmod>2026-11-15</lastmod><priority>0.8</priority></url>
-  <url><loc>https://fosnalic.pages.dev/pricing.html</loc><lastmod>2026-11-15</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fosnalic.pages.dev/portfolio.html</loc><lastmod>2026-11-15</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fosnalic.pages.dev/tools.html</loc><lastmod>2026-11-15</lastmod><priority>0.7</priority></url>
-  <url><loc>https://fosnalic.pages.dev/my-apps.html</loc><lastmod>2026-11-15</lastmod><priority>0.6</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://fosnalic.vercel.app/</loc><lastmod>2026-11-27</lastmod><priority>1.0</priority></url>
+  <url><loc>https://fosnalic.vercel.app/about.html</loc><lastmod>2026-11-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://fosnalic.vercel.app/academy.html</loc><lastmod>2026-11-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://fosnalic.vercel.app/contact.html</loc><lastmod>2026-11-27</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fosnalic.vercel.app/products.html</loc><lastmod>2026-11-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://fosnalic.vercel.app/services.html</loc><lastmod>2026-11-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://fosnalic.vercel.app/pricing.html</loc><lastmod>2026-11-27</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fosnalic.vercel.app/portfolio.html</loc><lastmod>2026-11-27</lastmod><priority>0.7</priority></url>
+  <url><loc>https://fosnalic.vercel.app/tools.html</loc><lastmod>2026-11-27</lastmod><priority>0.7</priority></url>
 </urlset>
