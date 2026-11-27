@@ -248,47 +248,61 @@ button:disabled{opacity:0.45;cursor:not-allowed}
 </div>
 
 <div class="container-fluid">
-    <!-- GitHub Connection Setup -->
-    <div class="card" style="border-left:4px solid var(--accent)">
-        <h3>
-            <span class="title-left"><i class="fas fa-network-wired"></i> GitHub Connection Settings</span>
-            <button class="btn-ghost btn-xs" onclick="toggleConfigBody()"><i class="fas fa-eye-slash" id="cfgEyeIcon"></i> Toggle</button>
-        </h3>
-        <div id="ghConfigBody">
-            <div class="grid-2">
-                <input id="ghOwner" placeholder="GitHub Username (e.g. fosnalictechs)">
-                <input id="ghRepo" placeholder="Repository Name (e.g. fosnalic)">
+    <!-- Admin Access Mode Selector (Option 1: Email & Password Only | Option 2: GitHub Token) -->
+    <div class="card" id="authModeCard" style="border-left:4px solid #059669">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px">
+            <div>
+                <h2 style="margin:0;font-size:1.05rem"><i class="fas fa-shield-halved" style="color:#059669"></i> Admin Access — Choose Sign-In Option</h2>
+                <small id="activeAuthBadge" style="color:var(--text-muted)">Sign in with Email &amp; Password (no GitHub token needed) or connect with a GitHub Token.</small>
             </div>
-            <div class="grid-3">
-                <input id="ghBranch" placeholder="Branch (e.g. main)">
-                <input id="ghGistId" placeholder="Gist ID (e.g. 0f719dd4...)">
-                <input id="ghToken" type="password" placeholder="Token (ghp_... or github_pat_...)">
-            </div>
-            <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
-                <button class="btn-primary" onclick="saveConfig()"><i class="fas fa-plug"></i> Save & Connect</button>
-                <button class="btn-ghost" onclick="loadData()"><i class="fas fa-rotate"></i> Sync Now</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button type="button" id="btnOptEmail" class="btn-ok btn-xs" onclick="selectAuthOption('email')"><i class="fas fa-envelope"></i> Option 1: Email &amp; Password Only</button>
+                <button type="button" id="btnOptToken" class="btn-ghost btn-xs" onclick="selectAuthOption('token')"><i class="fas fa-key"></i> Option 2: GitHub Token</button>
             </div>
         </div>
-    </div>
 
-    <!-- Navigation Tabs -->
-    <div class="card" id="sbAuthCard" style="border-left:4px solid #059669">
-    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
-        <div>
-            <h2 style="margin:0;font-size:1.05rem"><i class="fas fa-user-shield" style="color:#059669"></i> Independent Supabase Admin Session</h2>
-            <small id="sbAuthStatus" style="color:var(--text-muted)">Not signed in — enter your Supabase email &amp; password below</small>
+        <!-- OPTION 1: Email & Password Only (Supabase) -->
+        <div id="sbAuthCard" style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:14px">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+                <div>
+                    <b style="color:#065F46;font-size:0.95rem"><i class="fas fa-user-check"></i> Option 1: Email &amp; Password Login (No Token Required)</b><br>
+                    <small id="sbAuthStatus" style="color:#047857">Not signed in — enter your admin email &amp; password below</small>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <button type="button" class="btn-ghost btn-xs" onclick="syncFromSupabaseNow()"><i class="fas fa-rotate"></i> Sync Data</button>
+                    <button type="button" class="btn-danger btn-xs" id="btnSbLogout" onclick="logoutAdminSession()" style="display:none"><i class="fas fa-right-from-bracket"></i> Log Out</button>
+                </div>
+            </div>
+            <div id="sbLoginForm" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px">
+                <input id="sbEmail" type="email" placeholder="Admin Email (e.g. possyshad@gmail.com)" autocomplete="username" onkeydown="if(event.key==='Enter')loginWithSupabase()">
+                <input id="sbPassword" type="password" placeholder="Admin Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginWithSupabase()">
+                <button type="button" class="btn-ok" onclick="loginWithSupabase()"><i class="fas fa-right-to-bracket"></i> Sign In (Email &amp; Password)</button>
+            </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <button type="button" class="btn-ghost btn-xs" onclick="syncFromSupabaseNow()"><i class="fas fa-database"></i> Sync Supabase</button>
-            <button type="button" class="btn-danger btn-xs" id="btnSbLogout" onclick="logoutAdminSession()"><i class="fas fa-right-from-bracket"></i> Log Out</button>
+
+        <!-- OPTION 2: GitHub Token & Repo/Gist Settings -->
+        <div id="ghConfigPanel" class="hidden" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px;margin-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+                <b style="color:#1E3A8A;font-size:0.95rem"><i class="fas fa-network-wired"></i> Option 2: GitHub Token &amp; Repository Settings</b>
+                <button type="button" class="btn-ghost btn-xs" onclick="toggleConfigBody()"><i class="fas fa-eye-slash" id="cfgEyeIcon"></i> Show/Hide Fields</button>
+            </div>
+            <div id="ghConfigBody">
+                <div class="grid-2">
+                    <input id="ghOwner" placeholder="GitHub Username (e.g. fosnalictechs)">
+                    <input id="ghRepo" placeholder="Repository Name (e.g. fosnalic)">
+                </div>
+                <div class="grid-3">
+                    <input id="ghBranch" placeholder="Branch (e.g. main)">
+                    <input id="ghGistId" placeholder="Gist ID (e.g. 0f719dd4...)">
+                    <input id="ghToken" type="password" placeholder="GitHub Token (ghp_... or github_pat_...)">
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                    <button type="button" class="btn-primary" onclick="saveConfig()"><i class="fas fa-plug"></i> Save &amp; Connect Token</button>
+                    <button type="button" class="btn-ghost" onclick="loadData()"><i class="fas fa-rotate"></i> Sync Gist</button>
+                </div>
+            </div>
         </div>
     </div>
-    <div id="sbLoginForm" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px">
-        <input id="sbEmail" type="email" placeholder="Admin Email (e.g. possyshad@gmail.com)" autocomplete="username">
-        <input id="sbPassword" type="password" placeholder="Supabase Password" autocomplete="current-password">
-        <button type="button" class="btn-primary" onclick="loginWithSupabase()"><i class="fas fa-key"></i> Sign In with Email &amp; Password</button>
-    </div>
-</div>
 
 <div class="card">
         <div class="tabs">
@@ -1087,7 +1101,6 @@ async function loadData() {
 
 async function saveToGist() {
     if (!GH.token) {
-        toast('GitHub token required to save changes', 'err');
         return false;
     }
     let body = JSON.stringify({ files: { 'fosnalic-data.json': { content: JSON.stringify(CACHE, null, 2) } } });
@@ -2220,28 +2233,6 @@ async function createPage() {
   <h1>${name}</h1>
 
 
-<div id="imgLightboxModal" onclick="if(event.target===this)closeImageLightbox()">
-  <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
-    <div class="lightbox-top">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <i class="fas fa-expand" style="color:#38BDF8"></i>
-        <b id="lbTitle">Full Image Preview</b>
-        <span id="lbExtBadge" class="img-file-badge">IMAGE</span>
-      </div>
-      <button type="button" class="btn-ghost btn-xs" onclick="closeImageLightbox()"><i class="fas fa-xmark"></i> Close</button>
-    </div>
-    <div class="lightbox-stage">
-      <img id="lbImg" src="" alt="Full preview">
-    </div>
-    <div class="lightbox-meta" id="lbUrl"></div>
-    <div class="lightbox-actions">
-      <button type="button" class="btn-ghost btn-xs" onclick="copyLightboxUrl()"><i class="fas fa-copy"></i> Copy URL</button>
-      <a id="lbOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary btn-xs" style="text-decoration:none"><i class="fas fa-up-right-from-square"></i> Open Original</a>
-    </div>
-  </div>
-</div>
-<!-- /#imgLightboxModal -->
-
 </body>
 </html>`,
         css: `/* ${name} */
@@ -3070,6 +3061,398 @@ loadFilesForCurrentPath = async function() {
     }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
 };
 
+
+// ==================== AUTH OPTION SWITCHER (2 OPTIONS) ====================
+function selectAuthOption(mode) {
+    const emailPanel = document.getElementById('sbAuthCard');
+    const tokenPanel = document.getElementById('ghConfigPanel');
+    const btnEmail = document.getElementById('btnOptEmail');
+    const btnToken = document.getElementById('btnOptToken');
+    const badge = document.getElementById('activeAuthBadge');
+    localStorage.setItem('fos_auth_mode', mode);
+    if (mode === 'token') {
+        if (emailPanel) emailPanel.classList.add('hidden');
+        if (tokenPanel) tokenPanel.classList.remove('hidden');
+        if (btnToken) btnToken.className = 'btn-primary btn-xs';
+        if (btnEmail) btnEmail.className = 'btn-ghost btn-xs';
+        if (badge) badge.textContent = 'Mode 2 Active: GitHub Personal Access Token & Repository Connection';
+    } else {
+        if (tokenPanel) tokenPanel.classList.add('hidden');
+        if (emailPanel) emailPanel.classList.remove('hidden');
+        if (btnEmail) btnEmail.className = 'btn-ok btn-xs';
+        if (btnToken) btnToken.className = 'btn-ghost btn-xs';
+        if (badge) badge.textContent = 'Mode 1 Active: Email & Password Only (No GitHub Token Needed)';
+    }
+}
+
+(function initAuthModeUI() {
+    const savedMode = localStorage.getItem('fos_auth_mode');
+    const hasSb = !!readStoredAdminSession();
+    const hasGh = !!(GH && GH.token);
+    if (savedMode === 'token' || (!hasSb && hasGh && savedMode !== 'email')) {
+        selectAuthOption('token');
+    } else {
+        selectAuthOption('email');
+    }
+})();
+
+function isSupabaseSignedIn() {
+    const s = readStoredAdminSession();
+    return !!(s && s.access_token);
+}
+
+// Upload image using GitHub Token if available, OR Supabase Storage / compressed Data URL when signed in with Email & Password only
+async function uploadMediaSmart(file, folderPath) {
+    if (GH && GH.token) {
+        const b64 = await readFileAsBase64(file);
+        const path = `${folderPath}/${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+        const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { Authorization: getAuthHeaders().Authorization || '', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: `Upload ${path}`, content: b64, branch: GH.branch })
+        });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.message || 'GitHub upload failed');
+        return `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${path}`;
+    }
+
+    if (isSupabaseSignedIn()) {
+        const stored = readStoredAdminSession();
+        const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        const storagePath = `${folderPath}/${safeName}`;
+        try {
+            const upRes = await fetch(`${SB_URL}/storage/v1/object/fosnalic-media/${storagePath}`, {
+                method: 'POST',
+                headers: {
+                    apikey: SB_KEY,
+                    Authorization: `Bearer ${stored.access_token}`,
+                    'Content-Type': file.type || 'application/octet-stream',
+                    'x-upsert': 'true'
+                },
+                body: file
+            });
+            if (upRes.ok) {
+                return `${SB_URL}/storage/v1/object/public/fosnalic-media/${storagePath}`;
+            }
+        } catch (_) {}
+
+        return await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    const maxDim = 900;
+                    let w = img.width, h = img.height;
+                    if (w > maxDim || h > maxDim) {
+                        if (w > h) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+                        else { w = Math.round(w * (maxDim / h)); h = maxDim; }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/webp', 0.82));
+                };
+                img.onerror = () => resolve(reader.result);
+                img.src = reader.result;
+            };
+            reader.onerror = () => reject(new Error('Failed to read image file'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    throw new Error('Sign in with Email & Password (Option 1) or connect a GitHub Token (Option 2) first.');
+}
+
+uploadProductImage = async function() {
+    const file = document.getElementById('prodFile').files[0];
+    if (!file) return alert('Choose image first');
+    const st = document.getElementById('prodUploadStatus');
+    st.className = 'ok';
+    st.textContent = 'Uploading...';
+    try {
+        const url = await uploadMediaSmart(file, 'images/products');
+        document.getElementById('prodImage').value = url;
+        st.textContent = '✅ Uploaded!';
+        toast('✅ Product image ready');
+    } catch (err) {
+        st.className = 'err';
+        st.textContent = '❌ ' + err.message;
+    }
+};
+
+uploadAdImage = async function() {
+    const file = document.getElementById('adFile').files[0];
+    if (!file) return alert('Choose an ad image first');
+    const st = document.getElementById('adUploadStatus');
+    st.className = 'ok';
+    st.textContent = 'Uploading...';
+    try {
+        const url = await uploadMediaSmart(file, 'images/ads');
+        document.getElementById('adImage').value = url;
+        st.textContent = '✅ Uploaded!';
+        toast('✅ Ad image ready');
+    } catch (err) {
+        st.className = 'err';
+        st.textContent = '❌ ' + err.message;
+    }
+};
+
+uploadImage = async function() {
+    const file = document.getElementById('newsFile').files[0];
+    if (!file) return alert('Choose image');
+    const st = document.getElementById('newsUploadStatus');
+    st.className = 'ok';
+    st.textContent = 'Uploading...';
+    try {
+        const url = await uploadMediaSmart(file, 'images');
+        document.getElementById('newsImg').value = url;
+        st.textContent = '✅ Uploaded!';
+        toast('✅ Update image ready');
+    } catch (err) {
+        st.className = 'err';
+        st.textContent = '❌ ' + err.message;
+    }
+};
+
+uploadAppIcon = async function() {
+    const file = document.getElementById('appIconFile').files[0];
+    if (!file) return alert('Choose icon');
+    const st = document.getElementById('appIconStatus');
+    st.className = 'ok';
+    st.textContent = 'Uploading...';
+    try {
+        const url = await uploadMediaSmart(file, 'icons');
+        document.getElementById('appIconUrl').value = url;
+        document.getElementById('iconPreview').innerHTML = `<img src="${escapeHtml(url)}" onclick="openImageLightbox('${escapeHtml(url)}', 'App Icon')" style="cursor:pointer" title="Tap to preview icon">`;
+        st.textContent = '✅ Icon uploaded';
+        toast('✅ App icon ready');
+    } catch (err) {
+        st.className = 'err';
+        st.textContent = '❌ ' + err.message;
+    }
+};
+
+// ==================== EXPANDED IMAGE EXTENSION RECOGNITION & ICONS ====================
+const ALL_IMAGE_EXT_REGEX = /\.(png|jpe?g|jfif|pjpeg|pjp|webp|gif|svg|svgz|avif|heic|heif|bmp|dib|ico|cur|tiff?|tga|dds|apng)(\?|#|$)/i;
+
+isRecognizedImageFile = function(pathOrUrl) {
+    const s = String(pathOrUrl || '').trim();
+    if (!s) return false;
+    if (/^data:image\//i.test(s)) return true;
+    return ALL_IMAGE_EXT_REGEX.test(s);
+};
+
+getImageFormatLabel = function(pathOrUrl) {
+    const s = String(pathOrUrl || '').trim();
+    if (!s) return 'NONE';
+    const dataMatch = s.match(/^data:image\/([a-zA-Z0-9+.-]+)/i);
+    if (dataMatch) return dataMatch[1].toUpperCase().replace('SVG+XML', 'SVG');
+    const extMatch = s.match(/\.([a-zA-Z0-9]{2,6})(?:\?|#|$)/);
+    if (extMatch) {
+        return extMatch[1].toUpperCase();
+    }
+    return 'IMG';
+};
+
+function getImageExtIconClass(extLabel) {
+    const ext = String(extLabel || '').toUpperCase();
+    if (ext === 'SVG' || ext === 'SVGZ') return 'fa-vector-square';
+    if (ext === 'GIF' || ext === 'APNG') return 'fa-film';
+    if (ext === 'ICO' || ext === 'CUR') return 'fa-icons';
+    if (ext === 'WEBP' || ext === 'AVIF') return 'fa-image';
+    return 'fa-file-image';
+}
+
+renderMediaThumb = function(rawUrl, altText = 'Media') {
+    const resolved = resolveMediaUrl(rawUrl);
+    const safeTitle = escapeHtml(altText || 'Image Preview');
+    if (!resolved) {
+        return `<div class="thumb-placeholder" title="No image URL"><i class="fas fa-image"></i><span>No Image</span><span class="img-file-badge none">NONE</span></div>`;
+    }
+    const safeSrc = escapeHtml(resolved);
+    const fmt = getImageFormatLabel(resolved);
+    const iconCls = getImageExtIconClass(fmt);
+    return `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+            <div class="media-tap-wrap" data-full-src="${safeSrc}" data-label="${safeTitle}" onclick="event.preventDefault();event.stopPropagation();openImageLightbox(this.getAttribute('data-full-src'), this.getAttribute('data-label'));" title="Tap to view full image">
+                <img src="${safeSrc}" data-full-src="${safeSrc}" alt="${safeTitle}" loading="lazy" referrerpolicy="no-referrer" style="width:96px;height:72px;object-fit:cover;border-radius:6px;background:#E2E8F0;border:1px solid var(--border);display:block;cursor:zoom-in" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';this.setAttribute('data-broken','1');const b=this.closest('div').parentElement?.querySelector('.img-file-badge');if(b){b.innerHTML='<i class=\'fas fa-triangle-exclamation\'></i> BROKEN';b.className='img-file-badge broken';}">
+            </div>
+            <span class="img-file-badge"><i class="fas ${iconCls}"></i> ${escapeHtml(fmt)}</span>
+        </div>`;
+};
+
+loadFilesForCurrentPath = async function() {
+    document.getElementById('currentPathDisplay').textContent = '/' + (currentPath ? currentPath + '/' : '');
+    document.getElementById('parentFolderBtn').style.display = currentPath ? 'inline-flex' : 'none';
+    document.getElementById('pageButtons').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+    let r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${currentPath}?ref=${GH.branch}&t=${Date.now()}`, {
+        headers: GH.token ? { Authorization: getAuthHeaders().Authorization || '' } : {},
+        cache: "no-store"
+    });
+    if (!r.ok) {
+        let msg = '❌ Failed to load folder contents.';
+        try { const ej = await r.json(); if (ej && ej.message) msg += ` (${ej.message})`; } catch(_) {}
+        document.getElementById('pageButtons').innerHTML = msg;
+        return;
+    }
+    let files = await r.json();
+    files = files.sort((a, b) => {
+        if (a.type === b.type) return a.name.localeCompare(b.name);
+        return a.type === 'dir' ? -1 : 1;
+    });
+    document.getElementById('pageButtons').innerHTML = files.map(f => {
+        let delBtn = `<button class="btn-danger" style="padding:2px 8px;font-size:.7rem;margin-left:4px" onclick="event.stopPropagation();deleteFile('${f.path}')"><i class='fas fa-trash'></i></button>`;
+        if (f.type === 'dir') {
+            return `<span class="file-btn" style="background:#FEF3C7; border-color:#F59E0B;" onclick="openFolder('${f.path}')">📁 ${escapeHtml(f.name)}/</span>`;
+        }
+        if (isRecognizedImageFile(f.name)) {
+            const rawUrl = `https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/${f.path}`;
+            const fmt = getImageFormatLabel(f.name);
+            const iconCls = getImageExtIconClass(fmt);
+            return `
+                <div class="fm-img-chip" data-full-src="${escapeHtml(rawUrl)}" data-label="${escapeHtml(f.name)}" onclick="event.stopPropagation();openImageLightbox(this.getAttribute('data-full-src'), this.getAttribute('data-label'))" title="Tap to view image">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;background:#DBEAFE;color:#1D4ED8;flex-shrink:0"><i class="fas ${iconCls}"></i></span>
+                    <img class="fm-mini-thumb" src="${escapeHtml(rawUrl)}" data-full-src="${escapeHtml(rawUrl)}" alt="${escapeHtml(f.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_IMG_SVG}';">
+                    <span><b>${escapeHtml(f.name)}</b></span>
+                    <span class="img-file-badge"><i class="fas ${iconCls}"></i> ${escapeHtml(fmt)}</span>
+                    <button type="button" class="btn-ghost btn-xs" onclick="event.stopPropagation();loadPage('${f.path}',this.closest('.fm-img-chip'))" title="Edit file">Edit</button>
+                    ${delBtn}
+                </div>`;
+        }
+        let icon = f.name.endsWith('.html') ? '📄' : f.name.endsWith('.css') ? '🎨' : f.name.endsWith('.js') ? '⚙️' : f.name.endsWith('.json') ? '📦' : '📄';
+        return `<span class="file-btn ${f.path === currentPage ? 'active' : ''}" onclick="loadPage('${f.path}',this)">${icon} ${escapeHtml(f.name)}</span>${delBtn}`;
+    }).join('') || '<i style="color:var(--text-muted)">This folder is empty.</i>';
+};
+
+document.addEventListener('click', function (ev) {
+    const previewImg = ev.target && ev.target.closest ? ev.target.closest('.app-icon-preview img, .fm-mini-thumb') : null;
+    if (previewImg && !previewImg.closest('#imgLightboxModal')) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const src = previewImg.getAttribute('data-full-src') || previewImg.currentSrc || previewImg.src;
+        const label = previewImg.alt || 'Image Preview';
+        if (typeof openImageLightbox === 'function') {
+            openImageLightbox(src, label);
+        }
+    }
+}, true);
+
+// ==================== LIVE HTML PREVIEW (FIXED & WORKING) ====================
+let livePreviewOpen = false;
+let livePreviewTimer = null;
+
+function buildPreviewDocument(rawCode) {
+    let code = String(rawCode || '');
+    const baseHref = `https://raw.githubusercontent.com/${encodeURIComponent(GH.owner || 'fosnalictechs')}/${encodeURIComponent(GH.repo || 'fosnalic')}/${encodeURIComponent(GH.branch || 'main')}/`;
+    const isCss = currentPage && currentPage.toLowerCase().endsWith('.css');
+    const isJs = currentPage && currentPage.toLowerCase().endsWith('.js');
+
+    if (isCss) {
+        return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>${code}</style></head><body style="font-family:sans-serif;padding:20px"><h2>CSS Preview: ${escapeHtml(currentPage)}</h2><p>Sample paragraph text and <button>Sample Button</button></p><div class="card box container">Sample container block</div></body></html>`;
+    }
+    if (isJs) {
+        const openTag = '<' + 'script>';
+        const closeTag = '</' + 'script>';
+        return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:monospace;padding:16px"><h3>JS Console Output (${escapeHtml(currentPage)})</h3><pre id="out"></pre>${openTag}const out=document.getElementById('out');const origLog=console.log;console.log=(...a)=>{out.textContent+=a.join(' ')+'\n';origLog(...a);};window.onerror=(m,u,l)=>{out.textContent+='Error (line '+l+'): '+m+'\n';};try{${code}}catch(e){out.textContent+='Exception: '+e.message;}${closeTag}</body></html>`;
+    }
+
+    if (!code.trim()) {
+        return `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;padding:24px;color:#475569;text-align:center"><h3>Live HTML Preview</h3><p>Open an HTML file or type HTML code in the editor above to see it rendered live here.</p></body></html>`;
+    }
+
+    if (!/<html[\s>]/i.test(code) && !/<!doctype/i.test(code)) {
+        code = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="${baseHref}"></head><body>${code}</body></html>`;
+    } else if (!/<base\s/i.test(code)) {
+        if (/<head[^>]*>/i.test(code)) {
+            code = code.replace(/<head([^>]*)>/i, `<head$1><base href="${baseHref}">`);
+        } else {
+            code = code.replace(/<html([^>]*)>/i, `<html$1><head><base href="${baseHref}"></head>`);
+        }
+    }
+    return code;
+}
+
+function refreshLiveHtmlPreview() {
+    const iframe = document.getElementById('liveHtmlIframe');
+    const editor = document.getElementById('pageEditor');
+    const badge = document.getElementById('livePreviewBadge');
+    if (!iframe || !editor) return;
+
+    const htmlDoc = buildPreviewDocument(editor.value);
+    iframe.srcdoc = htmlDoc;
+    if (badge) {
+        badge.textContent = currentPage ? `LIVE • ${currentPage}` : 'LIVE • UNSAVED';
+    }
+}
+
+function toggleLiveHtmlPreview(forceState) {
+    const panel = document.getElementById('liveHtmlPreviewPanel');
+    const btn = document.getElementById('btnToggleLivePreview');
+    if (!panel) return;
+
+    livePreviewOpen = (typeof forceState === 'boolean') ? forceState : !livePreviewOpen;
+    if (livePreviewOpen) {
+        panel.classList.remove('hidden');
+        if (btn) btn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Preview';
+        refreshLiveHtmlPreview();
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } else {
+        panel.classList.add('hidden');
+        if (btn) btn.innerHTML = '<i class="fas fa-eye"></i> Live HTML Preview';
+    }
+}
+
+function setPreviewViewport(widthVal) {
+    const iframe = document.getElementById('liveHtmlIframe');
+    if (!iframe) return;
+    iframe.style.width = widthVal;
+    iframe.style.maxWidth = '100%';
+}
+
+document.getElementById('pageEditor')?.addEventListener('input', () => {
+    if (!livePreviewOpen) return;
+    clearTimeout(livePreviewTimer);
+    livePreviewTimer = setTimeout(refreshLiveHtmlPreview, 300);
+});
+
+const _origLoadPageForPreview = loadPage;
+loadPage = async function(path, btn) {
+    await _origLoadPageForPreview(path, btn);
+    if (livePreviewOpen) refreshLiveHtmlPreview();
+};
+
+const _origCreatePageForPreview = createPage;
+createPage = async function() {
+    await _origCreatePageForPreview();
+    if (livePreviewOpen) refreshLiveHtmlPreview();
+};
+
 </script>
+
+<!-- Global Tap-to-View Image Lightbox Modal -->
+<div id="imgLightboxModal" onclick="if(event.target===this)closeImageLightbox()">
+  <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+    <div class="lightbox-top">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <i class="fas fa-expand" style="color:#38BDF8"></i>
+        <b id="lbTitle">Full Image Preview</b>
+        <span id="lbExtBadge" class="img-file-badge">IMAGE</span>
+      </div>
+      <button type="button" class="btn-ghost btn-xs" onclick="closeImageLightbox()"><i class="fas fa-xmark"></i> Close</button>
+    </div>
+    <div class="lightbox-stage">
+      <img id="lbImg" src="" alt="Full preview">
+    </div>
+    <div class="lightbox-meta" id="lbUrl"></div>
+    <div class="lightbox-actions">
+      <button type="button" class="btn-ghost btn-xs" onclick="copyLightboxUrl()"><i class="fas fa-copy"></i> Copy URL</button>
+      <a id="lbOpenTab" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary btn-xs" style="text-decoration:none"><i class="fas fa-up-right-from-square"></i> Open Original</a>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
