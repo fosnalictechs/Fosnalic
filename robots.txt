@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard.html
+Disallow: /my-apps.html
 
 # AI Crawlers - Allow all
 User-agent: GPTBot
@@ -26,4 +28,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://fosnalic.pages.dev/sitemap.xml
+Sitemap: https://fosnalic.vercel.app/sitemap.xml
